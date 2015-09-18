@@ -1,5 +1,6 @@
 package com.hooblahstudios.games;
 
+import com.badlogic.gdx.math.Vector2;
 import com.hooblahstudios.games.touchCoordinate;
 
 import java.util.ArrayList;
@@ -13,11 +14,15 @@ public class square extends DynamicGameObject{
     boolean isDone;
     int id;
     float stateTime;
-    float xToMove;
-    float yToMove;
+    float movementLeft;
+    Vector2 destination;
+    Vector2 vectorPosition;
     int turnCounter;
     ArrayList<Action> actions;
     ArrayList<Action> savedActions;
+    Vector2 velocity;
+    Vector2 movement;
+    Vector2 dir;
 
     public final int speed = 120;
 
@@ -31,12 +36,9 @@ public class square extends DynamicGameObject{
         this.isEnemy = isEnemy;
         actions = new ArrayList<Action>();
         savedActions = new ArrayList<Action>();
-       setVelocity();
-    }
-
-    public void setVelocity(){
-        velocity.set(0, 0);
-        velocity.add(speed, speed);
+        this.vectorPosition = new Vector2(x, y);
+        this.destination = new Vector2(x, y);
+        this.movementLeft = 7;
     }
 
     public void addMove(Move mv){
@@ -45,41 +47,36 @@ public class square extends DynamicGameObject{
     }
 
     public void setToMove(Move mv){
-        this.xToMove = mv.getXToMove(this);
-        this.yToMove = mv.getYToMove(this);
+        this.destination = new Vector2(mv.x, mv.y);
     }
 
     public void update(float deltaTime){
-        if((int)this.xToMove != 0){
-            if(this.xToMove > 0){
-                position.add(velocity.x*deltaTime, 0);
-                bounds.x = position.x - bounds.width / 2;
-                this.xToMove = this.xToMove - (velocity.x*deltaTime);
-            }
-            else if(this.xToMove < 0){
-                position.add(-velocity.x*deltaTime, 0);
-                bounds.x = position.x - bounds.width / 2;
-                this.xToMove = this.xToMove + (velocity.x*deltaTime);
-            }
-        }
-        else if((int)this.yToMove != 0){
-            if(this.yToMove > 0){
-                position.add(0, velocity.y*deltaTime);
-                bounds.y = position.y - bounds.height / 2;
-                this.yToMove = this.yToMove - (velocity.y*deltaTime);
-            }
-            else if(this.yToMove < 0){
-                position.add(0, -velocity.y*deltaTime);
-                bounds.y = position.y - bounds.height / 2;
-                this.yToMove = this.yToMove + (velocity.y*deltaTime);
-            }
-        }
-        else{
+        dir = new Vector2();
+
+        //on touch event set the touch vector then get direction vector
+        dir.set(this.destination).sub(this.vectorPosition).nor();
+        movement = new Vector2();
+        velocity = new Vector2(dir).scl(this.speed);
+        movement.set(velocity).scl(deltaTime);
+
+        if (position.dst2(destination) > movement.len2()) {
+            position.add(movement);
+            bounds.x = position.x - bounds.width / 2;
+            bounds.y = position.y - bounds.height / 2;
+            movementLeft -= deltaTime;
+        } else {
+            position.set(destination);
+            bounds.x = position.x - bounds.width / 2;
+            bounds.y = position.y - bounds.height / 2;
             this.isMoving = false;
-            //assume that two moves takes up all action
-            if(turnCounter > 1 && !this.isMoving)
-                this.isDone = true;
         }
+        vectorPosition.set(this.position.x, this.position.y);
+
+        if(movementLeft <= 0 && this.velocity.x == 0 && this.velocity.y == 0){
+            this.isDone = true;
+        }
+
+        stateTime += deltaTime;
     }
 
     public void updateSetting(float deltaTime){
@@ -95,14 +92,6 @@ public class square extends DynamicGameObject{
         }
     }
 
-    public void endMove(){
-        this.actions.remove(0);
-        if(this.actions.size() == 0){
-            Move mv = new Move(this.position.x - 390, this.position.y - 240);
-            this.actions.add(mv);
-        }
-    }
-
     public void beginMoving(){
         if(this.turnCounter < this.actions.size()) {
             setToMove((Move) this.actions.get(this.turnCounter));
@@ -110,7 +99,6 @@ public class square extends DynamicGameObject{
             this.turnCounter++;
         }
     }
-
 
     public void resetActions(){
         this.actions = this.savedActions;

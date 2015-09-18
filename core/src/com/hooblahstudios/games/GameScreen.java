@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.hooblahstudios.games.touchCoordinate;
 //import com.badlogicgames.superjumper.World.WorldListener;
 
@@ -22,7 +25,7 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_PAUSED = 2;
     static final int GAME_LEVEL_END = 3;
     static final int GAME_OVER = 4;
-
+    private Viewport vp;
     proofOfConcept game;
 
     int state;
@@ -40,8 +43,9 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(proofOfConcept game){
         this.game = game;
         state = GAME_READY;
-        guiCam = new OrthographicCamera(world.WORLD_WIDTH, world.WORLD_HEIGHT);
-        guiCam.position.set(world.WORLD_WIDTH / 2, world.WORLD_HEIGHT / 2, 0);
+        guiCam = new OrthographicCamera(800, 480);
+        vp = new StretchViewport(480, 800, guiCam);
+        guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
 
         world = new World();
@@ -60,6 +64,8 @@ public class GameScreen extends ScreenAdapter {
     private void updateRunning(float deltaTime){
         if (Gdx.input.justTouched()) {
             guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+            System.out.println(touchPoint.x);
+            System.out.println(touchPoint.y);
             world.touched(touchPoint.x, touchPoint.y);
         }
 
@@ -72,9 +78,9 @@ public class GameScreen extends ScreenAdapter {
 
         renderer.render();
 
-//        guiCam.update();
-//        game.batcher.setProjectionMatrix(guiCam.combined);
-//        game.batcher.enableBlending();
+        guiCam.update();
+        game.batcher.setProjectionMatrix(guiCam.combined);
+        game.batcher.enableBlending();
 //        game.batcher.begin();
 //        switch (state) {
 //            case GAME_READY:

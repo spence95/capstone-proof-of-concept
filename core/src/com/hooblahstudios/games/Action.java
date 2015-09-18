@@ -7,7 +7,7 @@ public class Action {
     float x;
     float y;
     public Action(float x, float y){
-        this.x = x + 390;
-        this.y = y + 240;
+        this.x = x;
+        this.y = y;
     }
 }

@@ -6,6 +6,7 @@ package com.hooblahstudios.games;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 public class WorldRenderer {
     World world;
     OrthographicCamera cam;
@@ -34,7 +35,10 @@ public class WorldRenderer {
     }
 
     public void renderObjects () {
-        renderSquares();
+        //renderSquares();
+        renderPlayers();
+        renderActionButtons();
+        renderDot();
     }
 
     private void renderSquares(){
@@ -42,6 +46,39 @@ public class WorldRenderer {
         for(int i = 0; i < world.squares.size(); i++){
             batch.draw(Assets.squareRegion, world.squares.get(i).position.x, world.squares.get(i).position.y, 10, 10);
         }
+        batch.end();
+    }
+
+    private void renderPlayers(){
+        batch.begin();
+        for(int i = 0; i < world.squares.size(); i++){
+            square sq = world.squares.get(i);
+            TextureRegion keyFrame = Assets.playerStill;
+
+            if(sq.isMoving){
+                keyFrame = Assets.playerWalking.getKeyFrame(sq.stateTime, Animation.ANIMATION_LOOPING);
+            }
+
+            batch.draw(keyFrame, sq.position.x, sq.position.y, world.squareWidth, world.squareHeight);
+        }
+        batch.end();
+//        float side = world.bob.velocity.x < 0 ? -1 : 1;
+//        if (side < 0)
+//            batch.draw(keyFrame, world.bob.position.x + 0.5f, world.bob.position.y - 0.5f, side * 1, 1);
+//        else
+//            batch.draw(keyFrame, world.bob.position.x - 0.5f, world.bob.position.y - 0.5f, side * 1, 1);
+    }
+
+    public void renderActionButtons(){
+        batch.begin();
+        batch.draw(Assets.actionsRegion, world.actionMenu.position.x, world.actionMenu.position.y, world.MENU_WIDTH / 2, world.MENU_HEIGHT / 2);
+        batch.end();
+    }
+
+    public void renderDot(){
+        batch.begin();
+        TextureRegion keyFrame = Assets.dotOscillating.getKeyFrame(world.dot.stateTime, Animation.ANIMATION_LOOPING);
+        batch.draw(keyFrame, world.dot.position.x, world.dot.position.y, world.dot.bounds.width, world.dot.bounds.height);
         batch.end();
     }
 }

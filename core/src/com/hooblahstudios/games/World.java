@@ -4,30 +4,67 @@ package com.hooblahstudios.games;
  * Created by spence95 on 9/4/2015.
  */
 import com.google.gson.*;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Random;
+import com.badlogic.gdx.math.Rectangle;
 
 public class World {
-    public static final float WORLD_WIDTH = 780;
+
+    public static final float WORLD_WIDTH = 800;
     public static final float WORLD_HEIGHT = 480;
-    public final int squareWidth = 10;
-    public final int squareHeight = 10;
+    //392
+    public static final float MENU_WIDTH = WORLD_WIDTH / 3;
+    //127
+    public static final float MENU_HEIGHT = WORLD_HEIGHT / 4;
+    public final float squareWidth = 15;
+    public final float squareHeight = 31;
     public ArrayList<square> squares;
     boolean hasStarted = false;
     boolean isSetting = true;
+    float lastTouchedX;
+    float lastTouchedY;
+    Rectangle menuBounds;
     public square currentPlayer;
+    public Dot dot;
+    public ActionMenu actionMenu;
+
     public World() {
         squares = new ArrayList<square>();
+        actionMenu = new ActionMenu();
+        dot = new Dot(-1000, -1000);
     }
 
     public void touched(float x, float y){
+        //render actions menu
+            //check if click in menu bounds
+            if(actionMenu != null) {
+                if (actionMenu.menuBounds.contains(x, y)) {
+                    actionClicked(lastTouchedX, lastTouchedY);
+                } else {
+                    bringUpMenu(x, y);
+                }
+            }
+    }
+
+    private void bringUpMenu(float x, float y){
+        lastTouchedX = x;
+        lastTouchedY = y;
+        dot.position.x = x;
+        dot.position.y = y;
+        //if hidden
+        if(this.actionMenu.state == 0 && this.actionMenu.position.y < 0){
+            this.actionMenu.changeState(1);
+        }
+    }
+
+    public void actionClicked(float x, float y){
         Move mv = new Move(x, y);
+        //move dot away
+        this.dot.position.x = 1000;
+        this.dot.position.y = 1000;
         this.currentPlayer.addMove(mv);
         this.currentPlayer.beginMoving();
+        this.actionMenu.changeState(2);
     }
 
     public void start(){
@@ -42,15 +79,19 @@ public class World {
     }
 
     public void update(float deltaTime){
+
+     if(dot != null){
+         dot.update(deltaTime);
+     }
+
+     if(actionMenu != null){
+         actionMenu.update(deltaTime);
+     }
+
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
             if(this.currentPlayer.isDone){
-                this.currentPlayer.resetActions();
-                this.isSetting = false;
-                //reset current player
-                currentPlayer.position.x = 1;
-                currentPlayer.position.y = 1;
-                getEnemyActions();
+                submit();
             }
         }
         else{
@@ -59,6 +100,15 @@ public class World {
                 this.squares.get(i).updateRunning(deltaTime);
             }
         }
+    }
+
+    public void submit(){
+        this.currentPlayer.resetActions();
+        this.isSetting = false;
+        //reset current player
+        currentPlayer.position.x = 1;
+        currentPlayer.position.y = 1;
+        getEnemyActions();
     }
 
     public void getEnemyActions(){
