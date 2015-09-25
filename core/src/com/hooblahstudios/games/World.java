@@ -12,10 +12,12 @@ public class World {
 
     public static final float WORLD_WIDTH = 800;
     public static final float WORLD_HEIGHT = 480;
-    //392
-    public static final float MENU_WIDTH = WORLD_WIDTH / 3;
-    //127
-    public static final float MENU_HEIGHT = WORLD_HEIGHT / 4;
+    public static final float MENU_WIDTH = 392 / 2;
+    public static final float MENU_HEIGHT = 127 / 2;
+    public static final float Move_menu_width = 122 / 2;
+    public static final float Move_menu_height = 127 / 2;
+    public static final float Attack_menu_width = 150 / 2;
+    public static final float Attack_menu_height = 127 / 2;
     public final float squareWidth = 15;
     public final float squareHeight = 31;
     public ArrayList<square> squares;
@@ -39,7 +41,16 @@ public class World {
             //check if click in menu bounds
             if(actionMenu != null) {
                 if (actionMenu.menuBounds.contains(x, y)) {
-                    actionClicked(lastTouchedX, lastTouchedY);
+                    if(actionMenu.isReadyToSubmit){
+                        submit();
+                        return;
+                    }
+                    if(x > 439) {
+                        moveClicked(lastTouchedX, lastTouchedY);
+                    } else {
+                        attackClicked(lastTouchedX, lastTouchedY);
+                    }
+
                 } else {
                     bringUpMenu(x, y);
                 }
@@ -47,24 +58,40 @@ public class World {
     }
 
     private void bringUpMenu(float x, float y){
-        lastTouchedX = x;
-        lastTouchedY = y;
-        dot.position.x = x;
-        dot.position.y = y;
-        //if hidden
-        if(this.actionMenu.state == 0 && this.actionMenu.position.y < 0){
-            this.actionMenu.changeState(1);
+        //only bring up when player isn't moving already
+        if(this.currentPlayer.velocity != null) {
+            if (this.currentPlayer.velocity.x == 0 && this.currentPlayer.velocity.y == 0) {
+                lastTouchedX = x;
+                lastTouchedY = y;
+                dot.position.x = x;
+                dot.position.y = y;
+                //if hidden
+                if (this.actionMenu.state == 0 && this.actionMenu.position.y < 0) {
+                    this.actionMenu.changeState(1);
+                }
+            }
         }
     }
 
-    public void actionClicked(float x, float y){
+    public void moveClicked(float x, float y){
         Move mv = new Move(x, y);
-        //move dot away
-        this.dot.position.x = 1000;
-        this.dot.position.y = 1000;
+        hideDot();
         this.currentPlayer.addMove(mv);
         this.currentPlayer.beginMoving();
         this.actionMenu.changeState(2);
+    }
+
+    public void attackClicked(float x, float y) {
+        Attack at = new Attack(x, y);
+        hideDot();
+        this.currentPlayer.addAttack(at);
+        this.currentPlayer.bullet.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
+        this.actionMenu.changeState(2);
+    }
+
+    public void hideDot(){
+        this.dot.position.x = 1000;
+        this.dot.position.y = 1000;
     }
 
     public void start(){
@@ -80,18 +107,21 @@ public class World {
 
     public void update(float deltaTime){
 
+     //update dot
      if(dot != null){
          dot.update(deltaTime);
      }
 
+     //update action menu
      if(actionMenu != null){
          actionMenu.update(deltaTime);
      }
 
+
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
             if(this.currentPlayer.isDone){
-                submit();
+                actionMenu.makeReadyToSubmit();
             }
         }
         else{
@@ -103,6 +133,8 @@ public class World {
     }
 
     public void submit(){
+        hideDot();
+        this.actionMenu.changeState(2);
         this.currentPlayer.resetActions();
         this.isSetting = false;
         //reset current player

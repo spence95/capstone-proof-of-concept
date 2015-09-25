@@ -60,6 +60,7 @@ public class WorldRenderer {
             }
 
             batch.draw(keyFrame, sq.position.x, sq.position.y, world.squareWidth, world.squareHeight);
+            batch.draw(Assets.bulletRegion, sq.bullet.position.x, sq.bullet.position.y, sq.bullet.position.x, sq.bullet.position.y,sq.bullet.bounds.width, sq.bullet.bounds.height, 1, 1, sq.bullet.rotation, true);
         }
         batch.end();
 //        float side = world.bob.velocity.x < 0 ? -1 : 1;
@@ -71,7 +72,11 @@ public class WorldRenderer {
 
     public void renderActionButtons(){
         batch.begin();
-        batch.draw(Assets.actionsRegion, world.actionMenu.position.x, world.actionMenu.position.y, world.MENU_WIDTH / 2, world.MENU_HEIGHT / 2);
+        if(! world.actionMenu.isReadyToSubmit) {
+            batch.draw(Assets.menuRegion, world.actionMenu.position.x - (World.MENU_WIDTH/4), world.actionMenu.position.y, world.MENU_WIDTH, world.MENU_HEIGHT);
+        }
+        else
+            batch.draw(Assets.submitRegion, world.actionMenu.position.x - (World.MENU_WIDTH/4), world.actionMenu.position.y, world.MENU_WIDTH, world.MENU_HEIGHT);
         batch.end();
     }
 

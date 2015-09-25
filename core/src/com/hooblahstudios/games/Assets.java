@@ -14,16 +14,15 @@ public class Assets {
     public static Texture square;
     public static TextureRegion squareRegion;
 
-    public static Texture submit;
-    public static TextureRegion submitRegion;
-
     public static Texture actions;
-    public static TextureRegion actionsRegion;
+    public static TextureRegion menuRegion;
+    public static TextureRegion submitRegion;
 
     public static Texture player;
     public static TextureRegion playerWalkingRegion;
     public static TextureRegion playerStill;
     public static TextureRegion dotRegion;
+    public static TextureRegion bulletRegion;
 
     public static Animation playerWalking;
     public static Animation dotOscillating;
@@ -38,17 +37,16 @@ public class Assets {
         square = loadTexture("square.png");
         squareRegion = new TextureRegion(square, 0, 0, 50, 50);
 
-        submit = loadTexture("submit.png");
-        submitRegion = new TextureRegion(submit, 0, 0, 100, 50);
-
         actions = loadTexture("actions.png");
-        actionsRegion = new TextureRegion(actions, 0, 0, 392, 127);
+        menuRegion = new TextureRegion(actions, 0, 0, 392, 127);
+        submitRegion = new TextureRegion(actions, 0, 127, 392, 127);
 
         //506 by 169
         player = loadTexture("playerBig.png");
         playerWalkingRegion = new TextureRegion(player, 450, 105);
         playerStill = new TextureRegion(player, 50, 105);
         dotRegion = new TextureRegion(player, 0, 105, 506, 64);
+        bulletRegion = new TextureRegion(player, 564, 0, 78, 24);
 
         //animations
         playerWalking = new Animation(.05f,
