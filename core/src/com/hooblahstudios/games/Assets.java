@@ -23,6 +23,7 @@ public class Assets {
     public static TextureRegion playerStill;
     public static TextureRegion dotRegion;
     public static TextureRegion bulletRegion;
+    public static TextureRegion blockRegion;
 
     public static Animation playerWalking;
     public static Animation dotOscillating;
@@ -47,6 +48,7 @@ public class Assets {
         playerStill = new TextureRegion(player, 50, 105);
         dotRegion = new TextureRegion(player, 0, 105, 506, 64);
         bulletRegion = new TextureRegion(player, 564, 0, 78, 24);
+        blockRegion = new TextureRegion(player, 0, 916, 50, 50);
 
         //animations
         playerWalking = new Animation(.05f,

@@ -39,28 +39,30 @@ public class WorldRenderer {
         renderPlayers();
         renderActionButtons();
         renderDot();
+        renderBlocks();
     }
 
-    private void renderSquares(){
+    private void renderBlocks() {
         batch.begin();
-        for(int i = 0; i < world.squares.size(); i++){
-            batch.draw(Assets.squareRegion, world.squares.get(i).position.x, world.squares.get(i).position.y, 10, 10);
+        for(int i = 0; i < world.blocks.size(); i++) {
+            Block bl = world.blocks.get(i);
+            batch.draw(Assets.blockRegion, bl.position.x, bl.position.y, bl.bounds.width, bl.bounds.height);
         }
         batch.end();
     }
 
     private void renderPlayers(){
         batch.begin();
-        for(int i = 0; i < world.squares.size(); i++){
-            square sq = world.squares.get(i);
+        for(int i = 0; i < world.players.size(); i++){
+            Player pl = world.players.get(i);
             TextureRegion keyFrame = Assets.playerStill;
 
-            if(sq.isMoving){
-                keyFrame = Assets.playerWalking.getKeyFrame(sq.stateTime, Animation.ANIMATION_LOOPING);
+            if(pl.isMoving){
+                keyFrame = Assets.playerWalking.getKeyFrame(pl.stateTime, Animation.ANIMATION_LOOPING);
             }
 
-            batch.draw(keyFrame, sq.position.x, sq.position.y, world.squareWidth, world.squareHeight);
-            batch.draw(Assets.bulletRegion, sq.bullet.position.x, sq.bullet.position.y, sq.bullet.position.x, sq.bullet.position.y,sq.bullet.bounds.width, sq.bullet.bounds.height, 1, 1, sq.bullet.rotation, true);
+            batch.draw(keyFrame, pl.position.x, pl.position.y, world.squareWidth, world.squareHeight);
+            batch.draw(Assets.bulletRegion, pl.bullet.position.x, pl.bullet.position.y, pl.bullet.position.x, pl.bullet.position.y,pl.bullet.bounds.width, pl.bullet.bounds.height, 1, 1, pl.bullet.rotation, true);
         }
         batch.end();
 //        float side = world.bob.velocity.x < 0 ? -1 : 1;
