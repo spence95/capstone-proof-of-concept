@@ -46,7 +46,7 @@ public class WorldRenderer {
         batch.begin();
         for(int i = 0; i < world.blocks.size(); i++) {
             Block bl = world.blocks.get(i);
-            batch.draw(Assets.blockRegion, bl.position.x, bl.position.y, bl.bounds.width, bl.bounds.height);
+            batch.draw(Assets.blockRegion, bl.position.x - (bl.bounds.width / 2), bl.position.y - (bl.bounds.height/2), bl.bounds.width, bl.bounds.height);
         }
         batch.end();
     }
@@ -56,12 +56,11 @@ public class WorldRenderer {
         for(int i = 0; i < world.players.size(); i++){
             Player pl = world.players.get(i);
             TextureRegion keyFrame = Assets.playerStill;
-
             if(pl.isMoving){
                 keyFrame = Assets.playerWalking.getKeyFrame(pl.stateTime, Animation.ANIMATION_LOOPING);
             }
 
-            batch.draw(keyFrame, pl.position.x, pl.position.y, world.squareWidth, world.squareHeight);
+            batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth, world.squareHeight);
             batch.draw(Assets.bulletRegion, pl.bullet.position.x, pl.bullet.position.y, pl.bullet.position.x, pl.bullet.position.y,pl.bullet.bounds.width, pl.bullet.bounds.height, 1, 1, pl.bullet.rotation, true);
         }
         batch.end();

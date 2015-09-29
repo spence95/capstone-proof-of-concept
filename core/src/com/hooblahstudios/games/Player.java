@@ -12,9 +12,10 @@ public class Player extends DynamicGameObject{
     boolean isMoving;
     boolean isEnemy;
     boolean isDone;
+    boolean isWaiting;
     int id;
     float stateTime;
-    float movementLeft;
+    float secondsWaiting;
     Vector2 destination;
     Vector2 vectorPosition;
     int turnCounter;
@@ -33,17 +34,28 @@ public class Player extends DynamicGameObject{
         this.isMoving = false;
         this.isDone = false;
         this.turnCounter = 0;
+        this.secondsWaiting = 0;
         stateTime = 0;
         this.isEnemy = isEnemy;
         actions = new ArrayList<Action>();
         savedActions = new ArrayList<Action>();
         this.vectorPosition = new Vector2(x, y);
         this.destination = new Vector2(x, y);
-        this.movementLeft = 7;
         bullet = new Bullet(-100, -100, 200);
     }
 
-    public void addMove(Move mv){
+    public void addMove(float x, float y){
+        Move mv = new Move(x, y, secondsWaiting);
+        setToMove(mv);
+        this.isMoving = true;
+        savedActions.add(mv);
+        actions.add(mv);
+        resetSecondsWaiting();
+    }
+
+    //used for enemy's actions grabbed from server
+    public void jsonAddMove(float x, float y){
+        Move mv = new Move(x, y, secondsWaiting);
         savedActions.add(mv);
         actions.add(mv);
     }
@@ -58,14 +70,20 @@ public class Player extends DynamicGameObject{
         this.destination = new Vector2(mv.x, mv.y);
     }
 
+    public void resetSecondsWaiting(){
+        secondsWaiting = 0;
+    }
+
     public void update(float deltaTime, boolean isRunning){
         bullet.update(deltaTime);
-        if(movementLeft > 0) {
+        System.out.println(secondsWaiting);
+        //ten seconds per turn
+        if(stateTime <= 1000) {
             dir = new Vector2();
             //on touch event set the touch vector then get direction vector
-            dir.set(this.destination).sub(this.vectorPosition).nor();
+            dir.set(this.destination).sub(position).nor();
             movement = new Vector2();
-            velocity = new Vector2(dir).scl(this.speed);
+            velocity = new Vector2(dir).scl(speed);
             movement.set(velocity).scl(deltaTime);
 
             if (position.dst2(destination) > movement.len2()) {
@@ -73,34 +91,27 @@ public class Player extends DynamicGameObject{
                 position.add(movement);
                 bounds.x = position.x - bounds.width / 2;
                 bounds.y = position.y - bounds.height / 2;
-                movementLeft -= deltaTime;
             } else {
                 position.set(destination);
                 bounds.x = position.x - bounds.width / 2;
                 bounds.y = position.y - bounds.height / 2;
-                this.isMoving = false;
+                stop();
                 if(isRunning){
-                    if(turnCounter < this.actions.size() - 1) {
+                    if(actions.size() > turnCounter + 1 && !isWaiting) {
                         turnCounter++;
-                        this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
-                    }
-                    else{
-                        velocity.x = 0;
-                        velocity.y = 0;
-                        this.isMoving = false;
+                    } else if(turnCounter + 1 <= actions.size() && !isWaiting){
+                        isDone = true;
                     }
                 }
             }
-            vectorPosition.set(this.position.x, this.position.y);
-        }
-        else if(movementLeft <= 0){
-            //stop the player
+        } else {
             isDone = true;
             stop();
         }
-
+        if(!isRunning) {
+            secondsWaiting += deltaTime;
+        }
         stateTime += deltaTime;
-
     }
 
     public void updateAttack(float deltaTime){
@@ -114,37 +125,47 @@ public class Player extends DynamicGameObject{
     }
 
     public void updateRunning(float deltaTime){
-        if(this.actions.get(turnCounter) instanceof Move) {
-            this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
-            update(deltaTime, true);
-        }
-        else if(this.actions.get(turnCounter) instanceof Attack){
-            if(bullet.isShot) {
-                //if bullet out of bounds move onto moving again
-                if (bullet.position.y > 480 || bullet.position.y < 0 || bullet.position.x > 800 || bullet.position.x < 0) {
-                    bullet.reset();
+        secondsWaiting += deltaTime;
+        if(!isDone) {
+            if (this.actions.get(turnCounter) instanceof Move) {
+                Move mv = (Move) this.actions.get(turnCounter);
+                if (secondsWaiting >= mv.secondsToWait) {
+                    isWaiting = false;
+                    this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
+                } else {
+                    isWaiting = true;
+                    this.destination.set(position.x, position.y);
                 }
-            }else {
-                updateAttack(deltaTime);
-                this.turnCounter++;
+                update(deltaTime, true);
+            } else if (this.actions.get(turnCounter) instanceof Attack) {
+                if (bullet.isShot) {
+                    //if bullet out of bounds move onto moving again
+                    if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
+                        bullet.reset();
+                    }
+                } else {
+                    updateAttack(deltaTime);
+                    this.turnCounter++;
+                }
             }
         }
     }
 
     public void beginMoving(){
-        if(this.turnCounter < this.actions.size()) {
-                setToMove((Move) this.actions.get(this.turnCounter));
-                this.isMoving = true;
-                this.turnCounter++;
-
-        }
+        //if(this.turnCounter < this.actions.size()) {
+//                setToMove((Move) this.actions.get(this.turnCounter));
+//                this.isMoving = true;
+               // this.turnCounter++;
+        //}
     }
 
     public void resetActions(){
         this.actions = this.savedActions;
         this.turnCounter = 0;
-        this.movementLeft = 7;
+        this.stateTime = 0;
+        this.isDone = false;
         bullet.reset();
+        resetSecondsWaiting();
     }
 
     public void stop() {

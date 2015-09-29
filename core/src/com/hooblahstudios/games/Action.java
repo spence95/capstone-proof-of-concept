@@ -6,8 +6,10 @@ package com.hooblahstudios.games;
 public class Action {
     float x;
     float y;
-    public Action(float x, float y){
+    float secondsToWait;
+    public Action(float x, float y, float secondsToWait){
         this.x = x;
         this.y = y;
+        this.secondsToWait = secondsToWait;
     }
 }

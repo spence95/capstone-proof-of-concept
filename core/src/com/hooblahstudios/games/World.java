@@ -44,12 +44,12 @@ public class World {
 
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
-        Block block = new Block(400, 240, 10, 10);
+        Block block = new Block(400, 240, 200, 200);
         blocks.add(block);
-        block = new Block(80, 80, 20, 140);
-        blocks.add(block);
-        block = new Block(700, 220, 20, 160);
-        blocks.add(block);
+//        block = new Block(80, 80, 20, 140);
+//        blocks.add(block);
+//        block = new Block(700, 220, 20, 160);
+//        blocks.add(block);
     }
 
     public void touched(float x, float y){
@@ -90,15 +90,13 @@ public class World {
     }
 
     public void moveClicked(float x, float y){
-        Move mv = new Move(x, y);
         hideDot();
-        this.currentPlayer.addMove(mv);
-        this.currentPlayer.beginMoving();
+        this.currentPlayer.addMove(x, y);
         this.actionMenu.changeState(2);
     }
 
     public void attackClicked(float x, float y) {
-        Attack at = new Attack(x, y);
+        Attack at = new Attack(x, y, 9);
         hideDot();
         this.currentPlayer.addAttack(at);
         this.currentPlayer.bullet.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
@@ -184,10 +182,8 @@ public class World {
                 //parse the json
                 Gson gson = new Gson();
                 EnemyJsonTemplate ejst = gson.fromJson(json, EnemyJsonTemplate.class);
-                Move mv = new Move(ejst.ajst[0].destX, ejst.ajst[0].destY);
-                this.players.get(i).addMove(mv);
-                mv = new Move(ejst.ajst[1].destX, ejst.ajst[1].destY);
-                this.players.get(i).addMove(mv);
+                this.players.get(i).addMove(ejst.ajst[0].destX, ejst.ajst[0].destY);
+                this.players.get(i).addMove(ejst.ajst[1].destX, ejst.ajst[1].destY);
             }
         }
     }
