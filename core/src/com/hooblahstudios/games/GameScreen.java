@@ -64,8 +64,6 @@ public class GameScreen extends ScreenAdapter {
     private void updateRunning(float deltaTime){
         if (Gdx.input.justTouched()) {
             guiCam.unproject(touchPoint.set(Gdx.input.getX(), Gdx.input.getY(), 0));
-            System.out.println(touchPoint.x);
-            System.out.println(touchPoint.y);
             world.touched(touchPoint.x, touchPoint.y);
         }
 

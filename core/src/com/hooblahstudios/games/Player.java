@@ -15,7 +15,7 @@ public class Player extends DynamicGameObject{
     boolean isWaiting;
     int id;
     float stateTime;
-    float secondsWaiting;
+    private float secondsWaiting;
     Vector2 destination;
     Vector2 vectorPosition;
     int turnCounter;
@@ -76,9 +76,9 @@ public class Player extends DynamicGameObject{
 
     public void update(float deltaTime, boolean isRunning){
         bullet.update(deltaTime);
-        System.out.println(secondsWaiting);
         //ten seconds per turn
-        if(stateTime <= 1000) {
+        if(stateTime <= 1200) {
+
             dir = new Vector2();
             //on touch event set the touch vector then get direction vector
             dir.set(this.destination).sub(position).nor();
@@ -98,6 +98,7 @@ public class Player extends DynamicGameObject{
                 stop();
                 if(isRunning){
                     if(actions.size() > turnCounter + 1 && !isWaiting) {
+                        secondsWaiting = 0;
                         turnCounter++;
                     } else if(turnCounter + 1 <= actions.size() && !isWaiting){
                         isDone = true;
@@ -126,7 +127,7 @@ public class Player extends DynamicGameObject{
 
     public void updateRunning(float deltaTime){
         secondsWaiting += deltaTime;
-        if(!isDone) {
+        if(!isDone && this.actions.size() > 0) {
             if (this.actions.get(turnCounter) instanceof Move) {
                 Move mv = (Move) this.actions.get(turnCounter);
                 if (secondsWaiting >= mv.secondsToWait) {
@@ -139,6 +140,7 @@ public class Player extends DynamicGameObject{
                 update(deltaTime, true);
             } else if (this.actions.get(turnCounter) instanceof Attack) {
                 if (bullet.isShot) {
+
                     //if bullet out of bounds move onto moving again
                     if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
                         bullet.reset();

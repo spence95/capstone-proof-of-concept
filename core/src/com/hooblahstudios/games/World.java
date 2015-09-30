@@ -22,6 +22,7 @@ public class World {
     public final float squareHeight = 31;
     public ArrayList<Player> players;
     public ArrayList<Block> blocks;
+    public ArrayList<Explosion> explosions;
     boolean hasStarted = false;
     boolean isSetting = true;
     float lastTouchedX;
@@ -35,6 +36,7 @@ public class World {
     public World() {
         players = new ArrayList<Player>();
         blocks = new ArrayList<Block>();
+        explosions = new ArrayList<Explosion>();
         actionMenu = new ActionMenu();
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
@@ -46,6 +48,10 @@ public class World {
     public void placeBlocks(){
         Block block = new Block(400, 240, 200, 200);
         blocks.add(block);
+        block = new Block(775, 75, 150, 10);
+        blocks.add(block);
+        block = new Block(800, 0, 10, 480);
+        blocks.add(block);
 //        block = new Block(80, 80, 20, 140);
 //        blocks.add(block);
 //        block = new Block(700, 220, 20, 160);
@@ -56,7 +62,7 @@ public class World {
         //render actions menu
             //check if click in menu bounds
             if(actionMenu != null) {
-                if (actionMenu.menuBounds.contains(x, y)) {
+                if (actionMenu.menuBounds.contains(x, y) && actionMenu.isShown) {
                     if(actionMenu.isReadyToSubmit){
                         submit();
                         return;
@@ -84,6 +90,7 @@ public class World {
                 //if hidden
                 if (this.actionMenu.state == 0 && this.actionMenu.position.y < 0) {
                     this.actionMenu.changeState(1);
+                    this.actionMenu.isShown = true;
                 }
             }
         }
@@ -93,6 +100,7 @@ public class World {
         hideDot();
         this.currentPlayer.addMove(x, y);
         this.actionMenu.changeState(2);
+        this.actionMenu.isShown = false;
     }
 
     public void attackClicked(float x, float y) {
@@ -101,6 +109,7 @@ public class World {
         this.currentPlayer.addAttack(at);
         this.currentPlayer.bullet.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
         this.actionMenu.changeState(2);
+        this.actionMenu.isShown = false;
     }
 
     public void hideDot(){
@@ -133,7 +142,6 @@ public class World {
          actionMenu.update(deltaTime);
      }
 
-
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
             if(this.currentPlayer.isDone){
@@ -144,6 +152,19 @@ public class World {
             //run all squares at once
             for (int i = 0; i < this.players.size(); i++) {
                 this.players.get(i).updateRunning(deltaTime);
+            }
+        }
+
+        updateExplosions(deltaTime);
+    }
+
+    public void updateExplosions(float deltaTime){
+        for(int i = 0; i < explosions.size(); i++){
+            Explosion exp = explosions.get(i);
+            if(!exp.getIsDone()) {
+                exp.update(deltaTime);
+            } else{
+                explosions.remove(i);
             }
         }
     }

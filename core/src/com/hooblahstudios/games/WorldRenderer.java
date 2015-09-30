@@ -40,6 +40,16 @@ public class WorldRenderer {
         renderActionButtons();
         renderDot();
         renderBlocks();
+        renderExplosions();
+    }
+
+    private void renderExplosions() {
+        batch.begin();
+        for(int i = 0; i < world.explosions.size(); i++){
+            Explosion exp = world.explosions.get(i);
+            batch.draw(Assets.explosionRegion, exp.position.x - (exp.bounds.width / 2), exp.position.y - (exp.bounds.height / 2), exp.bounds.width, exp.bounds.height);
+        }
+        batch.end();
     }
 
     private void renderBlocks() {
@@ -61,7 +71,7 @@ public class WorldRenderer {
             }
 
             batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth, world.squareHeight);
-            batch.draw(Assets.bulletRegion, pl.bullet.position.x, pl.bullet.position.y, pl.bullet.position.x, pl.bullet.position.y,pl.bullet.bounds.width, pl.bullet.bounds.height, 1, 1, pl.bullet.rotation, true);
+            batch.draw(Assets.bulletRegion, pl.bullet.position.x - (pl.bullet.width / 2), pl.bullet.position.y - (pl.bullet.height / 2), pl.bullet.position.x, pl.bullet.position.y,pl.bullet.bounds.width, pl.bullet.bounds.height, pl.bullet.bounds.width/10, pl.bullet.bounds.height/10, pl.bullet.rotation, true);
         }
         batch.end();
 //        float side = world.bob.velocity.x < 0 ? -1 : 1;
@@ -84,7 +94,7 @@ public class WorldRenderer {
     public void renderDot(){
         batch.begin();
         TextureRegion keyFrame = Assets.dotOscillating.getKeyFrame(world.dot.stateTime, Animation.ANIMATION_LOOPING);
-        batch.draw(keyFrame, world.dot.position.x, world.dot.position.y, world.dot.bounds.width, world.dot.bounds.height);
+        batch.draw(keyFrame, world.dot.position.x - (world.dot.bounds.width / 2), world.dot.position.y - (world.dot.bounds.height / 2), world.dot.bounds.width, world.dot.bounds.height);
         batch.end();
     }
 }

@@ -14,8 +14,9 @@ public class ActionMenu extends DynamicGameObject {
     Rectangle attackBounds;
     //0 = hidden/shown, 1 = moving up, 2 = moving down
     int state;
-    int speed = 150;
+    int speed = 250;
     boolean isReadyToSubmit;
+    boolean isShown;
 
     Vector2 dir;
     Vector2 destination;
@@ -27,6 +28,7 @@ public class ActionMenu extends DynamicGameObject {
         super((World.WORLD_WIDTH / 2) - ((World.MENU_WIDTH/2)/2), -World.MENU_HEIGHT, World.MENU_WIDTH / 2, World.MENU_HEIGHT / 2);
         this.stateTime = 0;
         this.state = 0;
+        this.isShown = false;
         this.setMenuBounds();
         this.isReadyToSubmit = false;
         this.vectorPosition = new Vector2(this.position.x, this.position.y);
@@ -74,6 +76,7 @@ public class ActionMenu extends DynamicGameObject {
 
     public void makeReadyToSubmit(){
         this.isReadyToSubmit = true;
+        this.isShown = true;
         this.changeState(1);
     }
 

@@ -15,21 +15,28 @@ public class CollisionManager {
 
     public void updateCollisions(){
         updateBlockCollisions();
+        updateExplosions();
     }
 
-    public void updateBlockCollisions(){
+    private void updateExplosions() {
+        for(int i = 0; i < world.explosions.size(); i++){
+            Explosion e = world.explosions.get(i);
+            for(int p = 0; p < world.players.size(); p++){
+                Player pl = world.players.get(p);
+                if(pl.bounds.overlaps(e.bounds)){
+                    System.out.println("Explosion Collision");
+                }
+            }
+        }
+    }
+
+    private void updateBlockCollisions(){
         for(int playerIndex = 0; playerIndex < world.players.size(); playerIndex++){
             Player player = world.players.get(playerIndex);
             for(int blockIndex = 0; blockIndex < world.blocks.size(); blockIndex++){
                 Block block = world.blocks.get(blockIndex);
                 if(player.bounds.overlaps(block.bounds)){
-                    System.out.println("COLLIDING!!!");
-
                     //bump player back a bit in opposite direction
-                    //if px < dx && py < dy
-                    //if px < dx py> dy
-                    //if px > dx py < dy
-                    //if px > dx py > dy
                     float px = player.position.x;
                     float dx = player.destination.x;
                     float py = player.position.y;
@@ -50,9 +57,9 @@ public class CollisionManager {
                         degrees = Math.toDegrees(Math.atan(xDist / yDist));
                         bumpbackX = (float)(degrees/90) * bumpbackTotal;
                         bumpbackY = bumpbackTotal - bumpbackX;
-
                     }
 
+                    //the actual bumping back of the player
                     if(px < dx){
                         if(py < dy){
                             player.position.x = player.position.x - bumpbackX;
@@ -87,6 +94,21 @@ public class CollisionManager {
 
                 }
             }
+            //update that players bullet too
+            if(player.bullet.isShot){
+                Bullet bullet = player.bullet;
+                for(int i = 0; i < world.blocks.size(); i++) {
+                    Block block = world.blocks.get(i);
+                    if (bullet.bounds.overlaps(block.bounds)) {
+                        Explosion exp = new Explosion(bullet.position.x, bullet.position.y);
+                        world.explosions.add(exp);
+                        bullet.reset();
+//                        player.bullet.position.x = player.bullet.position.x - 7f;
+//                        player.bullet.position.y = player.bullet.position.y - 7f;
+                    }
+                }
+            }
         }
     }
+
 }

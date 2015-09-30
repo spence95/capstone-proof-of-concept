@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
  * Created by spence95 on 9/19/2015.
  */
 public class Bullet extends DynamicGameObject {
-    public final static float width = 20;
-    public final static float height = 5;
+    public final static float width = 10;
+    public final static float height = 10;
     Vector2 destination;
     Vector2 dir;
     Vector2 movement;
@@ -23,18 +23,29 @@ public class Bullet extends DynamicGameObject {
         isShot = false;
         rotation = 0;
         destination = new Vector2(x, y);
+
+    }
+
+    public void explode(){
+        //first stop the bullet
+        isShot = false;
+        velocity.x = 0;
+        velocity.y = 0;
+        this.destination.set(position.x, position.y);
+
+        //then expand the bullet at a fast pace
+        reset();
     }
 
     public void shoot(float x, float y, float originX, float originY){
-//        if(y > this.position.y){
-//            float adj = Math.abs(this.position.x - x);
-//            float opp = Math.abs(this.position.y - y);
-//            rotation = (float)Math.tan(opp/adj) * 57.3f;
-//            //rotation = rotation + 180f;
-//        } else {
-//
-//        }
+        System.out.println("Dest: " + x + " " + y);
+        System.out.println("Current: " + originX + " " + originY);
         position.set(originX, originY);
+        //use trig to set destination real far out
+        while(x < 800 || y < 480) {
+            x = x + (x - originX);
+            y = y + (y - originY);
+        }
         destination.set(x, y);
         isShot = true;
     }
@@ -43,23 +54,30 @@ public class Bullet extends DynamicGameObject {
         if(isShot) {
             dir = new Vector2();
             //on touch event set the touch vector then get direction vector
-            dir.set(this.destination).nor();
+            dir.set(this.destination).sub(position).nor();
             movement = new Vector2();
             velocity = new Vector2(dir).scl(this.speed);
             movement.set(velocity).scl(deltaTime);
-
-            position.add(movement);
-            bounds.x = position.x - bounds.width / 2;
-            bounds.y = position.y - bounds.height / 2;
+           // if (position.dst2(destination) > movement.len2()) {
+                position.add(movement);
+                bounds.x = position.x - bounds.width / 2;
+                bounds.y = position.y - bounds.height / 2;
+//            } else {
+//                position.set(destination);
+//                bounds.x = position.x - bounds.width / 2;
+//                bounds.y = position.y - bounds.height / 2;
+//            }
 
             speed = speed + (speed*deltaTime);
-            System.out.println(this.position.x + " " + this.position.y);
         }
+
     }
 
     public void reset(){
         isShot = false;
         this.position.set(-100, -100);
+        bounds.x = position.x - bounds.width / 2;
+        bounds.y = position.y - bounds.height / 2;
         this.speed = 200;
     }
 }

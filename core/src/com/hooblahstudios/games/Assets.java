@@ -23,6 +23,7 @@ public class Assets {
     public static TextureRegion playerStill;
     public static TextureRegion dotRegion;
     public static TextureRegion bulletRegion;
+    public static TextureRegion explosionRegion;
     public static TextureRegion blockRegion;
 
     public static Animation playerWalking;
@@ -47,7 +48,8 @@ public class Assets {
         playerWalkingRegion = new TextureRegion(player, 450, 105);
         playerStill = new TextureRegion(player, 50, 105);
         dotRegion = new TextureRegion(player, 0, 105, 506, 64);
-        bulletRegion = new TextureRegion(player, 564, 0, 78, 24);
+        bulletRegion = new TextureRegion(player, 611, 0, 30, 33);
+        explosionRegion = new TextureRegion(player, 611, 33, 30, 33);
         blockRegion = new TextureRegion(player, 0, 916, 50, 50);
 
         //animations
@@ -64,17 +66,17 @@ public class Assets {
         );
 
         dotOscillating = new Animation(.05f,
-                new TextureRegion(dotRegion, 0, 0, 46, 66),
-                new TextureRegion(dotRegion, 46, 0, 46, 66),
-                new TextureRegion(dotRegion, 92, 0, 46, 66),
-                new TextureRegion(dotRegion, 138, 0, 46, 66),
-                new TextureRegion(dotRegion, 184, 0, 46, 66),
-                new TextureRegion(dotRegion, 230, 0, 46, 66),
-                new TextureRegion(dotRegion, 276, 0, 46, 66),
-                new TextureRegion(dotRegion, 322, 0, 46, 66),
-                new TextureRegion(dotRegion, 368, 0, 46, 66),
-                new TextureRegion(dotRegion, 414, 0, 46, 66),
-                new TextureRegion(dotRegion, 460, 0, 46, 66)
+                new TextureRegion(dotRegion, 0, 0, 46, 60),
+                new TextureRegion(dotRegion, 46, 0, 46, 60),
+                new TextureRegion(dotRegion, 92, 0, 46, 60),
+                new TextureRegion(dotRegion, 138, 0, 46, 60),
+                new TextureRegion(dotRegion, 184, 0, 46, 60),
+                new TextureRegion(dotRegion, 230, 0, 46, 60),
+                new TextureRegion(dotRegion, 276, 0, 46, 60),
+                new TextureRegion(dotRegion, 322, 0, 46, 60),
+                new TextureRegion(dotRegion, 368, 0, 46, 60),
+                new TextureRegion(dotRegion, 414, 0, 46, 60),
+                new TextureRegion(dotRegion, 460, 0, 46, 60)
                 );
     }
 }
