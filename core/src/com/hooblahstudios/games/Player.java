@@ -13,6 +13,8 @@ public class Player extends DynamicGameObject{
     boolean isEnemy;
     boolean isDone;
     boolean isWaiting;
+    boolean isFiring;
+    boolean dead;
     int id;
     float stateTime;
     private float secondsWaiting;
@@ -33,6 +35,8 @@ public class Player extends DynamicGameObject{
         this.id = id;
         this.isMoving = false;
         this.isDone = false;
+        this.isFiring = false;
+        dead = false;
         this.turnCounter = 0;
         this.secondsWaiting = 0;
         stateTime = 0;
@@ -77,8 +81,7 @@ public class Player extends DynamicGameObject{
     public void update(float deltaTime, boolean isRunning){
         bullet.update(deltaTime);
         //ten seconds per turn
-        if(stateTime <= 1200) {
-
+        if(stateTime <= 12) {
             dir = new Vector2();
             //on touch event set the touch vector then get direction vector
             dir.set(this.destination).sub(position).nor();
@@ -175,5 +178,9 @@ public class Player extends DynamicGameObject{
         velocity.y = 0;
         this.isMoving = false;
         this.destination.set(position.x, position.y);
+    }
+
+    public void die() {
+        dead = true;
     }
 }

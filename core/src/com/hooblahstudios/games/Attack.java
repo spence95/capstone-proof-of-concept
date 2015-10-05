@@ -5,6 +5,6 @@ package com.hooblahstudios.games;
  */
 public class Attack extends Action {
     public Attack(float x, float y, float secondsWaiting){
-        super(x, y, secondsWaiting);
+        super(x, y, 0);
     }
 }

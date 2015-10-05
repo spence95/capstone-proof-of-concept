@@ -38,14 +38,25 @@ public class Bullet extends DynamicGameObject {
     }
 
     public void shoot(float x, float y, float originX, float originY){
-        System.out.println("Dest: " + x + " " + y);
-        System.out.println("Current: " + originX + " " + originY);
         position.set(originX, originY);
-        //use trig to set destination real far out
-        while(x < 800 || y < 480) {
-            x = x + (x - originX);
-            y = y + (y - originY);
+        //use proportions to set destination real far out
+        if(y > originY && x > originX){
+            x = ((x - originX)/(y - originY)) * (Math.abs(y - 500)) + x;
+            y = 500;
         }
+        else if (y < originY && x > originX) {
+            x = (((x - originX)/Math.abs(y - originY)) * (y + 10)) + x;
+            y = -10;
+        }
+        else if (y > originY && x < originX){
+            x = x - (Math.abs(x - originX)/(y - originY)) * (Math.abs(y - 500));
+            y = 500;
+        }
+        else if (y < originY && x < originX){
+            x = x - ((Math.abs(x - originX)/Math.abs(y - originY)) * (y + 10));
+            y = -10;
+        }
+
         destination.set(x, y);
         isShot = true;
     }

@@ -5,6 +5,6 @@ package com.hooblahstudios.games;
  */
 public class Move extends Action{
     public Move(float x, float y, float secondsWaiting){
-        super(x, y, secondsWaiting);
+        super(x, y, 0);
     }
 }

@@ -19,15 +19,18 @@ public class CollisionManager {
     }
 
     private void updateExplosions() {
-        for(int i = 0; i < world.explosions.size(); i++){
+        //if(!world.isSetting) {
+            for(int i = 0; i < world.explosions.size(); i++){
             Explosion e = world.explosions.get(i);
             for(int p = 0; p < world.players.size(); p++){
                 Player pl = world.players.get(p);
                 if(pl.bounds.overlaps(e.bounds)){
-                    System.out.println("Explosion Collision");
-                }
+                        pl.die();
+                        System.out.println("should die");
+                    }
             }
-        }
+            }
+       // }
     }
 
     private void updateBlockCollisions(){
@@ -103,8 +106,16 @@ public class CollisionManager {
                         Explosion exp = new Explosion(bullet.position.x, bullet.position.y);
                         world.explosions.add(exp);
                         bullet.reset();
-//                        player.bullet.position.x = player.bullet.position.x - 7f;
-//                        player.bullet.position.y = player.bullet.position.y - 7f;
+                    }
+                }
+                for(int i = 0; i < world.players.size(); i++){
+                    Player otherPl = world.players.get(i);
+                    if (player != otherPl){
+                        if(bullet.bounds.overlaps(otherPl.bounds)){
+                            Explosion exp = new Explosion(bullet.position.x, bullet.position.y);
+                            world.explosions.add(exp);
+                            bullet.reset();
+                        }
                     }
                 }
             }
