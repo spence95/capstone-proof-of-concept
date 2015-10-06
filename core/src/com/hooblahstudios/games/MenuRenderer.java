@@ -3,20 +3,35 @@ package com.hooblahstudios.games;
 /**
  * Created by spence95 on 9/4/2015.
  */
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MenuRenderer {
     Menu menu;
     OrthographicCamera cam;
     SpriteBatch batch;
+    Stage stage;
+    //Viewport viewport;
+    StretchViewport viewport;
 
     public MenuRenderer(SpriteBatch batch, Menu menu) {
         this.menu = menu;
         this.cam = new OrthographicCamera(this.menu.MENU_WIDTH, this.menu.MENU_HEIGHT);
         this.cam.position.set(this.menu.MENU_WIDTH / 2, this.menu.MENU_HEIGHT / 2, 0);
         this.batch = batch;
+        viewport = new StretchViewport(800, 480, cam);
+        stage = new Stage(viewport, batch);
+        //stage = new Stage();
+        //stage.getViewport().setCamera(this.cam);
+
+        Gdx.input.setInputProcessor(stage);
     }
 
     public void render () {
@@ -31,6 +46,12 @@ public class MenuRenderer {
         {
             MenuComponent mC = this.menu.menuComponents.get(i);
             batch.draw(mC.texture, mC.position.x - (mC.bounds.width / 2), mC.position.y - (mC.bounds.width / 2), mC.bounds.width, mC.bounds.height);
+        }
+        for (int j = 0; j < this.menu.menuTextFields.size(); j++)
+        {
+            TextField tF = this.menu.menuTextFields.get(j);
+            tF.draw(batch, 1);
+            stage.addActor(tF);
         }
         batch.end();
     }
