@@ -44,6 +44,18 @@ public class Assets {
     public static TextureRegion menuOptionsNotificationRegion;
     public static Texture menuReturn;
     public static TextureRegion menuReturnRegion;
+    public static Texture menuSignin;
+    public static TextureRegion menuSigninRegion;
+    public static Texture menuUsername;
+    public static TextureRegion menuUsernameRegion;
+    public static Texture menuPassword;
+    public static TextureRegion menuPasswordRegion;
+    public static Texture menuSubmit;
+    public static TextureRegion menuSubmitRegion;
+    public static Texture menuFailed;
+    public static TextureRegion menuFailedRegion;
+    public static Texture menuWelcome;
+    public static TextureRegion menuWelcomeRegion;
 
 
     public static Animation playerWalking;
@@ -97,6 +109,19 @@ public class Assets {
 
         menuReturn = loadTexture("menuReturn.png");
         menuReturnRegion = new TextureRegion(menuReturn, 0, 0, 100, 50);
+
+        menuSignin = loadTexture("menuSignin.png");
+        menuSigninRegion = new TextureRegion(menuSignin, 0, 0, 800, 480);
+        menuUsername = loadTexture("menuUsername.png");
+        menuUsernameRegion = new TextureRegion(menuUsername, 0, 0, 100, 50);
+        menuPassword = loadTexture("menuPassword.png");
+        menuPasswordRegion = new TextureRegion(menuPassword, 0, 0, 100, 50);
+        menuSubmit = loadTexture("menuSubmit.png");
+        menuSubmitRegion = new TextureRegion(menuSubmit, 0, 0, 100, 50);
+        menuFailed = loadTexture("menuFailed.png");
+        menuFailedRegion = new TextureRegion(menuFailed, 0, 0, 100, 50);
+        menuWelcome = loadTexture("menuWelcome.png");
+        menuWelcomeRegion = new TextureRegion(menuWelcome, 0, 0, 800, 480);
 
         //animations
         playerWalking = new Animation(.05f,
