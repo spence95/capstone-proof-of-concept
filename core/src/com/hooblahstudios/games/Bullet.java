@@ -8,12 +8,13 @@ import com.badlogic.gdx.math.Vector2;
 public class Bullet extends DynamicGameObject {
     public final static float width = 10;
     public final static float height = 10;
+    float speed = 200;
+    public final static float topSpeed = 600;
     Vector2 destination;
     Vector2 dir;
     Vector2 movement;
     Vector2 vectorPosition;
     Vector2 velocity;
-    float speed = 200;
     float rotation;
     boolean isShot;
 
@@ -24,17 +25,6 @@ public class Bullet extends DynamicGameObject {
         rotation = 0;
         destination = new Vector2(x, y);
 
-    }
-
-    public void explode(){
-        //first stop the bullet
-        isShot = false;
-        velocity.x = 0;
-        velocity.y = 0;
-        this.destination.set(position.x, position.y);
-
-        //then expand the bullet at a fast pace
-        reset();
     }
 
     public void shoot(float x, float y, float originX, float originY){
@@ -79,7 +69,9 @@ public class Bullet extends DynamicGameObject {
 //                bounds.y = position.y - bounds.height / 2;
 //            }
 
-            speed = speed + (speed*deltaTime);
+            if( speed < topSpeed) {
+                speed = speed + (speed * deltaTime);
+            }
         }
 
     }

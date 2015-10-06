@@ -19,7 +19,8 @@ public class CollisionManager {
     }
 
     private void updateExplosions() {
-        //if(!world.isSetting) {
+        //only kill if in running mode
+        if(!world.isSetting) {
             for(int i = 0; i < world.explosions.size(); i++){
             Explosion e = world.explosions.get(i);
             for(int p = 0; p < world.players.size(); p++){
@@ -30,7 +31,7 @@ public class CollisionManager {
                     }
             }
             }
-       // }
+        }
     }
 
     private void updateBlockCollisions(){

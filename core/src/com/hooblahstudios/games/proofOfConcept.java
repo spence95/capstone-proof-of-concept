@@ -11,8 +11,10 @@ public class proofOfConcept extends Game {
     public void create () {
         batcher = new SpriteBatch();
         Assets.load();
-        //setScreen(new GameScreen(this));
-        setScreen(new MenuScreen(this));
+
+        setScreen(new GameScreen(this));
+        //commented out below for development purposes
+        //setScreen(new MenuScreen(this));
     }
 
     //Calls out to GameScreen.update to call out to world.update and to listen for touches

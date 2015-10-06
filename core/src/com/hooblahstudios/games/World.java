@@ -46,16 +46,27 @@ public class World {
 
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
-        Block block = new Block(400, 240, 200, 200);
-        blocks.add(block);
-        block = new Block(775, 75, 150, 10);
-        blocks.add(block);
-        block = new Block(800, 0, 10, 480);
-        blocks.add(block);
+        placeOutsideWalls();
+//        Block block = new Block(775, 75, 150, 10);
+//        blocks.add(block);
+//        block = new Block(800, 0, 10, 480);
+//        blocks.add(block);
 //        block = new Block(80, 80, 20, 140);
 //        blocks.add(block);
 //        block = new Block(700, 220, 20, 160);
 //        blocks.add(block);
+
+    }
+
+    private void placeOutsideWalls(){
+        Block block = new Block(400, 0, 800, 10);
+        blocks.add(block);
+        block = new Block(400, 480, 800, 10);
+        blocks.add(block);
+        block = new Block(0, 240, 10, WORLD_HEIGHT);
+        blocks.add(block);
+        block = new Block(WORLD_WIDTH, 240, 10, WORLD_HEIGHT);
+        blocks.add(block);
     }
 
     public void touched(float x, float y){
@@ -118,10 +129,10 @@ public class World {
     }
 
     public void start(){
-        currentPlayer = new Player(0, 1, 1, squareWidth, squareHeight, false);
-        Player enemy1 = new Player(1, WORLD_WIDTH - squareWidth, WORLD_HEIGHT - squareHeight, squareWidth, squareHeight, true);
-        Player enemy2 = new Player(2, 1, WORLD_HEIGHT - squareHeight, squareWidth, squareHeight, true);
-        Player enemy3 = new Player(3, WORLD_WIDTH - squareWidth, squareHeight, squareWidth, squareHeight, true);
+        currentPlayer = new Player(0, 100, 100, squareWidth, squareHeight, false);
+        Player enemy1 = new Player(1, WORLD_WIDTH - 100, WORLD_HEIGHT - 100, squareWidth, squareHeight, true);
+        Player enemy2 = new Player(2, 100, WORLD_HEIGHT - 100, squareWidth, squareHeight, true);
+        Player enemy3 = new Player(3, WORLD_WIDTH - 100, 100, squareWidth, squareHeight, true);
         players.add(currentPlayer);
         players.add(enemy1);
         players.add(enemy2);
@@ -144,18 +155,44 @@ public class World {
 
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
+            this.currentPlayer.bullet.update(deltaTime);
             if(this.currentPlayer.isDone){
                 actionMenu.makeReadyToSubmit();
             }
         }
         else{
-            //run all squares at once
+         int doneCounter = 0;
+         //run all players at once
             for (int i = 0; i < this.players.size(); i++) {
-                this.players.get(i).updateRunning(deltaTime);
+                Player pl = players.get(i);
+                if (pl.isDone) {
+                    doneCounter++;
+                }
+                pl.updateRunning(deltaTime);
+                pl.bullet.update(deltaTime);
+                //check if all players are done and start a new round
+                if (doneCounter >= players.size()) {
+                    newRound(deltaTime);
+                }
+
+                //check for dead players and remove them
+                if (pl.dead) {
+                    players.remove(i);
+                }
             }
         }
 
         updateExplosions(deltaTime);
+    }
+
+    public void newRound(float deltaTime){
+        for(int i = 0; i < players.size(); i++){
+            players.get(i).forgetActions();
+        }
+        currentPlayer.setLastPosition(currentPlayer.position.x, currentPlayer.position.y);
+        isSetting = true;
+        actionMenu.isReadyToSubmit = false;
+
     }
 
     public void updateExplosions(float deltaTime){
@@ -175,8 +212,8 @@ public class World {
         this.currentPlayer.resetActions();
         this.isSetting = false;
         //reset current player
-        currentPlayer.position.x = 1;
-        currentPlayer.position.y = 1;
+        currentPlayer.position.x = currentPlayer.xLast;
+        currentPlayer.position.y = currentPlayer.yLast;
         getEnemyActions();
     }
 
@@ -187,14 +224,14 @@ public class World {
                 //reach out to server to get moves
                 //mocked data
                 Random rand = new Random();
-                int x = rand.nextInt((390 - 10) + 1) + 10;
-                int y = rand.nextInt((240 - 10) + 1) + 10;
+                int x = rand.nextInt((370 - 10) + 1) + 10;
+                int y = rand.nextInt((220 - 10) + 1) + 10;
 
                 String action1 =  "{  \"type\": \"Move\",  \"originX\":100, \"originY\":100, \"destX\":" + Float.toString(x) + ", \"destY\":" + Float.toString(y) + " }";
 
 
-                x = rand.nextInt((390 - 10) + 1) + 10;
-                y = rand.nextInt((240 - 10) + 1) + 10;
+                x = rand.nextInt((370 - 10) + 1) + 10;
+                y = rand.nextInt((220 - 10) + 1) + 10;
 
                 String action2 =  "{  \"type\": \"Move\",  \"originX\":100, \"originY\":100, \"destX\":" + Float.toString(x) + ", \"destY\":" + Float.toString(y) + " }";
 

@@ -27,11 +27,15 @@ public class Player extends DynamicGameObject{
     Vector2 movement;
     Vector2 dir;
     Bullet bullet;
+    float xLast;
+    float yLast;
 
-    public final int speed = 120;
+    public final int speed = 180;
 
     public Player(int id, float x, float y, float width, float height, boolean isEnemy) {
         super(x, y, width, height);
+        this.xLast = x;
+        this.yLast = y;
         this.id = id;
         this.isMoving = false;
         this.isDone = false;
@@ -79,9 +83,8 @@ public class Player extends DynamicGameObject{
     }
 
     public void update(float deltaTime, boolean isRunning){
-        bullet.update(deltaTime);
         //ten seconds per turn
-        if(stateTime <= 12) {
+        if(stateTime <= 17) {
             dir = new Vector2();
             //on touch event set the touch vector then get direction vector
             dir.set(this.destination).sub(position).nor();
@@ -130,17 +133,19 @@ public class Player extends DynamicGameObject{
 
     public void updateRunning(float deltaTime){
         secondsWaiting += deltaTime;
-        if(!isDone && this.actions.size() > 0) {
+        if(this.actions.size() > 0) {
             if (this.actions.get(turnCounter) instanceof Move) {
-                Move mv = (Move) this.actions.get(turnCounter);
-                if (secondsWaiting >= mv.secondsToWait) {
-                    isWaiting = false;
-                    this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
-                } else {
-                    isWaiting = true;
-                    this.destination.set(position.x, position.y);
+                if(!isDone) {
+                    Move mv = (Move) this.actions.get(turnCounter);
+                    if (secondsWaiting >= mv.secondsToWait) {
+                        isWaiting = false;
+                        this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
+                    } else {
+                        isWaiting = true;
+                        this.destination.set(position.x, position.y);
+                    }
+                    update(deltaTime, true);
                 }
-                update(deltaTime, true);
             } else if (this.actions.get(turnCounter) instanceof Attack) {
                 if (bullet.isShot) {
 
@@ -180,7 +185,21 @@ public class Player extends DynamicGameObject{
         this.destination.set(position.x, position.y);
     }
 
+    public void forgetActions() {
+        actions = new ArrayList<Action>();
+        savedActions = new ArrayList<Action>();
+        turnCounter = 0;
+        stateTime = 0;
+        isDone = false;
+        bullet.reset();
+    }
+
     public void die() {
         dead = true;
+    }
+
+    public void setLastPosition(float x, float y){
+        xLast = x;
+        yLast = y;
     }
 }
