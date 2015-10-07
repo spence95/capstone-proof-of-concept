@@ -77,7 +77,7 @@ public class WorldRenderer {
 //            float side = 1;
 //            if(pl.velocity != null)
 //                side = pl.velocity.x < 0 ? -1 : 1;
-            batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth, world.squareHeight);
+            batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth * pl.side, world.squareHeight);
             batch.draw(Assets.bulletRegion, pl.bullet.position.x - (pl.bullet.width / 2), pl.bullet.position.y - (pl.bullet.height / 2), pl.bullet.position.x, pl.bullet.position.y,pl.bullet.bounds.width, pl.bullet.bounds.height, pl.bullet.bounds.width/10, pl.bullet.bounds.height/10, pl.bullet.rotation, true);
         }
         batch.end();

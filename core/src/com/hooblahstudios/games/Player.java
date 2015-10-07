@@ -29,6 +29,7 @@ public class Player extends DynamicGameObject{
     Bullet bullet;
     float xLast;
     float yLast;
+    float side;
 
     public final int speed = 180;
 
@@ -50,6 +51,7 @@ public class Player extends DynamicGameObject{
         this.vectorPosition = new Vector2(x, y);
         this.destination = new Vector2(x, y);
         bullet = new Bullet(-100, -100, 200);
+        side = 1;
     }
 
     public void addMove(float x, float y){
@@ -91,6 +93,13 @@ public class Player extends DynamicGameObject{
             movement = new Vector2();
             velocity = new Vector2(dir).scl(speed);
             movement.set(velocity).scl(deltaTime);
+
+            if(velocity.x < 0){
+                side = -1;
+            }
+            else if(velocity.x > 0) {
+                side = 1;
+            }
 
             if (position.dst2(destination) > movement.len2()) {
                 this.isMoving = true;

@@ -91,10 +91,10 @@ public class CollisionManager {
 
                     //stop the player
                     //reset current move destination to current position instead of original touch
-                    if(world.isSetting) {
+                    //if(world.isSetting) {
                         player.actions.get(player.turnCounter).x = player.position.x;
                         player.actions.get(player.turnCounter).y = player.position.y;
-                    }
+                    //}
 
                 }
             }

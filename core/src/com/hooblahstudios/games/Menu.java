@@ -35,6 +35,7 @@ public class Menu {
     //lets say 1 = splash screen, 2 = main menu, 3 = options
     public int menuNumber;
     proofOfConcept game;
+    ApiCall apiCall;
 
     public ArrayList<String> httpReturns;
 
@@ -56,6 +57,7 @@ public class Menu {
         httpReturns = new ArrayList<String>();
         menuNumber = 1;
         this.game = game;
+        apiCall = new ApiCall();
     }
 
     public static String sha256(String base) { //this is almost certainly a really bad idea. eff it
@@ -76,59 +78,7 @@ public class Menu {
         }
     }
 
-    public String httpGet (String URL, final int ListNumber) {
 
-        httpReturns.add(ListNumber, "");
-
-        Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.GET);
-        httpRequest.setUrl(URL);
-        httpRequest.setHeader("Content-Type", "application/json");
-
-        Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                System.out.println("handle");
-                String successValue = httpResponse.getResultAsString();
-                System.out.println(successValue);
-                if (successValue.contains("\"total_count\": 0"))//wrong credentials
-                {
-                    httpReturns.set(ListNumber, "EMPTY");
-                    //menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
-                } else//there was a match yo! should probably have a unique conststraint on username. too hard eff it
-                {
-                    httpReturns.set(ListNumber, successValue);
-                    /*JSONObject json = new JSONObject(successValue);
-                    String username = json.getString("username");
-                    int wins = json.getInt("wins");
-                    int losses = json.getInt("losses");
-                    String charityURL = json.getString("charity");*/
-
-                }
-            }
-
-            @Override
-            public void failed(Throwable t) {
-                System.out.println("failed");
-                httpReturns.set(ListNumber, "FAILED");
-                System.out.println(t.toString());
-            }
-
-            @Override
-            public void cancelled() {
-
-                System.out.println("cancelled");
-                httpReturns.set(ListNumber, "CANCELLED");
-            }
-        });
-
-        while (httpReturns.get(ListNumber).length() < 1)//while its empty because the HTTP method hasnt returned yet
-        {
-
-        }
-
-        return httpReturns.get(ListNumber);
-
-    }
 
 
     public void touched(float x, float y){
@@ -148,7 +98,7 @@ public class Menu {
                 System.out.println("password: " + menuTextFields.get(1).getText());
                 System.out.println(sha256(menuTextFields.get(1).getText()));
 
-                String getPlayer = httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
+                String getPlayer = apiCall.httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
 
                 if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
                 {
@@ -170,7 +120,7 @@ public class Menu {
                     System.out.println(losses);
                     System.out.println(charityURL);
 
-                    String getCharity = httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
+                    String getCharity = apiCall.httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
                     if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
                     {
                         menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
@@ -200,6 +150,7 @@ public class Menu {
         {
             if (menuComponents.get(0).bounds.contains(x, y))
             {
+                //apiCall.httpPost()
                 game.setScreen(new GameScreen(game));
             }
             else if (menuComponents.get(1).bounds.contains(x, y))

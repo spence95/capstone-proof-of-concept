@@ -18,6 +18,7 @@ public class Animation {
         this.keyFrames = keyFrames;
     }
 
+
     public TextureRegion getKeyFrame (float stateTime, int mode) {
         int frameNumber = (int)(stateTime / frameDuration);
 

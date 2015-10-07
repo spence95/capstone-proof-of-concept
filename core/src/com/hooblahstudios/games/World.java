@@ -48,15 +48,28 @@ public class World {
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
         placeOutsideWalls();
-//        Block block = new Block(775, 75, 150, 10);
-//        blocks.add(block);
-//        block = new Block(800, 0, 10, 480);
-//        blocks.add(block);
-//        block = new Block(80, 80, 20, 140);
-//        blocks.add(block);
-//        block = new Block(700, 220, 20, 160);
-//        blocks.add(block);
+        Block block = new Block(125, 75, 100, 5);
+        blocks.add(block);
+        block = new Block(78, 100, 5, 50);
+        blocks.add(block);
 
+        block = new Block(800-125, 75, 100, 5);
+        blocks.add(block);
+        block = new Block(800-77, 100, 5, 50);
+        blocks.add(block);
+
+        block = new Block(125, 480-75, 100, 5);
+        blocks.add(block);
+        block = new Block(78, 480 - 100, 5, 50);
+        blocks.add(block);
+
+        block = new Block(800-125, 480-75, 100, 5);
+        blocks.add(block);
+        block = new Block(800-77, 480-100, 5, 50);
+        blocks.add(block);
+
+        block = new Block(400, 240, 50, 50);
+        blocks.add(block);
     }
 
     private void placeOutsideWalls(){
