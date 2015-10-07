@@ -35,6 +35,14 @@ public class Menu {
     //lets say 1 = splash screen, 2 = main menu, 3 = options
     public int menuNumber;
     proofOfConcept game;
+    ApiCall apiCall;
+
+    public static final int MENU_SPLASH = 1;
+    public static final int MENU_SIGNIN = 2;
+    public static final int MENU_SIGNUP = 3;
+    public static final int MENU_WELCOME = 4;
+    public static final int MENU_MAINMENU = 5;
+    public static final int MENU_OPTIONS = 6;
 
     public ArrayList<String> httpReturns;
 
@@ -54,8 +62,9 @@ public class Menu {
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
         httpReturns = new ArrayList<String>();
-        menuNumber = 1;
+        menuNumber = this.MENU_SPLASH;
         this.game = game;
+        apiCall = new ApiCall();
     }
 
     public static String sha256(String base) { //this is almost certainly a really bad idea. eff it
@@ -76,71 +85,17 @@ public class Menu {
         }
     }
 
-    public String httpGet (String URL, final int ListNumber) {
 
-        httpReturns.add(ListNumber, "");
-
-        Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.GET);
-        httpRequest.setUrl(URL);
-        httpRequest.setHeader("Content-Type", "application/json");
-
-        Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
-            @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                System.out.println("handle");
-                String successValue = httpResponse.getResultAsString();
-                System.out.println(successValue);
-                if (successValue.contains("\"total_count\": 0"))//wrong credentials
-                {
-                    httpReturns.set(ListNumber, "EMPTY");
-                    //menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
-                } else//there was a match yo! should probably have a unique conststraint on username. too hard eff it
-                {
-                    httpReturns.set(ListNumber, successValue);
-                    /*JSONObject json = new JSONObject(successValue);
-                    String username = json.getString("username");
-                    int wins = json.getInt("wins");
-                    int losses = json.getInt("losses");
-                    String charityURL = json.getString("charity");*/
-
-                }
-            }
-
-            @Override
-            public void failed(Throwable t) {
-                System.out.println("failed");
-                httpReturns.set(ListNumber, "FAILED");
-                System.out.println(t.toString());
-            }
-
-            @Override
-            public void cancelled() {
-
-                System.out.println("cancelled");
-                httpReturns.set(ListNumber, "CANCELLED");
-            }
-        });
-
-        while (httpReturns.get(ListNumber).length() < 1)//while its empty because the HTTP method hasnt returned yet
-        {
-
-        }
-
-        return httpReturns.get(ListNumber);
-
-    }
 
 
     public void touched(float x, float y){
 
-        if (menuNumber == 1)//splash
+        if (menuNumber == this.MENU_SPLASH)//splash
         {
             this.signIn();
-            //game.setScreen(new MainMenuScreen(game));
         }
-        else if (menuNumber == 2)//sign in
+        else if (menuNumber == this.MENU_SIGNIN)//sign in
         {
-            //this.mainMenu();
             if (menuComponents.get(2).bounds.contains(x, y))//submit
             {
                 System.out.println("username: " + menuTextFields.get(0).getText());
@@ -148,7 +103,7 @@ public class Menu {
                 System.out.println("password: " + menuTextFields.get(1).getText());
                 System.out.println(sha256(menuTextFields.get(1).getText()));
 
-                String getPlayer = httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
+                String getPlayer = apiCall.httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
 
                 if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
                 {
@@ -170,7 +125,7 @@ public class Menu {
                     System.out.println(losses);
                     System.out.println(charityURL);
 
-                    String getCharity = httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
+                    String getCharity = apiCall.httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
                     if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
                     {
                         menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
@@ -191,12 +146,77 @@ public class Menu {
 
 
             }
+            else if (menuComponents.get(3).bounds.contains(x, y))
+            {
+                this.signUp();
+            }
         }
-        else if (menuNumber == 3)
+        else if (menuNumber == this.MENU_WELCOME)//welcome
         {
             this.mainMenu();
         }
-        else if (menuNumber == 4)//main menu
+        else if (menuNumber == this.MENU_SIGNUP)//signup
+        {
+
+            if (menuComponents.get(4).bounds.contains(x, y))//submit
+            {
+                System.out.println("username: " + menuTextFields.get(0).getText());
+                System.out.println(sha256(menuTextFields.get(0).getText()));
+                System.out.println("password: " + menuTextFields.get(1).getText());
+                System.out.println(sha256(menuTextFields.get(1).getText()));
+                System.out.println("email: " + menuTextFields.get(2).getText());
+                System.out.println(sha256(menuTextFields.get(2).getText()));
+                System.out.println("charity: " + menuTextFields.get(3).getText());
+                System.out.println(sha256(menuTextFields.get(3).getText()));
+
+                //String getPlayer = httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
+
+                String URL = "http://45.33.62.187/api/v1/player/?format=json";
+                String Body = "" +
+                        "{" +
+                        "   \"charity\": \"/api/v1/charity/" + menuTextFields.get(3).getText() + "/\"," +
+                        "   \"email\": \"" + menuTextFields.get(2).getText() + "\"," +
+                        "   \"username\": \"" + menuTextFields.get(0).getText() + "\"," +
+                        "   \"username_hash\": \"" + sha256(menuTextFields.get(0).getText()) + "\"," +
+                        "   \"password_hash\": \"" + sha256(menuTextFields.get(1).getText()) + "\"," +
+                        "   \"wins\": 0," +
+                        "   \"losses\": 0" +
+                        "}";
+
+                System.out.println(Body);
+
+                String results = apiCall.httpPost(URL, Body, httpReturns.size());
+                System.out.println(results);
+
+
+
+                String getCharity = apiCall.httpGet("http://45.33.62.187/api/v1/charity/" + menuTextFields.get(3).getText() + "/?format=json", httpReturns.size());
+                if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
+                {
+                    menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
+                }
+                else {
+                    System.out.println(getCharity);
+                    JSONObject jsonCharity = new JSONObject(getCharity);
+                    String charityName = jsonCharity.getString("name");
+                    int charityIcon = jsonCharity.getInt("icon");
+                    System.out.println(charityName);
+                    System.out.println(charityIcon);
+
+                    this.welcome(menuTextFields.get(0).getText(), 0, 0, charityName, charityIcon);
+
+                }
+
+
+            }
+            else if (menuComponents.get(5).bounds.contains(x, y))//return
+            {
+                this.splash();
+            }
+
+
+        }
+        else if (menuNumber == this.MENU_MAINMENU)//main menu
         {
             if (menuComponents.get(0).bounds.contains(x, y))
             {
@@ -205,13 +225,13 @@ public class Menu {
             else if (menuComponents.get(1).bounds.contains(x, y))
             {
                 this.options();
-                //game.setScreen(new OptionsScreen(game));
+
             }
 
         }
-        else if (menuNumber == 5)//options
+        else if (menuNumber == this.MENU_OPTIONS)//options
         {
-            if (menuComponents.get(0).bounds.contains(x, y))
+            if (menuComponents.get(0).bounds.contains(x, y))//return button
             {
                 this.mainMenu();
             }
@@ -225,7 +245,7 @@ public class Menu {
         menu = Assets.splashRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
-        menuNumber = 1;
+        menuNumber = this.MENU_SPLASH;
     }
 
     public void signIn(){
@@ -236,6 +256,7 @@ public class Menu {
         menuComponents.add(0, new MenuComponent(200, 300, 100, 50, Assets.menuUsernameRegion));
         menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuPasswordRegion));
         menuComponents.add(2, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
+        menuComponents.add(3, new MenuComponent(400, 50, 100, 50, Assets.menuSignupRegion));
 
         Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
         TextField usernameTextField = new TextField("", usernameSkin);
@@ -252,7 +273,51 @@ public class Menu {
         menuTextFields.add(0, usernameTextField);
         menuTextFields.add(1, passwordTextField);
 
-        menuNumber = 2;
+        menuNumber = this.MENU_SIGNIN;
+    }
+
+    public void signUp(){
+        menu = Assets.menuSignupScreenRegion;
+        menuComponents = new ArrayList<MenuComponent>();
+        menuTextFields = new ArrayList<TextField>();
+
+        menuComponents.add(0, new MenuComponent(200, 400, 100, 50, Assets.menuUsernameRegion));
+        menuComponents.add(1, new MenuComponent(200, 300, 100, 50, Assets.menuPasswordRegion));
+        menuComponents.add(2, new MenuComponent(200, 200, 100, 50, Assets.menuEmailRegion));
+        menuComponents.add(3, new MenuComponent(200, 100, 100, 50, Assets.menuCharityRegion));
+        menuComponents.add(4, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
+        menuComponents.add(5, new MenuComponent(400, 50, 100, 50, Assets.menuReturnRegion));
+
+        Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        TextField usernameTextField = new TextField("", usernameSkin);
+        usernameTextField.setPosition(300, 400);
+        usernameTextField.setWidth(400);
+        usernameTextField.setFocusTraversal(false);
+
+
+        TextField passwordTextField = new TextField("", usernameSkin);
+        passwordTextField.setPosition(300, 300);
+        passwordTextField.setPasswordMode(true);
+        passwordTextField.setPasswordCharacter('a');
+        passwordTextField.setWidth(400);
+        passwordTextField.setFocusTraversal(false);
+
+        TextField emailTextField = new TextField("", usernameSkin);
+        emailTextField.setPosition(300, 200);
+        emailTextField.setWidth(400);
+        emailTextField.setFocusTraversal(false);
+
+        TextField charityTextField = new TextField("", usernameSkin);
+        charityTextField.setPosition(300, 100);
+        charityTextField.setWidth(400);
+        charityTextField.setFocusTraversal(false);
+
+        menuTextFields.add(0, usernameTextField);
+        menuTextFields.add(1, passwordTextField);
+        menuTextFields.add(2, emailTextField);
+        menuTextFields.add(3, charityTextField);
+
+        menuNumber = this.MENU_SIGNUP;
     }
 
     public void welcome(String username, int wins, int losses, String charityName, int charityIcon)
@@ -291,7 +356,7 @@ public class Menu {
         menuTextFields.add(2, lossesTextField);
         menuTextFields.add(3, charityTextField);
 
-        menuNumber = 3;
+        menuNumber = this.MENU_WELCOME;
     }
 
     public void mainMenu(){
@@ -301,12 +366,12 @@ public class Menu {
 
         menuComponents.add(0, new MenuComponent(200, 300, 100, 50, Assets.menuPlayRegion));
         menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuOptionsRegion));
-        menuNumber = 4;
+        menuNumber = this.MENU_MAINMENU;
     }
 
     public void options()
     {
-        menuNumber = 5;
+        menuNumber = this.MENU_OPTIONS;
         menu = Assets.optionsRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
