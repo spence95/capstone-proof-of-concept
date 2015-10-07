@@ -133,31 +133,36 @@ public class Player extends DynamicGameObject{
 
     public void updateRunning(float deltaTime){
         secondsWaiting += deltaTime;
-        if(this.actions.size() > 0) {
-            if (this.actions.get(turnCounter) instanceof Move) {
-                if(!isDone) {
-                    Move mv = (Move) this.actions.get(turnCounter);
-                    if (secondsWaiting >= mv.secondsToWait) {
-                        isWaiting = false;
-                        this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
-                    } else {
-                        isWaiting = true;
-                        this.destination.set(position.x, position.y);
+        if(this.actions.size() > turnCounter) {
+            //temp fix, without it crashes for some reason
+            if(turnCounter < actions.size()) {
+                if (this.actions.get(turnCounter) instanceof Move) {
+                    if (!isDone) {
+                        Move mv = (Move) this.actions.get(turnCounter);
+                        if (secondsWaiting >= mv.secondsToWait) {
+                            isWaiting = false;
+                            this.destination.set(this.actions.get(turnCounter).x, this.actions.get(turnCounter).y);
+                        } else {
+                            isWaiting = true;
+                            this.destination.set(position.x, position.y);
+                        }
+                        update(deltaTime, true);
                     }
-                    update(deltaTime, true);
-                }
-            } else if (this.actions.get(turnCounter) instanceof Attack) {
-                if (bullet.isShot) {
+                } else if (this.actions.get(turnCounter) instanceof Attack) {
+                    if (bullet.isShot) {
 
-                    //if bullet out of bounds move onto moving again
-                    if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
-                        bullet.reset();
+                        //if bullet out of bounds move onto moving again
+                        if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
+                            bullet.reset();
+                        }
+                    } else {
+                        updateAttack(deltaTime);
+                        this.turnCounter++;
                     }
-                } else {
-                    updateAttack(deltaTime);
-                    this.turnCounter++;
                 }
             }
+        } else {
+            isDone = true;
         }
     }
 

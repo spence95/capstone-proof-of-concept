@@ -48,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
         guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
 
-        world = new World();
+        world = new World(game);
         renderer = new WorldRenderer(game.batcher, world);
         world.start();
     }
@@ -105,4 +105,5 @@ public class GameScreen extends ScreenAdapter {
         update(delta);
         draw();
     }
+
 }

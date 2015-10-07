@@ -32,18 +32,19 @@ public class World {
     public Dot dot;
     public ActionMenu actionMenu;
     public CollisionManager collisionManager;
+    public ScreenController screenController;
 
-    public World() {
+    public World(proofOfConcept game) {
         players = new ArrayList<Player>();
         blocks = new ArrayList<Block>();
         explosions = new ArrayList<Explosion>();
         actionMenu = new ActionMenu();
+        screenController = new ScreenController(game);
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
         //place blocks on arena
         placeBlocks();
     }
-
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
         placeOutsideWalls();
@@ -78,12 +79,13 @@ public class World {
                         submit();
                         return;
                     }
-                    if(x > 439) {
-                        moveClicked(lastTouchedX, lastTouchedY);
-                    } else {
-                        attackClicked(lastTouchedX, lastTouchedY);
+                    if(!currentPlayer.isDone) {
+                        if (x > 439) {
+                            moveClicked(lastTouchedX, lastTouchedY);
+                        } else {
+                            attackClicked(lastTouchedX, lastTouchedY);
+                        }
                     }
-
                 } else {
                     bringUpMenu(x, y);
                 }
@@ -162,27 +164,51 @@ public class World {
         }
         else{
          int doneCounter = 0;
+         ArrayList<Integer> deadPlayerIds = new ArrayList<Integer>();
          //run all players at once
             for (int i = 0; i < this.players.size(); i++) {
                 Player pl = players.get(i);
                 if (pl.isDone) {
                     doneCounter++;
                 }
+
                 pl.updateRunning(deltaTime);
                 pl.bullet.update(deltaTime);
                 //check if all players are done and start a new round
+                //System.out.println("Players size " + players.size() + " DoneCounter: " + doneCounter + " pId: " + pl.id);
                 if (doneCounter >= players.size()) {
                     newRound(deltaTime);
                 }
 
                 //check for dead players and remove them
                 if (pl.dead) {
-                    players.remove(i);
+                    deadPlayerIds.add(pl.id);
+                    if(pl.id == currentPlayer.id){
+                        //oh dang, u just got Rekt
+                        getRekt();
+                    }
+                }
+            }
+         //safely remove dead players from list
+         removeDeadPlayers(deadPlayerIds);
+     }
+
+        updateExplosions(deltaTime);
+    }
+
+    private void removeDeadPlayers(ArrayList<Integer> deadPlayerIds){
+        for(int i = 0; i < deadPlayerIds.size(); i++){
+            for(int p = 0; p < players.size(); p++){
+                Player pl = players.get(p);
+                if(pl.id == deadPlayerIds.get(i)){
+                    players.remove(p);
                 }
             }
         }
+    }
 
-        updateExplosions(deltaTime);
+    private void getRekt(){
+        screenController.setGameOverScreen();
     }
 
     public void newRound(float deltaTime){

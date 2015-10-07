@@ -52,7 +52,7 @@ public class CollisionManager {
                     double degrees;
                     float bumpbackX;
                     float bumpbackY;
-                    float bumpbackTotal = 10;
+                    float bumpbackTotal = 15;
                     if(dx > px) {
                         degrees = Math.toDegrees(Math.atan(yDist / xDist));
                         bumpbackY = (float)(degrees/90) * bumpbackTotal;

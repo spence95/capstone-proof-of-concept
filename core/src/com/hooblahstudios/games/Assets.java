@@ -57,6 +57,9 @@ public class Assets {
     public static Texture menuWelcome;
     public static TextureRegion menuWelcomeRegion;
 
+    public static Texture getRektBackground;
+    public static TextureRegion rektBackgroundRegion;
+
 
     public static Animation playerWalking;
     public static Animation dotOscillating;
@@ -69,6 +72,9 @@ public class Assets {
         //textures and texture regions
         background = loadTexture("background.png");
         backgroundRegion = new TextureRegion(background, 0, 0, 480, 320);
+
+        getRektBackground = loadTexture("getRektBackground.png");
+        rektBackgroundRegion = new TextureRegion(getRektBackground, 0, 0, 800, 480);
 
         square = loadTexture("square.png");
         squareRegion = new TextureRegion(square, 0, 0, 50, 50);
