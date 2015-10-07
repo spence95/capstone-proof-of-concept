@@ -6,8 +6,7 @@ package com.hooblahstudios.games;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
-<<<<<<< HEAD
-=======
+
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,7 +16,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.security.MessageDigest;
->>>>>>> proofOfConcept/WilsonSigninAndPosting
+
 import java.util.ArrayList;
 
 
@@ -27,20 +26,16 @@ public class ApiCall {
     public ArrayList<String> httpReturns;
 
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> proofOfConcept/WilsonSigninAndPosting
+
     public ApiCall() {
         httpReturns = new ArrayList<String>();
     }
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> proofOfConcept/WilsonSigninAndPosting
+
     public String httpGet (String URL, final int ListNumber) {
 
         httpReturns.add(ListNumber, "");
@@ -89,22 +84,20 @@ public class ApiCall {
 
     }
 
-<<<<<<< HEAD
-    public String httpPost (String URL, String body, final int ListNumber) {
-=======
+
+
     public String httpPost (String URL, String Body, final int ListNumber) {
->>>>>>> proofOfConcept/WilsonSigninAndPosting
+
 
         httpReturns.add(ListNumber, "");
 
         Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.POST);
         httpRequest.setUrl(URL);
         httpRequest.setHeader("Content-Type", "application/json");
-<<<<<<< HEAD
-        httpRequest.setContent(body);
-=======
+
+
         httpRequest.setContent(Body);
->>>>>>> proofOfConcept/WilsonSigninAndPosting
+
 
         Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
             @Override
@@ -118,13 +111,11 @@ public class ApiCall {
                 } else//there was a match yo! should probably have a unique conststraint on username. too hard eff it
                 {
                     httpReturns.set(ListNumber, successValue);
-<<<<<<< HEAD
-=======
+
                     if (successValue.length() < 1)
                     {
                         httpReturns.set(ListNumber, "SUCCESSFUL POST");
                     }
->>>>>>> proofOfConcept/WilsonSigninAndPosting
 
                 }
             }

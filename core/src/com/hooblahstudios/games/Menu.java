@@ -6,7 +6,10 @@ package com.hooblahstudios.games;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -36,8 +39,6 @@ public class Menu {
     public int menuNumber;
     proofOfConcept game;
     ApiCall apiCall;
-<<<<<<< HEAD
-=======
 
     public static final int MENU_SPLASH = 1;
     public static final int MENU_SIGNIN = 2;
@@ -45,7 +46,6 @@ public class Menu {
     public static final int MENU_WELCOME = 4;
     public static final int MENU_MAINMENU = 5;
     public static final int MENU_OPTIONS = 6;
->>>>>>> proofOfConcept/WilsonSigninAndPosting
 
     public ArrayList<String> httpReturns;
 
@@ -262,8 +262,23 @@ public class Menu {
         menuComponents.add(2, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
         menuComponents.add(3, new MenuComponent(400, 50, 100, 50, Assets.menuSignupRegion));
 
-        Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        TextField usernameTextField = new TextField("", usernameSkin);
+        //dank fontz
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("AllerDisplay.ttf"));
+        BitmapFont font15 = generator.generateFont(15);
+        BitmapFont font22 = generator.generateFont(22);
+        generator.dispose();
+
+        TextField.TextFieldStyle tfs = new TextField.TextFieldStyle();
+        tfs.font = font15;
+        tfs.fontColor = Color.WHITE;
+
+
+        //end fontz
+
+        //Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        //TextField usernameTextField = new TextField("", usernameSkin);
+        TextField usernameTextField = new TextField("", tfs);
         usernameTextField.setPosition(300, 300);
         usernameTextField.setWidth(400);
         usernameTextField.setFocusTraversal(false);
