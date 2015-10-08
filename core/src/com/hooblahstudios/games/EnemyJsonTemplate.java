@@ -1,5 +1,7 @@
 package com.hooblahstudios.games;
 
+import com.hooblahstudios.games.json.ActionJsonTemplate;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,6 @@ import java.util.ArrayList;
 public class EnemyJsonTemplate {
     //ArrayList<ActionJsonTemplate> ajst;
     ActionJsonTemplate[] ajst;
-
     EnemyJsonTemplate(){
         //ajst = new ArrayList<ActionJsonTemplate>();
         ajst = new ActionJsonTemplate[2];

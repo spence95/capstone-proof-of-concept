@@ -35,12 +35,14 @@ public class WorldRenderer {
     }
 
     public void renderObjects () {
+        batch.enableBlending();
         //renderSquares();
         renderPlayers();
         renderActionButtons();
         renderDot();
         renderBlocks();
         renderExplosions();
+        batch.disableBlending();
     }
 
     private void renderExplosions() {

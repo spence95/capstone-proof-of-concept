@@ -98,7 +98,7 @@ public class Assets {
         dotRegion = new TextureRegion(player, 0, 105, 506, 64);
         bulletRegion = new TextureRegion(player, 611, 0, 30, 33);
         explosionRegion = new TextureRegion(player, 611, 33, 30, 33);
-        blockRegion = new TextureRegion(player, 0, 916, 50, 50);
+        blockRegion = new TextureRegion(player, 0, 902, 63, 63);
         playerFiringRegion = new TextureRegion(player, 7, 688, 443, 105);
         playerDyingRegion = new TextureRegion(player, 0, 3, 340, 95);
 

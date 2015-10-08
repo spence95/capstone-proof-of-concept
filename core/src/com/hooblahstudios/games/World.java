@@ -4,9 +4,12 @@ package com.hooblahstudios.games;
  * Created by spence95 on 9/4/2015.
  */
 import com.google.gson.*;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Random;
 import com.badlogic.gdx.math.Rectangle;
+import com.hooblahstudios.games.json.ActionJsonTemplate;
 
 public class World {
 
@@ -35,6 +38,10 @@ public class World {
     public CollisionManager collisionManager;
     public ScreenController screenController;
 
+    int turn;
+
+    ApiCall api;
+
     public World(proofOfConcept game) {
         players = new ArrayList<Player>();
         blocks = new ArrayList<Block>();
@@ -44,6 +51,8 @@ public class World {
         screenController = new ScreenController(game);
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
+        turn = 0;
+        api = new ApiCall();
         //place blocks on arena
         placeBlocks();
     }
@@ -193,7 +202,6 @@ public class World {
 
                 pl.updateRunning(deltaTime);
                 //check if all players are done and start a new round
-                //System.out.println("Players size " + players.size() + " DoneCounter: " + doneCounter + " pId: " + pl.id);
                 if (doneCounter >= players.size()) {
                     newRound(deltaTime);
                 }
@@ -227,9 +235,11 @@ public class World {
 
     private void getRekt(){
         screenController.setGameOverScreen();
+        turn = 0;
     }
 
     public void newRound(float deltaTime){
+        turn++;
         for(int i = 0; i < players.size(); i++){
             players.get(i).forgetActions();
         }
@@ -257,12 +267,52 @@ public class World {
     public void submit(){
         hideDot();
         this.actionMenu.changeState(2);
+        generateTurnJson();
         this.currentPlayer.resetActions();
         this.isSetting = false;
         //reset current player
         currentPlayer.position.x = currentPlayer.xLast;
         currentPlayer.position.y = currentPlayer.yLast;
         getEnemyActions();
+    }
+
+    public void generateTurnJson(){
+        int xLast = 0;
+        int yLast = 0;
+        ArrayList<ActionJsonTemplate> ajtList = new ArrayList<ActionJsonTemplate>();
+        for(int i = 0; i < currentPlayer.actions.size(); i++){
+            Action ac = currentPlayer.actions.get(i);
+            ActionJsonTemplate ajt = new ActionJsonTemplate();
+            int actionType = 0;
+            if(ac instanceof Attack)
+                actionType = 1;
+            ajt.setActionMeta(i, actionType);
+            ajt.setActivePowerUp("None");
+            if(i == 0){
+                xLast = (int)(100 * round(currentPlayer.xLast, 2));
+                yLast = (int)(100 * round(currentPlayer.yLast, 2));
+                ajt.setOrigin(xLast, yLast);
+            } else {
+                ajt.setOrigin(xLast, yLast);
+            }
+            if(ac instanceof Move) {
+                xLast = (int) (100 * round(ac.x, 2));
+                yLast = (int) (100 * round(ac.y, 2));
+            }
+            //TODO: determine player's id from login storage
+            ajt.setPlayerAndResourceURI("/api/v1/player/2/" , "/api/v1/action/" + i);
+            ajt.setTarget((int)(100 * round(ac.x, 2)), (int)(100 * round(ac.y, 2)));
+            ajt.setTimeTaken(0);
+            ajt.setTurn("/api/v1/turn/" + turn);
+            ajtList.add(ajt);
+        }
+        Gson gson = new Gson();
+        String ajtJson = gson.toJson(ajtList);
+        ArrayList<String> httpReturns = new ArrayList<String>();
+        httpReturns.add(api.httpPost("http://45.33.62.187/api/v1/action/?format=json", ajtJson, httpReturns.size()));
+        while(httpReturns.size() < 1){
+            System.out.println("waiting");
+        }
     }
 
     public void getEnemyActions(){
@@ -288,9 +338,15 @@ public class World {
                 //parse the json
                 Gson gson = new Gson();
                 EnemyJsonTemplate ejst = gson.fromJson(json, EnemyJsonTemplate.class);
-                this.players.get(i).addMove(ejst.ajst[0].destX, ejst.ajst[0].destY);
-                this.players.get(i).addMove(ejst.ajst[1].destX, ejst.ajst[1].destY);
+//                this.players.get(i).addMove(ejst.ajst[0].destX, ejst.ajst[0].destY);
+//                this.players.get(i).addMove(ejst.ajst[1].destX, ejst.ajst[1].destY);
             }
         }
+    }
+
+    public static float round(float d, int decimalPlace) {
+        BigDecimal bd = new BigDecimal(Float.toString(d));
+        bd = bd.setScale(decimalPlace, BigDecimal.ROUND_HALF_UP);
+        return bd.floatValue();
     }
 }
