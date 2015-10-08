@@ -23,6 +23,7 @@ public class World {
     public ArrayList<Player> players;
     public ArrayList<Block> blocks;
     public ArrayList<Explosion> explosions;
+    public ArrayList<Bullet> bullets;
     boolean hasStarted = false;
     boolean isSetting = true;
     float lastTouchedX;
@@ -38,6 +39,7 @@ public class World {
         players = new ArrayList<Player>();
         blocks = new ArrayList<Block>();
         explosions = new ArrayList<Explosion>();
+        bullets = new ArrayList<Bullet>();
         actionMenu = new ActionMenu();
         screenController = new ScreenController(game);
         dot = new Dot(-1000, -1000);
@@ -163,6 +165,11 @@ public class World {
          dot.update(deltaTime);
      }
 
+     //update bullets
+     for(int i = 0; i < players.size(); i++){
+         players.get(i).bullet.update(deltaTime);
+     }
+
      //update action menu
      if(actionMenu != null){
          actionMenu.update(deltaTime);
@@ -170,7 +177,6 @@ public class World {
 
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
-            this.currentPlayer.bullet.update(deltaTime);
             if(this.currentPlayer.isDone){
                 actionMenu.makeReadyToSubmit();
             }
@@ -186,7 +192,6 @@ public class World {
                 }
 
                 pl.updateRunning(deltaTime);
-                pl.bullet.update(deltaTime);
                 //check if all players are done and start a new round
                 //System.out.println("Players size " + players.size() + " DoneCounter: " + doneCounter + " pId: " + pl.id);
                 if (doneCounter >= players.size()) {
@@ -243,6 +248,10 @@ public class World {
                 explosions.remove(i);
             }
         }
+    }
+
+    public void bulletShoot(){
+
     }
 
     public void submit(){
