@@ -64,6 +64,10 @@ public class Assets {
     public static TextureRegion menuEmailRegion;
     public static Texture menuCharity;
     public static TextureRegion menuCharityRegion;
+    public static Texture menuNinePatch;
+    public static TextureRegion menuNinePatchRegion;
+    public static Texture menuCursor;
+    public static TextureRegion menuCursorRegion;
 
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
@@ -145,6 +149,11 @@ public class Assets {
         menuCharityRegion = new TextureRegion(menuCharity, 0, 0, 100, 50);
         menuSignupScreen = loadTexture("menuSignupScreen.png");
         menuSignupScreenRegion = new TextureRegion(menuSignupScreen, 0, 0, 800, 480);
+
+        menuNinePatch = loadTexture("menuNinePatch.png");
+        menuNinePatchRegion = new TextureRegion(menuNinePatch, 0, 0, 10, 10);
+        menuCursor = loadTexture("menuCursor.png");
+        menuCursorRegion = new TextureRegion(menuCursor, 0, 0, 2, 8);
 
         //animations
         playerWalking = new Animation(.05f,
