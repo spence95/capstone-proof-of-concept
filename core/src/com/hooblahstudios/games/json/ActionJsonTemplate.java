@@ -22,11 +22,10 @@ public class ActionJsonTemplate {
      */
     int actionnumber;
     int actiontype;
-    String activepowerup;
+    //String activepowerup;
     int originx;
     int originy;
     String player;
-    String resource_uri;
     int targetx;
     int targety;
     int timetaken;
@@ -41,18 +40,17 @@ public class ActionJsonTemplate {
         this.actiontype = actionType;
     }
 
-    public void setActivePowerUp(String activePowerUp){
-        this.activepowerup = activePowerUp;
-    }
+//    public void setActivePowerUp(String activePowerUp){
+//        this.activepowerup = activePowerUp;
+//    }
 
     public void setOrigin(int x, int y){
         this.originx = x;
         this.originy = y;
     }
 
-    public void setPlayerAndResourceURI(String player, String resourceURI){
+    public void setPlayer(String player){
         this.player = player;
-        this.resource_uri = resourceURI;
     }
 
     public void setTarget(int x, int y){

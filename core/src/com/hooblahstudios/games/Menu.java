@@ -188,7 +188,7 @@ public class Menu {
 
                 System.out.println(Body);
 
-                String results = apiCall.httpPost(URL, Body, httpReturns.size());
+                String results = apiCall.httpPostOrPatch(URL, Body, httpReturns.size(), false);
                 System.out.println(results);
 
 

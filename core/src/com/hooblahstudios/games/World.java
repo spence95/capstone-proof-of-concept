@@ -51,7 +51,7 @@ public class World {
         screenController = new ScreenController(game);
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
-        turn = 0;
+        turn = 1;
         api = new ApiCall();
         //place blocks on arena
         placeBlocks();
@@ -279,6 +279,26 @@ public class World {
     public void generateTurnJson(){
         int xLast = 0;
         int yLast = 0;
+        String URL = "http://45.33.62.187/api/v1/turn/?format=json";
+        /*
+         {
+        id: 1
+        match: "/api/v1/match/1/"
+        resource_uri: "/api/v1/turn/1/"
+        turnnumber: 0
+        }
+         */
+        String Body = "" +
+                "{" +
+                " \"match\": \"/api/v1/match/1/" +
+                " \"turnnumber\": " + turn +
+                "}";
+
+
+        System.out.println(Body);
+
+        String results = api.httpPostOrPatch(URL, Body, 0, false);
+
         ArrayList<ActionJsonTemplate> ajtList = new ArrayList<ActionJsonTemplate>();
         for(int i = 0; i < currentPlayer.actions.size(); i++){
             Action ac = currentPlayer.actions.get(i);
@@ -287,7 +307,6 @@ public class World {
             if(ac instanceof Attack)
                 actionType = 1;
             ajt.setActionMeta(i, actionType);
-            ajt.setActivePowerUp("None");
             if(i == 0){
                 xLast = (int)(100 * round(currentPlayer.xLast, 2));
                 yLast = (int)(100 * round(currentPlayer.yLast, 2));
@@ -300,19 +319,16 @@ public class World {
                 yLast = (int) (100 * round(ac.y, 2));
             }
             //TODO: determine player's id from login storage
-            ajt.setPlayerAndResourceURI("/api/v1/player/2/" , "/api/v1/action/" + i);
+            ajt.setPlayer("/api/v1/player/2/");
             ajt.setTarget((int)(100 * round(ac.x, 2)), (int)(100 * round(ac.y, 2)));
             ajt.setTimeTaken(0);
-            ajt.setTurn("/api/v1/turn/" + turn);
+            ajt.setTurn("/api/v1/turn/" + turn + "/");
             ajtList.add(ajt);
         }
         Gson gson = new Gson();
         String ajtJson = gson.toJson(ajtList);
-        ArrayList<String> httpReturns = new ArrayList<String>();
-        httpReturns.add(api.httpPost("http://45.33.62.187/api/v1/action/?format=json", ajtJson, httpReturns.size()));
-        while(httpReturns.size() < 1){
-            System.out.println("waiting");
-        }
+        ajtJson = "{\"objects\": " + ajtJson + "}";
+        results = api.httpPostOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true);
     }
 
     public void getEnemyActions(){
