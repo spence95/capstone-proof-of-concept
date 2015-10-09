@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
@@ -264,14 +265,46 @@ public class Menu {
 
         //dank fontz
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("AllerDisplay.ttf"));
-        BitmapFont font15 = generator.generateFont(15);
-        BitmapFont font22 = generator.generateFont(22);
-        generator.dispose();
+        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/OpenSans-Regular.ttf"));
+        //FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        //parameter.size = 24;
+        //parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //parameter.color = Color.RED;
+        //BitmapFont font24 = generator.generateFont(parameter);
+        //System.out.println("color1: " + font24.getColor());
+        //font24.setColor(255, 255, 255, 160);
+        //generator.dispose();
+
+        Skin nuSkin = new Skin();
+        NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
+        nuSkin.add("background", nP);
+        nuSkin.add("cursor", Assets.menuCursor);
+
+
+        //System.out.println("color2: " + font24.getColor());
 
         TextField.TextFieldStyle tfs = new TextField.TextFieldStyle();
-        tfs.font = font15;
+        //tfs.font = font24;
+        //System.out.println("color3: " + tfs.fontColor);
+        //System.out.println("color3: " + tfs.messageFontColor);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("data/comic8.fnt"), Gdx.files.internal("data/comic8_0.png"), false);
+        font.getData().setScale(.3f);
+        font.setColor(1f, 1f, 1f, 1f);
+
+        //tfs.font = new BitmapFont(Gdx.files.internal("comic3.fnt"), Gdx.files.internal("comic3_0.png"), false);
+        tfs.font = font;
+
+
         tfs.fontColor = Color.WHITE;
+        //System.out.println("color3: " + tfs.fontColor);
+        //System.out.println("color3: " + tfs.messageFontColor);
+
+
+        tfs.background = nuSkin.getDrawable("background");
+        tfs.cursor = nuSkin.getDrawable("cursor");
+        tfs.cursor.setMinWidth(2);
+        tfs.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
 
 
         //end fontz
@@ -281,9 +314,11 @@ public class Menu {
         TextField usernameTextField = new TextField("", tfs);
         usernameTextField.setPosition(300, 300);
         usernameTextField.setWidth(400);
+        //usernameTextField.setHeight(50);
         usernameTextField.setFocusTraversal(false);
-        Skin passwordSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        TextField passwordTextField = new TextField("", passwordSkin);
+        //Skin passwordSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        //TextField passwordTextField = new TextField("", passwordSkin);
+        TextField passwordTextField = new TextField("", tfs);
         passwordTextField.setPosition(300, 200);
         passwordTextField.setPasswordMode(true);
         passwordTextField.setPasswordCharacter('a');
@@ -307,26 +342,73 @@ public class Menu {
         menuComponents.add(4, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
         menuComponents.add(5, new MenuComponent(400, 50, 100, 50, Assets.menuReturnRegion));
 
-        Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        TextField usernameTextField = new TextField("", usernameSkin);
+        //dank fontz
+
+        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/OpenSans-Regular.ttf"));
+        //FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        //parameter.size = 24;
+        //parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //parameter.color = Color.RED;
+        //BitmapFont font24 = generator.generateFont(parameter);
+        //System.out.println("color1: " + font24.getColor());
+        //font24.setColor(255, 255, 255, 160);
+        //generator.dispose();
+
+        Skin nuSkin = new Skin();
+        NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
+        nuSkin.add("background", nP);
+        nuSkin.add("cursor", Assets.menuCursor);
+
+        //System.out.println("color2: " + font24.getColor());
+
+        TextField.TextFieldStyle tfs = new TextField.TextFieldStyle();
+        //tfs.font = font24;
+        //System.out.println("color3: " + tfs.fontColor);
+        //System.out.println("color3: " + tfs.messageFontColor);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("data/comic8.fnt"), Gdx.files.internal("data/comic8_0.png"), false);
+        font.getData().setScale(.3f);
+        font.setColor(Color.RED);
+
+        //tfs.font = new BitmapFont(Gdx.files.internal("comic3.fnt"), Gdx.files.internal("comic3_0.png"), false);
+        tfs.font = font;
+
+
+        tfs.fontColor = Color.WHITE;
+        //System.out.println("color3: " + tfs.fontColor);
+        //System.out.println("color3: " + tfs.messageFontColor);
+
+
+        tfs.background = nuSkin.getDrawable("background");
+        tfs.cursor = nuSkin.getDrawable("cursor");
+        tfs.cursor.setMinWidth(2);
+        tfs.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+
+
+        //end fontz
+
+
+        //Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        //TextField usernameTextField = new TextField("", usernameSkin);
+        TextField usernameTextField = new TextField("", tfs);
         usernameTextField.setPosition(300, 400);
         usernameTextField.setWidth(400);
         usernameTextField.setFocusTraversal(false);
 
 
-        TextField passwordTextField = new TextField("", usernameSkin);
+        TextField passwordTextField = new TextField("", tfs);
         passwordTextField.setPosition(300, 300);
         passwordTextField.setPasswordMode(true);
         passwordTextField.setPasswordCharacter('a');
         passwordTextField.setWidth(400);
         passwordTextField.setFocusTraversal(false);
 
-        TextField emailTextField = new TextField("", usernameSkin);
+        TextField emailTextField = new TextField("", tfs);
         emailTextField.setPosition(300, 200);
         emailTextField.setWidth(400);
         emailTextField.setFocusTraversal(false);
 
-        TextField charityTextField = new TextField("", usernameSkin);
+        TextField charityTextField = new TextField("", tfs);
         charityTextField.setPosition(300, 100);
         charityTextField.setWidth(400);
         charityTextField.setFocusTraversal(false);
@@ -345,26 +427,73 @@ public class Menu {
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
 
-        Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        TextField usernameTextField = new TextField(username, usernameSkin);
+
+        //dank fontz
+
+        //FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("data/OpenSans-Regular.ttf"));
+        //FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        //parameter.size = 24;
+        //parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //parameter.color = Color.RED;
+        //BitmapFont font24 = generator.generateFont(parameter);
+        //System.out.println("color1: " + font24.getColor());
+        //font24.setColor(255, 255, 255, 160);
+        //generator.dispose();
+
+        Skin nuSkin = new Skin();
+        NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
+        nuSkin.add("background", nP);
+        nuSkin.add("cursor", Assets.menuCursor);
+
+        //System.out.println("color2: " + font24.getColor());
+
+        TextField.TextFieldStyle tfs = new TextField.TextFieldStyle();
+        //tfs.font = font24;
+        //System.out.println("color3: " + tfs.fontColor);
+        //System.out.println("color3: " + tfs.messageFontColor);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("data/comic8.fnt"), Gdx.files.internal("data/comic8_0.png"), false);
+        font.getData().setScale(.3f);
+        font.setColor(Color.RED);
+
+        //tfs.font = new BitmapFont(Gdx.files.internal("comic3.fnt"), Gdx.files.internal("comic3_0.png"), false);
+        tfs.font = font;
+
+
+        tfs.fontColor = Color.WHITE;
+        //System.out.println("color3: " + tfs.fontColor);
+        //System.out.println("color3: " + tfs.messageFontColor);
+
+
+        tfs.background = nuSkin.getDrawable("background");
+        tfs.cursor = nuSkin.getDrawable("cursor");
+        tfs.cursor.setMinWidth(2);
+        tfs.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+
+
+        //end fontz
+
+        //Skin usernameSkin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        //TextField usernameTextField = new TextField(username, usernameSkin);
+        TextField usernameTextField = new TextField(username, tfs);
         usernameTextField.setPosition(300, 400);
         usernameTextField.setWidth(400);
         usernameTextField.setFocusTraversal(false);
         usernameTextField.setDisabled(true);
 
-        TextField winsTextField = new TextField(String.valueOf(wins), usernameSkin);
+        TextField winsTextField = new TextField(String.valueOf(wins), tfs);
         winsTextField.setPosition(300, 300);
         winsTextField.setWidth(400);
         winsTextField.setFocusTraversal(false);
         winsTextField.setDisabled(true);
 
-        TextField lossesTextField = new TextField(String.valueOf(losses), usernameSkin);
+        TextField lossesTextField = new TextField(String.valueOf(losses), tfs);
         lossesTextField.setPosition(300, 200);
         lossesTextField.setWidth(400);
         lossesTextField.setFocusTraversal(false);
         lossesTextField.setDisabled(true);
 
-        TextField charityTextField = new TextField(charityName, usernameSkin);
+        TextField charityTextField = new TextField(charityName, tfs);
         charityTextField.setPosition(300, 100);
         charityTextField.setWidth(400);
         charityTextField.setFocusTraversal(false);
