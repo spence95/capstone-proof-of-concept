@@ -38,7 +38,7 @@ public class MenuRenderer {
         //renderBackground();
         //renderObjects();
         //have it know what to draw here and then just draw it here.
-        batch.disableBlending();
+        batch.enableBlending();
         batch.begin();
         batch.draw(menu.menu, cam.position.x - this.menu.MENU_WIDTH / 2, cam.position.y - this.menu.MENU_HEIGHT / 2, this.menu.MENU_WIDTH,
                 this.menu.MENU_HEIGHT);
@@ -54,6 +54,7 @@ public class MenuRenderer {
             stage.addActor(tF);
         }
         batch.end();
+        batch.disableBlending();
     }
 
     /*public void renderBackground () {

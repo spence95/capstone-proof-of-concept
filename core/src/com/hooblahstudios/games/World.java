@@ -37,12 +37,14 @@ public class World {
     public ActionMenu actionMenu;
     public CollisionManager collisionManager;
     public ScreenController screenController;
+    proofOfConcept game;
 
     int turn;
 
     ApiCall api;
 
     public World(proofOfConcept game) {
+        this.game = game;
         players = new ArrayList<Player>();
         blocks = new ArrayList<Block>();
         explosions = new ArrayList<Explosion>();
@@ -155,7 +157,7 @@ public class World {
     }
 
     public void start(){
-        currentPlayer = new Player(0, 100, 100, squareWidth, squareHeight, false);
+        currentPlayer = new Player(game.getPlayerID(), 100, 100, squareWidth, squareHeight, false);
         Player enemy1 = new Player(1, WORLD_WIDTH - 100, WORLD_HEIGHT - 100, squareWidth, squareHeight, true);
         Player enemy2 = new Player(2, 100, WORLD_HEIGHT - 100, squareWidth, squareHeight, true);
         Player enemy3 = new Player(3, WORLD_WIDTH - 100, 100, squareWidth, squareHeight, true);
@@ -328,7 +330,7 @@ public class World {
         Gson gson = new Gson();
         String ajtJson = gson.toJson(ajtList);
         ajtJson = "{\"objects\": " + ajtJson + "}";
-        results = api.httpPostOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true);
+        api.httpPostOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true);
     }
 
     public void getEnemyActions(){

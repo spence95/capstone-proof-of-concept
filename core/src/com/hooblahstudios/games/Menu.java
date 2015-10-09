@@ -124,6 +124,11 @@ public class Menu {
                     int wins = player0.getInt("wins");
                     int losses = player0.getInt("losses");
                     String charityURL = player0.getString("charity");
+
+                    //store players id during this playing session in proofOfConcept (best place I can think of at the moment)
+                    int id = player0.getInt("id");
+                    game.setPlayerID(id);
+
                     System.out.println(username);
                     System.out.println(wins);
                     System.out.println(losses);
@@ -224,7 +229,7 @@ public class Menu {
         {
             if (menuComponents.get(0).bounds.contains(x, y))
             {
-                //apiCall.httpPost()
+                //
                 game.setScreen(new GameScreen(game));
             }
             else if (menuComponents.get(1).bounds.contains(x, y))
