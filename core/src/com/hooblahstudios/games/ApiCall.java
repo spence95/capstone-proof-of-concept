@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ApiCall {
@@ -91,54 +92,17 @@ public class ApiCall {
 
     }
 
-    //gdx's .net doesn't have a patch method
-    //no worky
-//    public String httpPatch (String targetURL, String Body) {
-//        HttpURLConnection connection = null;
-//        try {
-//            URL url = new URL(targetURL);
-//            connection = (HttpURLConnection)url.openConnection();
-//            connection.setRequestMethod("PATCH");
-//            connection.setRequestProperty("Content-Type",
-//                    "application/json");
-//
-//            connection.setUseCaches(false);
-//            connection.setDoOutput(true);
-//
-//            //Send request
-//            DataOutputStream wr = new DataOutputStream(
-//                    connection.getOutputStream());
-//            wr.writeBytes(Body);
-//            wr.close();
-//
-//            //Get Response
-//            InputStream is = connection.getInputStream();
-//            BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-//            StringBuilder response = new StringBuilder(); // or StringBuffer if not Java 5+
-//            String line;
-//            while((line = rd.readLine()) != null) {
-//                response.append(line);
-//                response.append('\r');
-//                System.out.println("appending");
-//            }
-//            rd.close();
-//            return response.toString();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        } finally {
-//            if(connection != null) {
-//                connection.disconnect();
-//            }
-//        }
-//    }
 
-    public String httpPostOrPatch (String URL, String Body, final int ListNumber, boolean isPatch) {
+    public String httpPostPutOrPatch (String URL, String Body, final int ListNumber, boolean isPatch, boolean isPut) {
 
 
         httpReturns.add(ListNumber, "");
-
-        Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.POST);
+        Net.HttpRequest httpRequest;
+        if(isPut){
+            httpRequest = new Net.HttpRequest(Net.HttpMethods.PUT);
+        } else {
+            httpRequest = new Net.HttpRequest(Net.HttpMethods.POST);
+        }
         httpRequest.setUrl(URL);
         httpRequest.setHeader("Content-Type", "application/json");
         //override to patch method

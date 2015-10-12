@@ -195,7 +195,7 @@ public class Menu {
 
                 System.out.println(Body);
 
-                String results = apiCall.httpPostOrPatch(URL, Body, httpReturns.size(), false);
+                String results = apiCall.httpPostPutOrPatch(URL, Body, httpReturns.size(), false, false);
                 System.out.println(results);
 
 
@@ -231,8 +231,8 @@ public class Menu {
             if (menuComponents.get(0).bounds.contains(x, y))
             {
                 //goes to lobby, lobby goes to game when ready
-                //game.setScreen(new LobbyScreen(game));
-                game.setScreen(new GameScreen(game, 0));
+                game.setScreen(new LobbyScreen(game));
+                //game.setScreen(new GameScreen(game, 0));
             }
             else if (menuComponents.get(1).bounds.contains(x, y))
             {

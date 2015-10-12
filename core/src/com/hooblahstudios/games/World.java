@@ -302,7 +302,7 @@ public class World {
 
         System.out.println(Body);
 
-        String results = api.httpPostOrPatch(URL, Body, 0, false);
+        String results = api.httpPostPutOrPatch(URL, Body, 0, false, false);
 
         ArrayList<ActionJsonTemplate> ajtList = new ArrayList<ActionJsonTemplate>();
         for(int i = 0; i < currentPlayer.actions.size(); i++){
@@ -333,7 +333,7 @@ public class World {
         Gson gson = new Gson();
         String ajtJson = gson.toJson(ajtList);
         ajtJson = "{\"objects\": " + ajtJson + "}";
-        String patchResults = api.httpPostOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true);
+        String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true, false);
         //upon successful patching, get everyone else's results
         //else try again
     }

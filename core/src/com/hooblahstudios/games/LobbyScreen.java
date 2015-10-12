@@ -17,7 +17,7 @@ public class LobbyScreen extends ScreenAdapter {
     OrthographicCamera guiCam;
     SpriteBatch batch;
     ApiCall api;
-    String postResults;
+    String putResults;
 
     public LobbyScreen(proofOfConcept game){
         this.game = game;
@@ -25,21 +25,33 @@ public class LobbyScreen extends ScreenAdapter {
         guiCam.position.set(800 / 2, 480 / 2, 0);
         api = new ApiCall();
         //call out to server once
-        postResults = putReady();
+        putResults = putReady();
     }
 
     public String putReady(){
         //url is: http://45.33.62.187/api/v1/matchmaking/(id)/?format=json
-        String URL = "http://45.33.62.187/api/v1/matchmaking/?player=" + game.getPlayerID() + "&waiting=True&format=json";
+        String[] matchmakingId = getMatchmaking(true);
+        String URL = "http://45.33.62.187/api/v1/matchmaking/" + matchmakingId[0] + "/?player=" + game.getPlayerID() + "&format=json";
         String Body = "{" +
                 "\"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +
-                "\"waiting\": \"True\"}";
-        return api.httpPostOrPatch(URL, Body, 0, false);
-        //return "SUCCESSFUL POST";
+                "\"waiting\": \"TRUE\"}";
+        return api.httpPostPutOrPatch(URL, Body, 0, false, true);
     }
 
-    public String getMatchmaking(){
-        
+    public String[] getMatchmaking(boolean getMatchmakingId){
+        String[] results = new String[2];
+        String URL = "http://45.33.62.187/api/v1/matchmaking/?player=" + game.getPlayerID()
+                + "&format=json";
+        String matchmakingStr = api.httpGet(URL, 0);
+        JSONObject matchmakingJson = new JSONObject(matchmakingStr);
+        JSONArray matchmakingArray = matchmakingJson.getJSONArray("objects");
+        JSONObject matchMakingObj = matchmakingArray.getJSONObject(0);
+        results[0] = matchMakingObj.getString("match");
+        if(getMatchmakingId){
+            results[0] = matchMakingObj.getString("id");
+        }
+        results[1] = matchMakingObj.getString("waiting");
+        return results;
     }
 
     public void draw(){
@@ -55,30 +67,19 @@ public class LobbyScreen extends ScreenAdapter {
 
     public void update(float delta){
         draw();
-        //call out every x seconds to see if match made
-        if(postResults != "SUCCESSFUL POST"){
-            postResults = postReady();
-            return;
-        }
-        //server will have to tell us what the start origin is
-        String URL = "http://45.33.62.187/api/v1/matchmaking/?player=" + game.getPlayerID()
-                + "&waiting=TRUE&format=json";
-        String matchUpdate = api.httpGet(URL, 0);
-        //results look like this:
 
-
-        JSONObject json = new JSONObject(matchUpdate);
-        JSONArray matchArray = json.getJSONArray("objects");
-        JSONObject matchObj = matchArray.getJSONObject(0);
-        System.out.println(matchObj.toString());
-        String match = matchObj.getString("match");
-        if (match.length() >= 2)         // if word is at least two characters long
-        {
-            int matchID = (int)match.length() - 2;    // access the second from last character
-            if(match != "null"){
+        String[] matchmakingResults = getMatchmaking(false);
+        String match = matchmakingResults[0];
+        String waiting = matchmakingResults[1];
+        System.out.println(match);
+        update(delta);
+        if(waiting == "false") {
+            if (match != "null") {
+                //get match id from string
+                String[] tokens = match.split("/");
+                int lastPlace = tokens.length - 1;
+                int matchID = Integer.parseInt(tokens[lastPlace]);
                 game.setScreen(new GameScreen(game, matchID));
-            } else {
-                update(delta);
             }
         }
     }
