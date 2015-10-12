@@ -40,11 +40,13 @@ public class World {
     proofOfConcept game;
 
     int turn;
+    int matchID;
 
     ApiCall api;
 
-    public World(proofOfConcept game) {
+    public World(proofOfConcept game, int matchID) {
         this.game = game;
+        this.matchID = matchID;
         players = new ArrayList<Player>();
         blocks = new ArrayList<Block>();
         explosions = new ArrayList<Explosion>();
@@ -276,6 +278,7 @@ public class World {
         currentPlayer.position.x = currentPlayer.xLast;
         currentPlayer.position.y = currentPlayer.yLast;
         getEnemyActions();
+        explosions.clear();
     }
 
     public void generateTurnJson(){
@@ -330,7 +333,9 @@ public class World {
         Gson gson = new Gson();
         String ajtJson = gson.toJson(ajtList);
         ajtJson = "{\"objects\": " + ajtJson + "}";
-        api.httpPostOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true);
+        String patchResults = api.httpPostOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true);
+        //upon successful patching, get everyone else's results
+        //else try again
     }
 
     public void getEnemyActions(){

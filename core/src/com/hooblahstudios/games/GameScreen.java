@@ -40,7 +40,7 @@ public class GameScreen extends ScreenAdapter {
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
-    public GameScreen(proofOfConcept game){
+    public GameScreen(proofOfConcept game, int matchID){
         this.game = game;
         state = GAME_READY;
         guiCam = new OrthographicCamera(800, 480);
@@ -48,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
         guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
 
-        world = new World(game);
+        world = new World(game, matchID);
         renderer = new WorldRenderer(game.batcher, world);
         world.start();
     }

@@ -69,6 +69,9 @@ public class Assets {
     public static Texture menuCursor;
     public static TextureRegion menuCursorRegion;
 
+    public static Texture loadingMenu;
+    public static TextureRegion loadingMenuRegion;
+
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
 
@@ -154,6 +157,9 @@ public class Assets {
         menuNinePatchRegion = new TextureRegion(menuNinePatch, 0, 0, 10, 10);
         menuCursor = loadTexture("menuCursor.png");
         menuCursorRegion = new TextureRegion(menuCursor, 0, 0, 2, 8);
+
+        loadingMenu = loadTexture("loading.png");
+        loadingMenuRegion = new TextureRegion(loadingMenu, 0, 0, 800, 480);
 
         //animations
         playerWalking = new Animation(.05f,

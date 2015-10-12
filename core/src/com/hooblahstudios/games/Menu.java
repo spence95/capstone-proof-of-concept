@@ -107,7 +107,8 @@ public class Menu {
                 System.out.println("password: " + menuTextFields.get(1).getText());
                 System.out.println(sha256(menuTextFields.get(1).getText()));
 
-                String getPlayer = apiCall.httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
+                String url = "http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json";
+                String getPlayer = apiCall.httpGet(url, httpReturns.size());
 
                 if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
                 {
@@ -229,8 +230,9 @@ public class Menu {
         {
             if (menuComponents.get(0).bounds.contains(x, y))
             {
-                //
-                game.setScreen(new GameScreen(game));
+                //goes to lobby, lobby goes to game when ready
+                //game.setScreen(new LobbyScreen(game));
+                game.setScreen(new GameScreen(game, 0));
             }
             else if (menuComponents.get(1).bounds.contains(x, y))
             {

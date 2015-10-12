@@ -144,7 +144,7 @@ public class Player extends DynamicGameObject{
         secondsWaiting += deltaTime;
         if(this.actions.size() > turnCounter) {
             //temp fix, without it crashes for some reason
-            if(turnCounter < actions.size()) {
+            //if(turnCounter < actions.size()) {
                 if (this.actions.get(turnCounter) instanceof Move) {
                     if (!isDone) {
                         Move mv = (Move) this.actions.get(turnCounter);
@@ -168,7 +168,7 @@ public class Player extends DynamicGameObject{
                         updateAttack(deltaTime);
                         this.turnCounter++;
                     }
-                }
+              //  }
             }
         } else {
             isDone = true;
@@ -188,7 +188,7 @@ public class Player extends DynamicGameObject{
         this.turnCounter = 0;
         this.stateTime = 0;
         this.isDone = false;
-        bullet.reset();
+        //bullet.reset();
         resetSecondsWaiting();
     }
 
@@ -205,7 +205,7 @@ public class Player extends DynamicGameObject{
         turnCounter = 0;
         stateTime = 0;
         isDone = false;
-        bullet.reset();
+        //bullet.reset();
     }
 
     public void die() {
