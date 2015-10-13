@@ -91,6 +91,57 @@ public class Menu {
     }
 
 
+    public void processSignIn(String username, String password)
+    {
+
+        String url = "http://45.33.62.187/api/v1/player/?username_hash=" + sha256(username) + "&password_hash=" + sha256(password) + "&format=json";
+        String getPlayer = apiCall.httpGet(url, httpReturns.size());
+
+        if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
+        {
+            menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
+        }
+        else {
+            System.out.println(getPlayer);
+            JSONObject json = new JSONObject(getPlayer);
+            JSONArray playerArray = json.getJSONArray("objects");
+            System.out.println(playerArray.toString());
+            JSONObject player0 = playerArray.getJSONObject(0);
+            System.out.println(player0.toString());
+            //String username = player0.getString("username");
+            int wins = player0.getInt("wins");
+            int losses = player0.getInt("losses");
+            String charityURL = player0.getString("charity");
+
+            //store players id during this playing session in proofOfConcept (best place I can think of at the moment)
+            int id = player0.getInt("id");
+            game.setPlayerID(id);
+
+            System.out.println(username);
+            System.out.println(wins);
+            System.out.println(losses);
+            System.out.println(charityURL);
+
+            String getCharity = apiCall.httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
+            if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
+            {
+                menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
+            }
+            else {
+                System.out.println(getCharity);
+                JSONObject jsonCharity = new JSONObject(getCharity);
+                String charityName = jsonCharity.getString("name");
+                int charityIcon = jsonCharity.getInt("icon");
+                System.out.println(charityName);
+                System.out.println(charityIcon);
+
+                this.welcome(username, wins, losses, charityName, charityIcon);
+
+            }
+
+        }
+
+    }
 
 
     public void touched(float x, float y){
@@ -103,63 +154,17 @@ public class Menu {
         {
             if (menuComponents.get(2).bounds.contains(x, y))//submit
             {
-                System.out.println("username: " + menuTextFields.get(0).getText());
-                System.out.println(sha256(menuTextFields.get(0).getText()));
-                System.out.println("password: " + menuTextFields.get(1).getText());
-                System.out.println(sha256(menuTextFields.get(1).getText()));
 
-                String url = "http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json";
-                String getPlayer = apiCall.httpGet(url, httpReturns.size());
-
-                if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
-                {
-                    menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
-                }
-                else {
-                    System.out.println(getPlayer);
-                    JSONObject json = new JSONObject(getPlayer);
-                    JSONArray playerArray = json.getJSONArray("objects");
-                    System.out.println(playerArray.toString());
-                    JSONObject player0 = playerArray.getJSONObject(0);
-                    System.out.println(player0.toString());
-                    String username = player0.getString("username");
-                    int wins = player0.getInt("wins");
-                    int losses = player0.getInt("losses");
-                    String charityURL = player0.getString("charity");
-
-                    //store players id during this playing session in proofOfConcept (best place I can think of at the moment)
-                    int id = player0.getInt("id");
-                    game.setPlayerID(id);
-
-                    System.out.println(username);
-                    System.out.println(wins);
-                    System.out.println(losses);
-                    System.out.println(charityURL);
-
-                    String getCharity = apiCall.httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
-                    if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
-                    {
-                        menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
-                    }
-                    else {
-                        System.out.println(getCharity);
-                        JSONObject jsonCharity = new JSONObject(getCharity);
-                        String charityName = jsonCharity.getString("name");
-                        int charityIcon = jsonCharity.getInt("icon");
-                        System.out.println(charityName);
-                        System.out.println(charityIcon);
-
-                        this.welcome(username, wins, losses, charityName, charityIcon);
-
-                    }
-
-                }
-
+                this.processSignIn(menuTextFields.get(0).getText(), menuTextFields.get(1).getText());
 
             }
             else if (menuComponents.get(3).bounds.contains(x, y))
             {
                 this.signUp();
+            }
+            else if (menuComponents.get(4).bounds.contains(x, y))//shortcut to sign in as spence95
+            {
+                this.processSignIn("spence95", "abc");
             }
         }
         else if (menuNumber == this.MENU_WELCOME)//welcome
@@ -312,6 +317,7 @@ public class Menu {
         menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuPasswordRegion));
         menuComponents.add(2, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
         menuComponents.add(3, new MenuComponent(400, 50, 100, 50, Assets.menuSignupRegion));
+        menuComponents.add(4, new MenuComponent(45, 45, 178, 267, Assets.menuSpenceRegion));
 
 
         TextField usernameTextField = new TextField("", Assets.tfs);

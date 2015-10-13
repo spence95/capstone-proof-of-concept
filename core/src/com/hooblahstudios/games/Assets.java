@@ -81,6 +81,9 @@ public class Assets {
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
 
+    public static Texture menuSpence;
+    public static TextureRegion menuSpenceRegion;
+
     public static TextField.TextFieldStyle tfs;
 
 
@@ -168,6 +171,9 @@ public class Assets {
 
         loadingMenu = loadTexture("loading.png");
         loadingMenuRegion = new TextureRegion(loadingMenu, 0, 0, 800, 480);
+
+        menuSpence = loadTexture("menuSpence.png");
+        menuSpenceRegion = new TextureRegion(menuSpence, 0, 0, 534, 799);
 
         //animations
         playerWalking = new Animation(.05f,
