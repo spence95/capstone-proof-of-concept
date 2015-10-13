@@ -102,13 +102,9 @@ public class Menu {
             menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
         }
         else {
-            System.out.println(getPlayer);
             JSONObject json = new JSONObject(getPlayer);
             JSONArray playerArray = json.getJSONArray("objects");
-            System.out.println(playerArray.toString());
             JSONObject player0 = playerArray.getJSONObject(0);
-            System.out.println(player0.toString());
-            //String username = player0.getString("username");
             int wins = player0.getInt("wins");
             int losses = player0.getInt("losses");
             String charityURL = player0.getString("charity");
@@ -117,30 +113,66 @@ public class Menu {
             int id = player0.getInt("id");
             game.setPlayerID(id);
 
-            System.out.println(username);
-            System.out.println(wins);
-            System.out.println(losses);
-            System.out.println(charityURL);
-
             String getCharity = apiCall.httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
             if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
             {
                 menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
             }
             else {
-                System.out.println(getCharity);
                 JSONObject jsonCharity = new JSONObject(getCharity);
                 String charityName = jsonCharity.getString("name");
                 int charityIcon = jsonCharity.getInt("icon");
-                System.out.println(charityName);
-                System.out.println(charityIcon);
-
                 this.welcome(username, wins, losses, charityName, charityIcon);
-
             }
+        }
+    }
+
+    public void processSignUp(String username, String password, String email, String charity)
+    {
+        String URL = "http://45.33.62.187/api/v1/player/?format=json";
+        String Body = "" +
+                "{" +
+                "   \"charity\": \"/api/v1/charity/" + charity + "/\"," +
+                "   \"email\": \"" + email + "\"," +
+                "   \"username\": \"" + username + "\"," +
+                "   \"username_hash\": \"" + sha256(username) + "\"," +
+                "   \"password_hash\": \"" + sha256(password) + "\"," +
+                "   \"wins\": 0," +
+                "   \"losses\": 0" +
+                "}";
+
+
+        String results = apiCall.httpPostPutOrPatch(URL, Body, httpReturns.size(), false, false);//makes the first call to insert player to table
+
+
+        //below gets the userID from another query, then posts that to the matchmaking table
+        String url = "http://45.33.62.187/api/v1/player/?username_hash=" + sha256(username) + "&password_hash=" + sha256(password) + "&format=json";
+        String getPlayer = apiCall.httpGet(url, httpReturns.size());
+
+        if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
+        {
+            menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
+        }
+        else {
+            JSONObject json = new JSONObject(getPlayer);
+            JSONArray playerArray = json.getJSONArray("objects");
+            JSONObject player0 = playerArray.getJSONObject(0);
+            int id = player0.getInt("id");
+
+            //post to matchmaking
+            URL = "http://45.33.62.187/api/v1/matchmaking/?format=json";
+            Body = "" +
+                    "{" +
+                    "   \"player\": \"/api/v1/player/" + id + "/\"," +
+                    "   \"match\": null," +
+                    "   \"waiting\": false" +
+                    "}";
+
+            results = apiCall.httpPostPutOrPatch(URL, Body, httpReturns.size(), false, false);
+            //end post to matchmaking
 
         }
-
+        //end get playerID
     }
 
 
@@ -176,96 +208,9 @@ public class Menu {
 
             if (menuComponents.get(4).bounds.contains(x, y))//submit
             {
-                System.out.println("username: " + menuTextFields.get(0).getText());
-                System.out.println(sha256(menuTextFields.get(0).getText()));
-                System.out.println("password: " + menuTextFields.get(1).getText());
-                System.out.println(sha256(menuTextFields.get(1).getText()));
-                System.out.println("email: " + menuTextFields.get(2).getText());
-                System.out.println(sha256(menuTextFields.get(2).getText()));
-                System.out.println("charity: " + menuTextFields.get(3).getText());
-                System.out.println(sha256(menuTextFields.get(3).getText()));
+                this.processSignUp(menuTextFields.get(0).getText(), menuTextFields.get(1).getText(), menuTextFields.get(2).getText(), menuTextFields.get(3).getText());
 
-                //String getPlayer = httpGet("http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json", httpReturns.size());
-
-                String URL = "http://45.33.62.187/api/v1/player/?format=json";
-                String Body = "" +
-                        "{" +
-                        "   \"charity\": \"/api/v1/charity/" + menuTextFields.get(3).getText() + "/\"," +
-                        "   \"email\": \"" + menuTextFields.get(2).getText() + "\"," +
-                        "   \"username\": \"" + menuTextFields.get(0).getText() + "\"," +
-                        "   \"username_hash\": \"" + sha256(menuTextFields.get(0).getText()) + "\"," +
-                        "   \"password_hash\": \"" + sha256(menuTextFields.get(1).getText()) + "\"," +
-                        "   \"wins\": 0," +
-                        "   \"losses\": 0" +
-                        "}";
-
-                System.out.println(Body);
-
-                String results = apiCall.httpPostPutOrPatch(URL, Body, httpReturns.size(), false, false);
-                System.out.println(results);
-
-                //get playerID
-
-
-                String url = "http://45.33.62.187/api/v1/player/?username_hash=" + sha256(menuTextFields.get(0).getText()) + "&password_hash=" + sha256(menuTextFields.get(1).getText()) + "&format=json";
-                String getPlayer = apiCall.httpGet(url, httpReturns.size());
-
-                if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
-                {
-                    menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
-                }
-                else {
-                    System.out.println(getPlayer);
-                    JSONObject json = new JSONObject(getPlayer);
-                    JSONArray playerArray = json.getJSONArray("objects");
-                    System.out.println(playerArray.toString());
-                    JSONObject player0 = playerArray.getJSONObject(0);
-                    System.out.println(player0.toString());
-                    //String username = player0.getString("username");
-                    //int wins = player0.getInt("wins");
-                    //int losses = player0.getInt("losses");
-                    //String charityURL = player0.getString("charity");
-
-                    //store players id during this playing session in proofOfConcept (best place I can think of at the moment)
-                    int id = player0.getInt("id");
-
-                    //post to matchmaking
-                    URL = "http://45.33.62.187/api/v1/matchmaking/?format=json";
-                    Body = "" +
-                            "{" +
-                            "   \"player\": \"/api/v1/player/" + id + "/\"," +
-                            "   \"match\": null," +
-                            "   \"waiting\": false" +
-                            "}";
-
-                    System.out.println(Body);
-                    results = apiCall.httpPostPutOrPatch(URL, Body, httpReturns.size(), false, false);
-                    //end post to matchmaking
-
-                }
-                //end get playerID
-
-
-
-
-                String getCharity = apiCall.httpGet("http://45.33.62.187/api/v1/charity/" + menuTextFields.get(3).getText() + "/?format=json", httpReturns.size());
-                if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
-                {
-                    menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
-                }
-                else {
-                    System.out.println(getCharity);
-                    JSONObject jsonCharity = new JSONObject(getCharity);
-                    String charityName = jsonCharity.getString("name");
-                    int charityIcon = jsonCharity.getInt("icon");
-                    System.out.println(charityName);
-                    System.out.println(charityIcon);
-
-                    this.welcome(menuTextFields.get(0).getText(), 0, 0, charityName, charityIcon);
-
-                }
-
-
+                this.processSignIn(menuTextFields.get(0).getText(), menuTextFields.get(1).getText());
             }
             else if (menuComponents.get(5).bounds.contains(x, y))//return
             {
