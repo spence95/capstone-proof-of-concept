@@ -3,9 +3,15 @@ package com.hooblahstudios.games;
 /**
  * Created by spence95 on 9/4/2015.
  */
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public class Assets {
     public static Texture background;
@@ -74,6 +80,8 @@ public class Assets {
 
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
+
+    public static TextField.TextFieldStyle tfs;
 
 
     public static Animation playerWalking;
@@ -210,5 +218,41 @@ public class Assets {
                 new TextureRegion(dotRegion, 414, 0, 46, 60),
                 new TextureRegion(dotRegion, 460, 0, 46, 60)
                 );
+
+
+        //dank fontz
+
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("PTS55F.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 36;
+        parameter.minFilter = Texture.TextureFilter.Linear;
+        parameter.magFilter = Texture.TextureFilter.Linear;
+        parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
+        BitmapFont font24 = generator.generateFont(parameter);
+        generator.dispose();
+
+        Skin nuSkin = new Skin();
+        NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
+        nuSkin.add("background", nP);
+        nuSkin.add("cursor", Assets.menuCursor);
+
+        //end fontz
+
+        //make textfieldstyle
+
+        tfs = new TextField.TextFieldStyle();
+        tfs.font = font24;
+
+
+        tfs.fontColor = Color.BLACK;
+
+        tfs.background = nuSkin.getDrawable("background");
+        tfs.cursor = nuSkin.getDrawable("cursor");
+        tfs.cursor.setMinWidth(2);
+        tfs.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        //end textfieldstyle
+
+
     }
 }
