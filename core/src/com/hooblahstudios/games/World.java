@@ -273,7 +273,7 @@ public class World {
 
         if(explosions.size() < 1){
             readyToEndRound = true;
-        } 
+        }
     }
 
     public void bulletShoot(){
