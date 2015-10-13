@@ -40,17 +40,18 @@ public class GameScreen extends ScreenAdapter {
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
-    public GameScreen(proofOfConcept game, int matchID){
+    public GameScreen(proofOfConcept game, World world){
         this.game = game;
+        this.world = world;
         state = GAME_READY;
         guiCam = new OrthographicCamera(800, 480);
         vp = new StretchViewport(480, 800, guiCam);
         guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
 
-        world = new World(game, matchID);
+        //TODO: Move creation of world to lobbyscreen so we can instantiate players with spawn move
+        //TODO: accept world as parameter here
         renderer = new WorldRenderer(game.batcher, world);
-        world.start();
     }
 
     public void update(float deltaTime){

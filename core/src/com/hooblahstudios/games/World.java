@@ -47,6 +47,7 @@ public class World {
 
     int turn;
     int matchID;
+    public ArrayList<Integer> turnIDs;
 
     ApiCall api;
 
@@ -102,6 +103,10 @@ public class World {
         blocks.add(block);
         block = new Block(WORLD_WIDTH, 240, 10, WORLD_HEIGHT);
         blocks.add(block);
+    }
+
+    public void addToTurnIDs(int id){
+        turnIDs.add(id);
     }
 
     public void touched(float x, float y){
@@ -164,15 +169,17 @@ public class World {
         this.dot.position.y = 1000;
     }
 
-    public void start(){
-        currentPlayer = new Player(game.getPlayerID(), 100, 100, squareWidth, squareHeight, false);
-        Player enemy1 = new Player(1, WORLD_WIDTH - 100, WORLD_HEIGHT - 100, squareWidth, squareHeight, true);
-        Player enemy2 = new Player(2, 100, WORLD_HEIGHT - 100, squareWidth, squareHeight, true);
-        Player enemy3 = new Player(3, WORLD_WIDTH - 100, 100, squareWidth, squareHeight, true);
+    public void start(int startingTurnId, float spawnX, float spawnY){
+        turn = startingTurnId;
+        currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
+        currentPlayer.spawn(spawnX, spawnY);
+//        Player enemy1 = new Player(1, squareWidth, squareHeight, true);
+//        Player enemy2 = new Player(2, squareWidth, squareHeight, true);
+//        Player enemy3 = new Player(3, squareWidth, squareHeight, true);
         players.add(currentPlayer);
-        players.add(enemy1);
-        players.add(enemy2);
-        players.add(enemy3);
+//        players.add(enemy1);
+//        players.add(enemy2);
+//        players.add(enemy3);
     }
 
     public void update(float deltaTime){
@@ -294,60 +301,55 @@ public class World {
     }
 
     public void generateTurnJson(){
-        int xLast = 0;
-        int yLast = 0;
-        String URL = "http://45.33.62.187/api/v1/turn/?format=json";
-        /*
-         {
-        id: 1
-        match: "/api/v1/match/1/"
-        resource_uri: "/api/v1/turn/1/"
-        turnnumber: 0
-        }
-         */
-        String Body = "" +
-                "{" +
-                " \"match\": \"/api/v1/match/1/" +
-                " \"turnnumber\": " + turn +
-                "}";
-
-
-        System.out.println(Body);
-
-        String results = api.httpPostPutOrPatch(URL, Body, 0, false, false);
-
-        ArrayList<ActionJsonTemplate> ajtList = new ArrayList<ActionJsonTemplate>();
-        for(int i = 0; i < currentPlayer.actions.size(); i++){
+        //TODO: build actions json
+        String actionsJson = "{\"objects\":[";
+        for(int i = 0; i < currentPlayer.actions.size(); i++) {
             Action ac = currentPlayer.actions.get(i);
-            ActionJsonTemplate ajt = new ActionJsonTemplate();
-            int actionType = 0;
-            if(ac instanceof Attack)
-                actionType = 1;
-            ajt.setActionMeta(i, actionType);
+            int actiontype = 1;
+            if(ac instanceof Spawn){
+                actiontype = 0;
+            } else if(ac instanceof Attack) {
+                actiontype = 2;
+            }
+            int originx = 0;
+            int originy = 0;
             if(i == 0){
-                xLast = (int)(100 * round(currentPlayer.xLast, 2));
-                yLast = (int)(100 * round(currentPlayer.yLast, 2));
-                ajt.setOrigin(xLast, yLast);
-            } else {
-                ajt.setOrigin(xLast, yLast);
+                originx = (int)(100 * round(currentPlayer.xLast, 2));
+                originy = (int)(100 * round(currentPlayer.yLast, 2));
             }
+
             if(ac instanceof Move) {
-                xLast = (int) (100 * round(ac.x, 2));
-                yLast = (int) (100 * round(ac.y, 2));
+                originx = (int) (100 * round(ac.x, 2));
+                originy = (int) (100 * round(ac.y, 2));
             }
-            //TODO: determine player's id from login storage
-            ajt.setPlayer("/api/v1/player/2/");
-            ajt.setTarget((int)(100 * round(ac.x, 2)), (int)(100 * round(ac.y, 2)));
-            ajt.setTimeTaken(0);
-            ajt.setTurn("/api/v1/turn/" + turn + "/");
-            ajtList.add(ajt);
+
+            int targetx = (int) (100 * round(ac.x, 2));
+            int targety = (int) (100 * round(ac.y, 2));
+
+            int turnId = turnIDs.get(turnIDs.size() - 1);
+
+            String action = "{ \"actionnumber\":" + i + "," +
+                    "\"actiontype\":" + actiontype + "," +
+                    "\"originx\":" + originx + "," +
+                    "\"originy\":" + originy + "," +
+                    "\"targetx\":" + targetx + "," +
+                    "\"targety\":" + targety + "," +
+                    "\"timetaken\":0" + "," +
+                    "\"turn\": \"/api/v1/turn/" + turnId + "\"}";
+
+            actionsJson += action;
         }
-        Gson gson = new Gson();
-        String ajtJson = gson.toJson(ajtList);
-        ajtJson = "{\"objects\": " + ajtJson + "}";
-        String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", ajtJson, 0, true, false);
-        //upon successful patching, get everyone else's results
-        //else try again
+        actionsJson += "]}";
+
+        //TODO: post actions to turn id in world
+        String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", actionsJson, 0, true, false);
+        //TODO: throw up loading sign
+        //TODO: if post unsuccessful try again else retrieve enemy actions
+        if(patchResults == "SUCCESSFUL POST") {
+
+        }
+        //TODO: upon successful retrieval create turn id for next time and store it in world
+
     }
 
     public void getEnemyActions(){

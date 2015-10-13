@@ -223,9 +223,8 @@ public class Menu {
         {
             if (menuComponents.get(0).bounds.contains(x, y))
             {
-                //goes to lobby, lobby goes to game when ready
-                //game.setScreen(new LobbyScreen(game));
-                game.setScreen(new GameScreen(game, 0));
+                //goes to lobby (loading), lobby goes to game when ready
+                game.setScreen(new LobbyScreen(game));
             }
             else if (menuComponents.get(1).bounds.contains(x, y))
             {

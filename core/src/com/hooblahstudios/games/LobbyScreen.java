@@ -18,6 +18,7 @@ public class LobbyScreen extends ScreenAdapter {
     SpriteBatch batch;
     ApiCall api;
     String putResults;
+    World world;
 
 
     public LobbyScreen(proofOfConcept game){
@@ -80,7 +81,28 @@ public class LobbyScreen extends ScreenAdapter {
                     String[] tokens = match.split("/");
                     int lastPlace = tokens.length - 1;
                     int matchID = Integer.parseInt(tokens[lastPlace]);
-                    game.setScreen(new GameScreen(game, matchID));
+
+                    //get first turn id
+                    String getTurnURL = "http://45.33.62.187/api/v1/turn/?player=" + game.getPlayerID()
+                            + "&match=" + matchID + "&format=json";
+                    String getTurnStr = api.httpGet(getTurnURL, 0);
+                    JSONObject turnJson = new JSONObject(getTurnStr);
+                    JSONArray turnArray = turnJson.getJSONArray("objects");
+                    JSONObject turnObj = turnArray.getJSONObject(0);
+                    int turnId = Integer.parseInt(turnObj.getString("id"));
+
+                    //get first spawn action
+                    String getActionURL = "http://45.33.62.187/api/v1/action/?turn=" + turnId + "&actionnumber=0&format=json";
+                    String getActionStr = api.httpGet(getActionURL, 0);
+                    JSONObject actionJson = new JSONObject(getActionStr);
+                    JSONArray actionArray = actionJson.getJSONArray("objects");
+                    JSONObject actionObj = actionArray.getJSONObject(0);
+                    float xSpawn = actionObj.getInt("originX")/100;
+                    float ySpawn = actionObj.getInt("originY")/100;
+                    world = new World(game, matchID);
+                    world.start(turnId, xSpawn, ySpawn);
+                    world.addToTurnIDs(turnId);
+                    game.setScreen(new GameScreen(game, world));
                 }
             }
         }

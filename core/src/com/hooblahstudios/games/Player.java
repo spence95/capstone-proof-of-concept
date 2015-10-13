@@ -33,10 +33,9 @@ public class Player extends DynamicGameObject{
 
     public final int speed = 180;
 
-    public Player(int id, float x, float y, float width, float height, boolean isEnemy) {
+    public Player(int id, float width, float height, boolean isEnemy) {
         super(-1000, -1000, width, height);
-        this.xLast = x;
-        this.yLast = y;
+
         this.id = id;
         this.isMoving = false;
         this.isDone = false;
@@ -48,12 +47,9 @@ public class Player extends DynamicGameObject{
         this.isEnemy = isEnemy;
         actions = new ArrayList<Action>();
         savedActions = new ArrayList<Action>();
-        this.vectorPosition = new Vector2(x, y);
-        this.destination = new Vector2(x, y);
+
         bullet = new Bullet(-100, -100, 200);
         side = 1;
-
-        spawn(x, y);
     }
 
     public void spawn(float x, float y){
@@ -64,6 +60,12 @@ public class Player extends DynamicGameObject{
         position.y = y;
         bounds.x = position.x - bounds.width / 2;
         bounds.y = position.y - bounds.height / 2;
+
+        //initialization stuff depending on knowing first position
+        this.xLast = x;
+        this.yLast = y;
+        this.vectorPosition = new Vector2(x, y);
+        this.destination = new Vector2(x, y);
     }
 
     public void addMove(float x, float y){
