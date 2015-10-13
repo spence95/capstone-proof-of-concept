@@ -266,13 +266,13 @@ public class Menu {
 
 
         TextField usernameTextField = new TextField("", Assets.tfs);
-        usernameTextField.setPosition(300, 300);
+        usernameTextField.setPosition(300, 250);
         usernameTextField.setWidth(400);
         usernameTextField.setHeight(50);
         usernameTextField.setFocusTraversal(false);
 
         TextField passwordTextField = new TextField("", Assets.tfs);
-        passwordTextField.setPosition(300, 200);
+        passwordTextField.setPosition(300, 150);
         passwordTextField.setPasswordMode(true);
         passwordTextField.setPasswordCharacter('*');
         passwordTextField.setWidth(400);
@@ -301,28 +301,28 @@ public class Menu {
 
 
         TextField usernameTextField = new TextField("", Assets.tfs);
-        usernameTextField.setPosition(300, 400);
+        usernameTextField.setPosition(300, 350);
         usernameTextField.setWidth(400);
         usernameTextField.setHeight(50);
         usernameTextField.setFocusTraversal(false);
 
 
         TextField passwordTextField = new TextField("", Assets.tfs);
-        passwordTextField.setPosition(300, 300);
+        passwordTextField.setPosition(300, 250);
         passwordTextField.setPasswordMode(true);
-        passwordTextField.setPasswordCharacter('a');
+        passwordTextField.setPasswordCharacter('*');
         passwordTextField.setWidth(400);
         passwordTextField.setHeight(50);
         passwordTextField.setFocusTraversal(false);
 
         TextField emailTextField = new TextField("", Assets.tfs);
-        emailTextField.setPosition(300, 200);
+        emailTextField.setPosition(300, 150);
         emailTextField.setWidth(400);
         emailTextField.setHeight(50);
         emailTextField.setFocusTraversal(false);
 
         TextField charityTextField = new TextField("", Assets.tfs);
-        charityTextField.setPosition(300, 100);
+        charityTextField.setPosition(300, 50);
         charityTextField.setWidth(400);
         charityTextField.setHeight(50);
         charityTextField.setFocusTraversal(false);
