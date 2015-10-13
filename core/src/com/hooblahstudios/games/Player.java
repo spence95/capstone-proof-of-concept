@@ -34,7 +34,7 @@ public class Player extends DynamicGameObject{
     public final int speed = 180;
 
     public Player(int id, float x, float y, float width, float height, boolean isEnemy) {
-        super(x, y, width, height);
+        super(-1000, -1000, width, height);
         this.xLast = x;
         this.yLast = y;
         this.id = id;
@@ -52,6 +52,18 @@ public class Player extends DynamicGameObject{
         this.destination = new Vector2(x, y);
         bullet = new Bullet(-100, -100, 200);
         side = 1;
+
+        spawn(x, y);
+    }
+
+    public void spawn(float x, float y){
+        Spawn sp = new Spawn(x, y);
+        actions.add(sp);
+
+        position.x = x;
+        position.y = y;
+        bounds.x = position.x - bounds.width / 2;
+        bounds.y = position.y - bounds.height / 2;
     }
 
     public void addMove(float x, float y){
@@ -145,7 +157,15 @@ public class Player extends DynamicGameObject{
         if(this.actions.size() > turnCounter) {
             //temp fix, without it crashes for some reason
             //if(turnCounter < actions.size()) {
-                if (this.actions.get(turnCounter) instanceof Move) {
+                if (actions.get(turnCounter) instanceof Spawn){
+                    if(!isDone){
+                        position.set(actions.get(turnCounter).x, actions.get(turnCounter).y);
+                        bounds.x = position.x - bounds.width / 2;
+                        bounds.y = position.y - bounds.height / 2;
+                        turnCounter++;
+                    }
+                }
+               else if (this.actions.get(turnCounter) instanceof Move) {
                     if (!isDone) {
                         Move mv = (Move) this.actions.get(turnCounter);
                         if (secondsWaiting >= mv.secondsToWait) {

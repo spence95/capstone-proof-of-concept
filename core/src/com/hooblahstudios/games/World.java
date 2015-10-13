@@ -22,13 +22,19 @@ public class World {
     public static final float Attack_menu_width = 150 / 2;
     public static final float Attack_menu_height = 127 / 2;
     public final float squareWidth = 15;
-    public final float squareHeight = 31;
+    public final float squareHeight = 30;
+    //origin start points
+    //(20, 40)
+    //(20, 440)
+    //(780, 40)
+    //(780, 440)
     public ArrayList<Player> players;
     public ArrayList<Block> blocks;
     public ArrayList<Explosion> explosions;
     public ArrayList<Bullet> bullets;
     boolean hasStarted = false;
     boolean isSetting = true;
+    boolean readyToEndRound = true;
     float lastTouchedX;
     float lastTouchedY;
     Rectangle menuBounds;
@@ -207,7 +213,8 @@ public class World {
                 pl.updateRunning(deltaTime);
                 //check if all players are done and start a new round
                 if (doneCounter >= players.size()) {
-                    newRound(deltaTime);
+                    if(readyToEndRound)
+                        newRound(deltaTime);
                 }
 
                 //check for dead players and remove them
@@ -255,6 +262,7 @@ public class World {
 
     public void updateExplosions(float deltaTime){
         for(int i = 0; i < explosions.size(); i++){
+            readyToEndRound = false;
             Explosion exp = explosions.get(i);
             if(!exp.getIsDone()) {
                 exp.update(deltaTime);
@@ -262,6 +270,10 @@ public class World {
                 explosions.remove(i);
             }
         }
+
+        if(explosions.size() < 1){
+            readyToEndRound = true;
+        } 
     }
 
     public void bulletShoot(){
