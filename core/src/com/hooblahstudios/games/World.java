@@ -380,7 +380,7 @@ public class World {
 
                     players.get(index).id = playerID;
                     JSONObject actionsObj = actionArray.getJSONObject(a);
-                    ArrayList<Action> actions = new ArrayList<>();
+                    ArrayList<Action> actions = new ArrayList<Action>();
 
                     float originx = actionsObj.getInt("originx")/100;
                     float originy = actionsObj.getInt("originy")/100;
