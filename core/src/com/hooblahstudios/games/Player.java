@@ -206,7 +206,7 @@ public class Player extends DynamicGameObject{
     }
 
     public void resetActions(){
-        this.actions = this.savedActions;
+        //this.actions = this.savedActions;
         this.turnCounter = 0;
         this.stateTime = 0;
         this.isDone = false;

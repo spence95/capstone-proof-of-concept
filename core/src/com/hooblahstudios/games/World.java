@@ -7,9 +7,13 @@ import com.google.gson.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import com.badlogic.gdx.math.Rectangle;
 import com.hooblahstudios.games.json.ActionJsonTemplate;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class World {
 
@@ -66,6 +70,7 @@ public class World {
         api = new ApiCall();
         //place blocks on arena
         placeBlocks();
+        turnIDs = new ArrayList<Integer>();
     }
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
@@ -169,15 +174,15 @@ public class World {
         this.dot.position.y = 1000;
     }
 
-    public void start(int startingTurnId, float spawnX, float spawnY){
+    public void start(int startingTurnId){
         turn = startingTurnId;
         currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
-        currentPlayer.spawn(spawnX, spawnY);
-//        Player enemy1 = new Player(1, squareWidth, squareHeight, true);
+        //currentPlayer.spawn(spawnX, spawnY);
+        Player enemy1 = new Player(-1, squareWidth, squareHeight, true);
 //        Player enemy2 = new Player(2, squareWidth, squareHeight, true);
 //        Player enemy3 = new Player(3, squareWidth, squareHeight, true);
         players.add(currentPlayer);
-//        players.add(enemy1);
+        players.add(enemy1);
 //        players.add(enemy2);
 //        players.add(enemy3);
     }
@@ -340,16 +345,73 @@ public class World {
             actionsJson += action;
         }
         actionsJson += "]}";
+        //post turn, needs match, player, and turnnumber
 
         //TODO: post actions to turn id in world
         String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", actionsJson, 0, true, false);
         //TODO: throw up loading sign
         //TODO: if post unsuccessful try again else retrieve enemy actions
-        if(patchResults == "SUCCESSFUL POST") {
+        if(patchResults.length() > 1) {
+            String url = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&turnnumber=" + turn + "&format=json";
+            String turnResults = api.httpGet(url, 0);
+            JSONObject turnJson = new JSONObject(turnResults);
+            JSONArray turnArray = turnJson.getJSONArray("objects");
+            JSONObject turnObj = turnArray.getJSONObject(0);
+//            int[] tempTurnIds = new int[4];
+            HashMap<Integer, String> tempTurnIds = new HashMap<Integer, String>();
+            tempTurnIds.put(turnObj.getInt("id"), turnObj.getString("player"));
+            turnObj = turnArray.getJSONObject(1);
+            tempTurnIds.put(turnObj.getInt("id"), turnObj.getString("player"));
+//            turnObj = turnArray.getJSONObject(2);
+//            tempTurnIds[2] = turnObj.getInt("id");
+//            turnObj = turnArray.getJSONObject(3);
+//            tempTurnIds[3] = turnObj.getInt("id");
+            int index = 0;
+            for (int i : tempTurnIds.keySet()) {
+                String getActionsUrl = "http://45.33.62.187/api/v1/action/?turn=" + i + "&format=json";
+                String actionResults = api.httpGet(getActionsUrl, 0);
+                JSONObject actionJson = new JSONObject(actionResults);
+                JSONArray actionArray = actionJson.getJSONArray("objects");
+                for(int a = 0; a < actionArray.length(); a++) {
 
+                    String[] tokens = tempTurnIds.get(i).split("/");
+                    int lastPlace = tokens.length - 1;
+                    int playerID = Integer.parseInt(tokens[lastPlace]);
+
+                    players.get(index).id = playerID;
+                    JSONObject actionsObj = actionArray.getJSONObject(a);
+                    ArrayList<Action> actions = new ArrayList<>();
+
+                    float originx = actionsObj.getInt("originx")/100;
+                    float originy = actionsObj.getInt("originy")/100;
+                    float targetx = actionsObj.getInt("targetx")/100;
+                    float targety = actionsObj.getInt("targety")/100;
+                    int actiontype = actionsObj.getInt("actiontype");
+                    if(actiontype == 0){
+                        Spawn sp = new Spawn(originx, originy);
+                        actions.add(sp);
+                    } else if(actiontype == 1){
+                        Move mv = new Move(targetx, targety, 0);
+                        actions.add(mv);
+                    } else if(actiontype == 2){
+                        Attack at = new Attack(targetx, targety, 0);
+                        actions.add(at);
+                    }
+                    players.get(index).actions = actions;
+                }
+                index++;
+            }
         }
         //TODO: upon successful retrieval create turn id for next time and store it in world
 
+        String turnPostJson = "{" +
+                "\"match\":\"/api/v1/match/" + matchID + "/\"," +
+                "\"player\":\"/api/v1/player/" + game.getPlayerID() + "/\"," +
+                "\"turnnumber\":" + turn + "}";
+        String postResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/turn/?format=json", turnPostJson, 0, false, false);
+        JSONObject turnIdJsonObj = new JSONObject(postResults);
+        int turnId = turnIdJsonObj.getInt("id");
+        addToTurnIDs(turnId);
     }
 
     public void getEnemyActions(){
