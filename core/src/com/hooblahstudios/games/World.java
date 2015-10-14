@@ -66,7 +66,7 @@ public class World {
         screenController = new ScreenController(game);
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
-        turn = 1;
+        turn = 0;
         api = new ApiCall();
         //place blocks on arena
         placeBlocks();
@@ -175,7 +175,7 @@ public class World {
     }
 
     public void start(int startingTurnId, float spawnX, float spawnY){
-        turn = startingTurnId;
+        //turn = startingTurnId;
         currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
         currentPlayer.spawn(spawnX, spawnY);
         Player enemy1 = new Player(-1, squareWidth, squareHeight, true);
@@ -225,8 +225,8 @@ public class World {
                 pl.updateRunning(deltaTime);
                 //check if all players are done and start a new round
                 if (doneCounter >= players.size()) {
-                    if(readyToEndRound)
-                        newRound(deltaTime);
+//                    if(readyToEndRound)
+//                        newRound(deltaTime);
                 }
 
                 //check for dead players and remove them
@@ -261,7 +261,7 @@ public class World {
         turn = 0;
     }
 
-    public void newRound(float deltaTime){
+    public void newRound(){
         for(int i = 0; i < players.size(); i++){
             players.get(i).forgetActions();
         }
@@ -306,7 +306,6 @@ public class World {
 
     public void generateTurnJson(){
         //TODO: build actions json
-        turn++;
         String actionsJson = "{\"objects\":[";
         for(int i = 0; i < currentPlayer.actions.size(); i++) {
             Action ac = currentPlayer.actions.get(i);
@@ -405,6 +404,7 @@ public class World {
         }
         //TODO: upon successful retrieval create turn id for next time and store it in world
 
+        turn++;
         String turnPostJson = "{" +
                 "\"match\":\"/api/v1/match/" + matchID + "/\"," +
                 "\"player\":\"/api/v1/player/" + game.getPlayerID() + "/\"," +
@@ -413,6 +413,8 @@ public class World {
         JSONObject turnIdJsonObj = new JSONObject(postResults);
         int turnId = turnIdJsonObj.getInt("id");
         addToTurnIDs(turnId);
+
+        newRound();
     }
 
     public void getEnemyActions(){
