@@ -390,6 +390,7 @@ public class World {
                     if(actiontype == 0){
                         Spawn sp = new Spawn(originx, originy);
                         actions.add(sp);
+                        players.get(index).spawn(originx, originy);
                     } else if(actiontype == 1){
                         Move mv = new Move(targetx, targety, 0);
                         actions.add(mv);
