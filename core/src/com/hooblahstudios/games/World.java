@@ -225,8 +225,8 @@ public class World {
                 pl.updateRunning(deltaTime);
                 //check if all players are done and start a new round
                 if (doneCounter >= players.size()) {
-//                    if(readyToEndRound)
-//                        newRound(deltaTime);
+                    if(readyToEndRound)
+                        newRound();
                 }
 
                 //check for dead players and remove them
@@ -339,10 +339,11 @@ public class World {
                     "\"targetx\":" + targetx + "," +
                     "\"targety\":" + targety + "," +
                     "\"timetaken\":0" + "," +
-                    "\"turn\": \"/api/v1/turn/" + turnId + "\"}";
+                    "\"turn\": \"/api/v1/turn/" + turnId + "/\"},";
 
             actionsJson += action;
         }
+        actionsJson = actionsJson.substring(0, actionsJson.length() - 1);
         actionsJson += "]}";
         //post turn, needs match, player, and turnnumber
 
@@ -350,7 +351,7 @@ public class World {
         String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", actionsJson, 0, true, false);
         //TODO: throw up loading sign
         //TODO: if post unsuccessful try again else retrieve enemy actions
-        if(patchResults.length() > 1) {
+       // if(!patchResults.contains("error")) {
             String url = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&turnnumber=" + turn + "&format=json";
             String turnResults = api.httpGet(url, 0);
             JSONObject turnJson = new JSONObject(turnResults);
@@ -401,7 +402,9 @@ public class World {
                 }
                 index++;
             }
-        }
+//        } else {
+//
+//        }
         //TODO: upon successful retrieval create turn id for next time and store it in world
 
         turn++;
@@ -414,7 +417,6 @@ public class World {
         int turnId = turnIdJsonObj.getInt("id");
         addToTurnIDs(turnId);
 
-        newRound();
     }
 
     public void getEnemyActions(){
