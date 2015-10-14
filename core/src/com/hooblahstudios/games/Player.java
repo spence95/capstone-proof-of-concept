@@ -53,6 +53,8 @@ public class Player extends DynamicGameObject{
     }
 
     public void spawn(float x, float y){
+        Spawn sp = new Spawn(x, y);
+        actions.add(sp);
 
         position.x = x;
         position.y = y;

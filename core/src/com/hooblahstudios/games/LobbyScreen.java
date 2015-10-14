@@ -97,8 +97,10 @@ public class LobbyScreen extends ScreenAdapter {
                     JSONObject actionJson = new JSONObject(getActionStr);
                     JSONArray actionArray = actionJson.getJSONArray("objects");
                     JSONObject actionObj = actionArray.getJSONObject(0);
+                    float xSpawn = actionObj.getInt("originx")/100;
+                    float ySpawn = actionObj.getInt("originy")/100;
                     world = new World(game, matchID);
-                    world.start(turnId);
+                    world.start(turnId, xSpawn, ySpawn);
                     world.addToTurnIDs(turnId);
                     game.setScreen(new GameScreen(game, world));
                 }

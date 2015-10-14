@@ -174,10 +174,10 @@ public class World {
         this.dot.position.y = 1000;
     }
 
-    public void start(int startingTurnId){
+    public void start(int startingTurnId, float spawnX, float spawnY){
         turn = startingTurnId;
         currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
-        //currentPlayer.spawn(spawnX, spawnY);
+        currentPlayer.spawn(spawnX, spawnY);
         Player enemy1 = new Player(-1, squareWidth, squareHeight, true);
 //        Player enemy2 = new Player(2, squareWidth, squareHeight, true);
 //        Player enemy3 = new Player(3, squareWidth, squareHeight, true);
