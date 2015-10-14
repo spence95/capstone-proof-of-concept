@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -40,6 +41,11 @@ public class MenuRenderer {
         //have it know what to draw here and then just draw it here.
         batch.enableBlending();
         batch.begin();
+        if (this.menu.shouldClear) {//it should clear because it changed screens and we want to remove the actors from the stage
+            stage.clear();
+            this.menu.shouldClear = false;
+            System.out.println("should clear was true, so stage was cleared and shouldClear was set to false");
+        }
         batch.draw(menu.menu, cam.position.x - this.menu.MENU_WIDTH / 2, cam.position.y - this.menu.MENU_HEIGHT / 2, this.menu.MENU_WIDTH,
                 this.menu.MENU_HEIGHT);
         for (int i = 0; i < this.menu.menuComponents.size(); i++)
@@ -52,7 +58,9 @@ public class MenuRenderer {
             TextField tF = this.menu.menuTextFields.get(j);
             tF.draw(batch, 1);
             stage.addActor(tF);
+
         }
+
         batch.end();
         batch.disableBlending();
     }

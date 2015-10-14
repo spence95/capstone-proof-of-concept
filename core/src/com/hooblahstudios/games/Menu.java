@@ -59,6 +59,8 @@ public class Menu {
     float lastTouchedY;
     Rectangle menuBounds;
 
+    Boolean shouldClear = false;
+
 
 
     public Menu(proofOfConcept game) {
@@ -221,9 +223,11 @@ public class Menu {
         }
         else if (menuNumber == this.MENU_MAINMENU)//main menu
         {
+
             if (menuComponents.get(0).bounds.contains(x, y))
             {
                 //goes to lobby (loading), lobby goes to game when ready
+                
                 game.setScreen(new LobbyScreen(game));
             }
             else if (menuComponents.get(1).bounds.contains(x, y))
@@ -246,6 +250,7 @@ public class Menu {
 
 
     public void splash(){
+        shouldClear = true;
         menu = Assets.splashRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
@@ -253,6 +258,7 @@ public class Menu {
     }
 
     public void signIn(){
+        shouldClear = true;
         menu = Assets.menuSigninRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
@@ -285,6 +291,7 @@ public class Menu {
     }
 
     public void signUp(){
+        shouldClear = true;
         menu = Assets.menuSignupScreenRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
@@ -336,6 +343,7 @@ public class Menu {
 
     public void welcome(String username, int wins, int losses, String charityName, int charityIcon)
     {
+        shouldClear = true;
         menu = Assets.menuWelcomeRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
@@ -378,10 +386,10 @@ public class Menu {
     }
 
     public void mainMenu(){
+        shouldClear = true;
         menu = Assets.mainMenuRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new ArrayList<TextField>();
-
         menuComponents.add(0, new MenuComponent(200, 300, 100, 50, Assets.menuPlayRegion));
         menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuOptionsRegion));
         menuNumber = this.MENU_MAINMENU;
@@ -389,6 +397,7 @@ public class Menu {
 
     public void options()
     {
+        shouldClear = true;
         menuNumber = this.MENU_OPTIONS;
         menu = Assets.optionsRegion;
         menuComponents = new ArrayList<MenuComponent>();
