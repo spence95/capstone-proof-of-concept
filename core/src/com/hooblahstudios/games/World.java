@@ -262,7 +262,6 @@ public class World {
     }
 
     public void newRound(float deltaTime){
-        turn++;
         for(int i = 0; i < players.size(); i++){
             players.get(i).forgetActions();
         }
@@ -307,6 +306,7 @@ public class World {
 
     public void generateTurnJson(){
         //TODO: build actions json
+        turn++;
         String actionsJson = "{\"objects\":[";
         for(int i = 0; i < currentPlayer.actions.size(); i++) {
             Action ac = currentPlayer.actions.get(i);
