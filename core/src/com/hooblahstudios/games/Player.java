@@ -36,7 +36,7 @@ public class Player extends DynamicGameObject{
     public Player(int id, float width, float height, boolean isEnemy) {
         super(-1000, -1000, width, height);
 
-        this.id = id;
+        //this.id = id;
         this.isMoving = false;
         this.isDone = false;
         this.isFiring = false;
@@ -238,4 +238,6 @@ public class Player extends DynamicGameObject{
         xLast = x;
         yLast = y;
     }
+
+
 }

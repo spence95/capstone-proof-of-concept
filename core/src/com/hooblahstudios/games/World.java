@@ -55,6 +55,12 @@ public class World {
 
     ApiCall api;
 
+    //define callback interface
+    interface playerActionRetrievalCallback {
+
+        void setPlayersForRunning(String actionResults, String playerUrl, int index);
+    }
+
     public World(proofOfConcept game, int matchID) {
         this.game = game;
         this.matchID = matchID;
@@ -67,7 +73,12 @@ public class World {
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
         turn = 0;
-        api = new ApiCall();
+        api = new ApiCall(new playerActionRetrievalCallback() {
+            @Override
+            public void setPlayersForRunning(String actionResults, String playerUrl, int index) {
+                SetPlayersForRunning(actionResults, playerUrl, index);
+            }
+        });
         //place blocks on arena
         placeBlocks();
         turnIDs = new ArrayList<Integer>();
@@ -119,10 +130,11 @@ public class World {
             //check if click in menu bounds
             if(actionMenu != null) {
                 if (actionMenu.menuBounds.contains(x, y) && actionMenu.isShown) {
-                    if(actionMenu.isReadyToSubmit){
+                    if(actionMenu.isReadyToSubmit && readyToEndRound){
                         submit();
                         return;
                     }
+
                     if(!currentPlayer.isDone) {
                         if (x > 439) {
                             moveClicked(lastTouchedX, lastTouchedY);
@@ -212,6 +224,7 @@ public class World {
                 actionMenu.makeReadyToSubmit();
             }
         }
+
         else{
          int doneCounter = 0;
          ArrayList<Integer> deadPlayerIds = new ArrayList<Integer>();
@@ -261,6 +274,7 @@ public class World {
         turn = 0;
     }
 
+    //executed after one round has ran (not setting)
     public void newRound(){
         for(int i = 0; i < players.size(); i++){
             players.get(i).forgetActions();
@@ -268,7 +282,6 @@ public class World {
         currentPlayer.setLastPosition(currentPlayer.position.x, currentPlayer.position.y);
         isSetting = true;
         actionMenu.isReadyToSubmit = false;
-
     }
 
     public void updateExplosions(float deltaTime){
@@ -295,13 +308,21 @@ public class World {
         hideDot();
         this.actionMenu.changeState(2);
         generateTurnJson();
+        //newRound();
         this.currentPlayer.resetActions();
         this.isSetting = false;
         //reset current player
         currentPlayer.position.x = currentPlayer.xLast;
         currentPlayer.position.y = currentPlayer.yLast;
-        getEnemyActions();
         explosions.clear();
+    }
+
+    public Player getPlayerById(int id){
+        for(int p = 0; p < players.size(); p++){
+            if(players.get(p).id == id)
+                return players.get(p);
+        }
+        return null;
     }
 
     public void generateTurnJson(){
@@ -369,37 +390,8 @@ public class World {
             int index = 0;
             for (int i : tempTurnIds.keySet()) {
                 String getActionsUrl = "http://45.33.62.187/api/v1/action/?turn=" + i + "&format=json";
-                String actionResults = api.httpGet(getActionsUrl, 0);
-                JSONObject actionJson = new JSONObject(actionResults);
-                JSONArray actionArray = actionJson.getJSONArray("objects");
-                for(int a = 0; a < actionArray.length(); a++) {
-
-                    String[] tokens = tempTurnIds.get(i).split("/");
-                    int lastPlace = tokens.length - 1;
-                    int playerID = Integer.parseInt(tokens[lastPlace]);
-
-                    players.get(index).id = playerID;
-                    JSONObject actionsObj = actionArray.getJSONObject(a);
-                    ArrayList<Action> actions = new ArrayList<Action>();
-
-                    float originx = actionsObj.getInt("originx")/100;
-                    float originy = actionsObj.getInt("originy")/100;
-                    float targetx = actionsObj.getInt("targetx")/100;
-                    float targety = actionsObj.getInt("targety")/100;
-                    int actiontype = actionsObj.getInt("actiontype");
-                    if(actiontype == 0){
-                        Spawn sp = new Spawn(originx, originy);
-                        actions.add(sp);
-                        players.get(index).spawn(originx, originy);
-                    } else if(actiontype == 1){
-                        Move mv = new Move(targetx, targety, 0);
-                        actions.add(mv);
-                    } else if(actiontype == 2){
-                        Attack at = new Attack(targetx, targety, 0);
-                        actions.add(at);
-                    }
-                    players.get(index).actions = actions;
-                }
+                String actionResults = "";
+                api.httpGetAndRunPlayers(getActionsUrl, tempTurnIds.get(i), index);
                 index++;
             }
 //        } else {
@@ -419,34 +411,56 @@ public class World {
 
     }
 
-    public void getEnemyActions(){
-        //randomize other squares movements
-        for(int i = 0; i < this.players.size(); i++){
-            if(this.players.get(i).isEnemy){
-                //reach out to server to get moves
-                //mocked data
-                Random rand = new Random();
-                int x = rand.nextInt((370 - 10) + 1) + 10;
-                int y = rand.nextInt((220 - 10) + 1) + 10;
+    public void SetPlayersForRunning(String actionResults, String playerUrl, int index){
+        JSONObject actionJson = new JSONObject(actionResults);
+        JSONArray actionArray = actionJson.getJSONArray("objects");
+        for(int a = 0; a < actionArray.length(); a++) {
 
-                String action1 =  "{  \"type\": \"Move\",  \"originX\":100, \"originY\":100, \"destX\":" + Float.toString(x) + ", \"destY\":" + Float.toString(y) + " }";
+            String[] tokens = playerUrl.split("/");
+            int lastPlace = tokens.length - 1;
+            int playerID = Integer.parseInt(tokens[lastPlace]);
 
+            Player pl = players.get(index);
 
-                x = rand.nextInt((370 - 10) + 1) + 10;
-                y = rand.nextInt((220 - 10) + 1) + 10;
-
-                String action2 =  "{  \"type\": \"Move\",  \"originX\":100, \"originY\":100, \"destX\":" + Float.toString(x) + ", \"destY\":" + Float.toString(y) + " }";
-
-                String json = "{\"ajst\":[" + action1 + "," + action2 + " ]}";
-
-                //parse the json
-                Gson gson = new Gson();
-                EnemyJsonTemplate ejst = gson.fromJson(json, EnemyJsonTemplate.class);
-//                this.players.get(i).addMove(ejst.ajst[0].destX, ejst.ajst[0].destY);
-//                this.players.get(i).addMove(ejst.ajst[1].destX, ejst.ajst[1].destY);
+            //if first time through
+            if(turn == 0) {
+                if (playerID != game.getPlayerID()) {
+                    pl.id = playerID;
+                } else {
+                    pl.id = game.getPlayerID();
+                }
             }
+            //else
+            else {
+                pl = getPlayerById(playerID);
+            }
+
+
+
+            JSONObject actionsObj = actionArray.getJSONObject(a);
+            ArrayList<Action> actions = new ArrayList<Action>();
+
+            float originx = actionsObj.getInt("originx")/100;
+            float originy = actionsObj.getInt("originy")/100;
+            float targetx = actionsObj.getInt("targetx")/100;
+            float targety = actionsObj.getInt("targety")/100;
+            int actiontype = actionsObj.getInt("actiontype");
+            if(actiontype == 0){
+                Spawn sp = new Spawn(originx, originy);
+                actions.add(sp);
+                pl.spawn(originx, originy);
+            } else if(actiontype == 1){
+                Move mv = new Move(targetx, targety, 0);
+                actions.add(mv);
+            } else if(actiontype == 2){
+                Attack at = new Attack(targetx, targety, 0);
+                actions.add(at);
+            }
+            pl.actions = actions;
         }
     }
+
+
 
     public static float round(float d, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(d));

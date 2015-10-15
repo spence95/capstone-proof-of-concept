@@ -32,12 +32,16 @@ public class ApiCall {
 
 
     public ArrayList<String> httpReturns;
+    public World.playerActionRetrievalCallback callback;
 
 
+    public ApiCall(){
+        httpReturns = new ArrayList<String>();
+    }
 
-
-
-    public ApiCall() {
+    public ApiCall(World.playerActionRetrievalCallback callback)
+    {
+        this.callback = callback;
         httpReturns = new ArrayList<String>();
     }
 
@@ -155,6 +159,42 @@ public class ApiCall {
         }
 
         return httpReturns.get(ListNumber);
+
+    }
+
+
+    public void httpGetAndRunPlayers (String URL, final String playerUrl, final int index) {
+
+
+        Net.HttpRequest httpRequest = new Net.HttpRequest(Net.HttpMethods.GET);
+        httpRequest.setUrl(URL);
+        httpRequest.setHeader("Content-Type", "application/json");
+
+        Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String successValue = httpResponse.getResultAsString();
+                if (successValue.contains("\"total_count\": 0"))//wrong credentials
+                {
+                    //do something insightful here
+
+                } else//there was a match yo! should probably have a unique conststraint on username. too hard eff it
+                {
+                    callback.setPlayersForRunning(successValue, playerUrl, index);
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                System.out.println("failed");
+                System.out.println(t.toString());
+            }
+
+            @Override
+            public void cancelled() {
+                System.out.println("cancelled");
+            }
+        });
 
     }
 
