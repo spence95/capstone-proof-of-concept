@@ -47,7 +47,6 @@ public class Player extends DynamicGameObject{
         this.isEnemy = isEnemy;
         actions = new ArrayList<Action>();
         savedActions = new ArrayList<Action>();
-
         bullet = new Bullet(-100, -100, 200);
         side = 1;
     }

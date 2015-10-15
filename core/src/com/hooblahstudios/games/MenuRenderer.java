@@ -19,7 +19,6 @@ public class MenuRenderer {
     OrthographicCamera cam;
     SpriteBatch batch;
     Stage stage;
-    //Viewport viewport;
     StretchViewport viewport;
 
     public MenuRenderer(SpriteBatch batch, Menu menu) {
@@ -29,8 +28,6 @@ public class MenuRenderer {
         this.batch = batch;
         viewport = new StretchViewport(800, 480, cam);
         stage = new Stage(viewport, batch);
-        //stage = new Stage();
-        //stage.getViewport().setCamera(this.cam);
 
         Gdx.input.setInputProcessor(stage);
     }

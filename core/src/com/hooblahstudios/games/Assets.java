@@ -85,6 +85,7 @@ public class Assets {
     public static TextureRegion menuSpenceRegion;
 
     public static TextField.TextFieldStyle tfs;
+    public static TextField.TextFieldStyle tfs12;
 
 
     public static Animation playerWalking;
@@ -234,8 +235,17 @@ public class Assets {
         parameter.minFilter = Texture.TextureFilter.Linear;
         parameter.magFilter = Texture.TextureFilter.Linear;
         parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
-        BitmapFont font24 = generator.generateFont(parameter);
+        BitmapFont font36 = generator.generateFont(parameter);
         generator.dispose();
+
+        FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(Gdx.files.internal("PTS55F.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter2.size = 12;
+        parameter2.minFilter = Texture.TextureFilter.Linear;
+        parameter2.magFilter = Texture.TextureFilter.Linear;
+        parameter2.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
+        BitmapFont font12 = generator2.generateFont(parameter2);
+        generator2.dispose();
 
         Skin nuSkin = new Skin();
         NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
@@ -247,15 +257,20 @@ public class Assets {
         //make textfieldstyle
 
         tfs = new TextField.TextFieldStyle();
-        tfs.font = font24;
-
-
+        tfs.font = font36;
         tfs.fontColor = Color.BLACK;
-
         tfs.background = nuSkin.getDrawable("background");
         tfs.cursor = nuSkin.getDrawable("cursor");
         tfs.cursor.setMinWidth(2);
         tfs.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfs12 = new TextField.TextFieldStyle();
+        tfs12.font = font12;
+        tfs12.fontColor = Color.BLACK;
+        tfs12.background = nuSkin.getDrawable("background");
+        tfs12.cursor = nuSkin.getDrawable("cursor");
+        tfs12.cursor.setMinWidth(2);
+        tfs12.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
 
         //end textfieldstyle
 

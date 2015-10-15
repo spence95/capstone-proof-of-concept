@@ -3,6 +3,7 @@ package com.hooblahstudios.games;
 /**
  * Created by spence95 on 9/4/2015.
  */
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.google.gson.*;
 
 import java.math.BigDecimal;
@@ -49,6 +50,9 @@ public class World {
     public ScreenController screenController;
     proofOfConcept game;
 
+    public HashMap<Integer, String> playersByID;
+    public HashMap<Integer, TextField> playerLabels;
+
     int turn;
     int matchID;
     public ArrayList<Integer> turnIDs;
@@ -82,6 +86,8 @@ public class World {
         //place blocks on arena
         placeBlocks();
         turnIDs = new ArrayList<Integer>();
+        playersByID = new HashMap<Integer, String>();
+        playerLabels = new HashMap<Integer, TextField>();
     }
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
@@ -186,8 +192,52 @@ public class World {
         this.dot.position.y = 1000;
     }
 
+    public void getPlayerDetails() {
+        String URL = "http://li1081-187.members.linode.com/api/v1/turn/?match=" + this.matchID + "&turnnumber=0&format=json";
+        String getTurns = api.httpGet(URL, 0);
+        System.out.println(getTurns);
+        //loop through the players to build the playersByID<int, string> hashmap
+        //String turnResults = api.httpGet(url, 0);
+        JSONObject turnJson = new JSONObject(getTurns);
+        JSONArray turnArray = turnJson.getJSONArray("objects");
+        ArrayList<Integer> playerIDs = new ArrayList<Integer>();
+        for (int i = 0; i < turnArray.length(); i++) {
+            JSONObject turnObj = turnArray.getJSONObject(i);
+
+            String[] tokens = turnObj.getString("player").split("/");
+            int lastPlace = tokens.length - 1;
+            int playerID = Integer.parseInt(tokens[lastPlace]);
+
+            playerIDs.add(playerID);
+        }//now it should have all the playerIDs in the temporary ArrayList
+
+        for (int playerID : playerIDs) {
+            URL = "http://li1081-187.members.linode.com/api/v1/player/" + playerID + "/?format=json";
+            String getPlayer = api.httpGet(URL, 0);
+            JSONObject json = new JSONObject(getPlayer);
+            String username = json.getString("username");
+            playersByID.put(playerID, username);
+            TextField usernameTextField = new TextField(username, Assets.tfs12);
+            usernameTextField.setPosition(0, 0);
+            usernameTextField.setWidth(100);
+            usernameTextField.setHeight(30);
+            usernameTextField.setFocusTraversal(false);
+            usernameTextField.setDisabled(true);
+            playerLabels.put(playerID,usernameTextField);
+        }
+
+        System.out.println(playersByID);
+        System.out.println("playesrbyid:");
+        for (int i : playersByID.keySet()) {
+            System.out.println(i + ": " + playersByID.get(i));
+        }
+
+
+    }
+
     public void start(int startingTurnId, float spawnX, float spawnY){
         //turn = startingTurnId;
+        this.getPlayerDetails();
         currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
         currentPlayer.spawn(spawnX, spawnY);
         Player enemy1 = new Player(-1, squareWidth, squareHeight, true);

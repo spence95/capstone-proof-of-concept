@@ -6,17 +6,22 @@ package com.hooblahstudios.games;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class WorldRenderer {
     World world;
     OrthographicCamera cam;
     SpriteBatch batch;
+    StretchViewport viewport;
 
     public WorldRenderer (SpriteBatch batch, World world) {
         this.world = world;
         this.cam = new OrthographicCamera(this.world.WORLD_WIDTH, this.world.WORLD_HEIGHT);
         this.cam.position.set(this.world.WORLD_WIDTH / 2, this.world.WORLD_HEIGHT / 2, 0);
         this.batch = batch;
+        viewport = new StretchViewport(800, 480, cam);
     }
 
     public void render () {
@@ -38,6 +43,7 @@ public class WorldRenderer {
         batch.enableBlending();
         //renderSquares();
         renderPlayers();
+        renderLabels();
         renderActionButtons();
         renderDot();
         renderBlocks();
@@ -61,6 +67,39 @@ public class WorldRenderer {
             batch.draw(Assets.blockRegion, bl.position.x - (bl.bounds.width / 2), bl.position.y - (bl.bounds.height/2), bl.bounds.width, bl.bounds.height);
         }
         batch.end();
+    }
+
+    private void renderLabels() {
+        batch.begin();
+        for (Player p : world.players) {
+            try {
+                System.out.print("Trying to get the label for " + (p.id + 1));//I set it as p.id + 1 so it would be valid. right now its always 0, id isnt set right spence
+                System.out.println(p);
+                TextField tf = this.world.playerLabels.get((p.id + 1));
+                System.out.println(tf);
+                tf.setPosition(p.xLast, p.yLast + 10);
+                System.out.println("set the position");
+                tf.draw(batch, 1);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }//this will make an exception until the player id in the player thing is correct.
+
+        }
+        batch.end();
+        /*for (int i : this.world.playerLabels.keySet()) {
+            TextField tf = this.world.playerLabels.get(i);
+            for (Player p : world.players) {
+                System.out.println("checking match on " + p.id + " and " + i);
+                if (p.id == i) {
+                    System.out.println("Changing positions because " + p.id + " and " + i + " matched");
+                    tf.setPosition(p.xLast, p.yLast + 10);
+                }
+            }
+
+            tf.draw(batch, 1);
+        }*/
+
     }
 
     private void renderPlayers(){
