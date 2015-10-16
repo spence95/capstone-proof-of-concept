@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 public class MenuComponent {
     public final Vector2 position;
     public final Rectangle bounds;
-    public final TextureRegion texture;
+    public TextureRegion texture;
 
     public MenuComponent (float x, float y, float width, float height, TextureRegion texture) {
         this.position = new Vector2(x, y);

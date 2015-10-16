@@ -34,6 +34,24 @@ public class Assets {
     public static TextureRegion playerFiringRegion;
     public static TextureRegion playerDyingRegion;
 
+    //nu menuz//
+    public static Texture menuSplashCharityChamps;
+    public static TextureRegion menuSplashCharityChampsRegion;
+    public static Texture menuSplashBlank;
+    public static TextureRegion menuSplashBlankRegion;
+    public static Texture menuLogin;
+    public static TextureRegion menuLoginRegion;
+    public static Texture menuLetsGo;
+    public static TextureRegion menuLetsGoRegion;
+    public static Texture menuLetsGoDark;
+    public static TextureRegion menuLetsGoDarkRegion;
+    public static Texture menuSignUp;
+    public static TextureRegion menuSignUpRegion;
+    public static Texture menuSignUpDark;
+    public static TextureRegion menuSignUpDarkRegion;
+
+    //end nu menuz
+
     public static Texture splash;
     public static TextureRegion splashRegion;
     public static Texture mainMenu;
@@ -62,8 +80,8 @@ public class Assets {
     public static TextureRegion menuFailedRegion;
     public static Texture menuWelcome;
     public static TextureRegion menuWelcomeRegion;
-    public static Texture menuSignup;
-    public static TextureRegion menuSignupRegion;
+    //public static Texture menuSignup;
+    //public static TextureRegion menuSignupRegion;
     public static Texture menuSignupScreen;
     public static TextureRegion menuSignupScreenRegion;
     public static Texture menuEmail;
@@ -155,8 +173,8 @@ public class Assets {
         menuFailedRegion = new TextureRegion(menuFailed, 0, 0, 100, 50);
         menuWelcome = loadTexture("menuWelcome.png");
         menuWelcomeRegion = new TextureRegion(menuWelcome, 0, 0, 800, 480);
-        menuSignup = loadTexture("menuSignup.png");
-        menuSignupRegion = new TextureRegion(menuSignup, 0, 0, 100, 50);
+        //menuSignup = loadTexture("menuSignup.png");
+        //menuSignupRegion = new TextureRegion(menuSignup, 0, 0, 100, 50);
 
         menuEmail = loadTexture("menuEmail.png");
         menuEmailRegion = new TextureRegion(menuEmail, 0, 0, 100, 50);
@@ -175,6 +193,24 @@ public class Assets {
 
         menuSpence = loadTexture("menuSpence.png");
         menuSpenceRegion = new TextureRegion(menuSpence, 0, 0, 534, 799);
+
+        //nu menuz
+        menuSplashCharityChamps = loadTexture("menuSplashCharityChamps.png");
+        menuSplashCharityChampsRegion = new TextureRegion(menuSplashCharityChamps, 0, 0, 800, 480);
+        menuSplashBlank = loadTexture("menuSplashBlank.png");
+        menuSplashBlankRegion = new TextureRegion(menuSplashBlank, 0, 0, 800, 480);
+        menuLogin = loadTexture("menuLogin.png");
+        menuLoginRegion = new TextureRegion(menuLogin, 0, 0, 800, 480);
+        menuLetsGo = loadTexture("menuLetsGo.png");
+        menuLetsGoRegion = new TextureRegion(menuLetsGo, 0, 0, 350, 150);
+        menuLetsGoDark = loadTexture("menuLetsGoDark.png");
+        menuLetsGoDarkRegion = new TextureRegion(menuLetsGoDark, 0, 0, 350, 150);
+        menuSignUp = loadTexture("menuSignUpWorkaround.png");
+        menuSignUpRegion = new TextureRegion(menuSignUp, 0, 0, 350, 150);
+        menuSignUpDark = loadTexture("menuSignUpDark.png");
+        menuSignUpDarkRegion = new TextureRegion(menuSignUpDark, 0, 0, 350, 150);
+
+        //end nu menuz
 
         //animations
         playerWalking = new Animation(.05f,
@@ -229,16 +265,18 @@ public class Assets {
 
         //dank fontz
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("PTS55F.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("8-Bit-Madness.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 36;
         parameter.minFilter = Texture.TextureFilter.Linear;
         parameter.magFilter = Texture.TextureFilter.Linear;
+        //parameter.minFilter = Texture.TextureFilter.Nearest;
+        //parameter.magFilter = Texture.TextureFilter.Nearest;
         parameter.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
         BitmapFont font36 = generator.generateFont(parameter);
         generator.dispose();
 
-        FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(Gdx.files.internal("PTS55F.ttf"));
+        FreeTypeFontGenerator generator2 = new FreeTypeFontGenerator(Gdx.files.internal("8-Bit-Madness.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter2.size = 12;
         parameter2.minFilter = Texture.TextureFilter.Linear;
@@ -258,7 +296,7 @@ public class Assets {
 
         tfs = new TextField.TextFieldStyle();
         tfs.font = font36;
-        tfs.fontColor = Color.BLACK;
+        tfs.fontColor = Color.valueOf("fa7a82");
         tfs.background = nuSkin.getDrawable("background");
         tfs.cursor = nuSkin.getDrawable("cursor");
         tfs.cursor.setMinWidth(2);

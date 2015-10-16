@@ -13,8 +13,11 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -28,14 +31,13 @@ import java.util.Random;
 
 
 
-
 public class Menu {
 
     //wilsons stuff
     public static final float MENU_WIDTH = 800;
     public static final float MENU_HEIGHT = 480;
     public ArrayList<MenuComponent> menuComponents;
-    public ArrayList<TextField> menuTextFields;
+    public HashMap<String, TextField> menuTextFields;
     public TextureRegion menu;
     //lets say 1 = splash screen, 2 = main menu, 3 = options
     public int menuNumber;
@@ -59,7 +61,10 @@ public class Menu {
     float lastTouchedY;
     Rectangle menuBounds;
 
-    Boolean shouldClear = false;
+    Boolean shouldClear;
+    public int blinkTimer;//this is used in menuRendered to process the blinking Charity Champs menu
+    Boolean isSplash;
+    Boolean unfocusAll;
 
 
 
@@ -67,11 +72,15 @@ public class Menu {
         //defaults to splash, since that should be first
         menu = Assets.splashRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
         httpReturns = new ArrayList<String>();
         menuNumber = this.MENU_SPLASH;
         this.game = game;
         apiCall = new ApiCall();
+        blinkTimer = 0;
+        shouldClear = false;
+        isSplash = true;
+        unfocusAll = false;
     }
 
     public static String sha256(String base) { //this is almost certainly a really bad idea. eff it
@@ -182,11 +191,25 @@ public class Menu {
 
         if (menuNumber == this.MENU_SPLASH)//splash
         {
+            this.isSplash = false;
             this.signIn();
+
         }
         else if (menuNumber == this.MENU_SIGNIN)//sign in
         {
-            if (menuComponents.get(2).bounds.contains(x, y))//submit
+
+            if (menuComponents.get(0).bounds.contains(x, y))//LETS GO
+            {
+                menuComponents.get(0).texture = Assets.menuLetsGoDarkRegion;
+                this.processSignIn(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText());
+            }
+            else if (menuComponents.get(1).bounds.contains(x, y))//SIGN UP
+            {
+                menuComponents.get(1).texture = Assets.menuSignUpDarkRegion;
+                this.signUp();
+            }
+
+            /*if (menuComponents.get(2).bounds.contains(x, y))//submit
             {
 
                 this.processSignIn(menuTextFields.get(0).getText(), menuTextFields.get(1).getText());
@@ -199,7 +222,7 @@ public class Menu {
             else if (menuComponents.get(4).bounds.contains(x, y))//shortcut to sign in as spence95
             {
                 this.processSignIn("spence95", "abc");
-            }
+            }*/
         }
         else if (menuNumber == this.MENU_WELCOME)//welcome
         {
@@ -210,9 +233,9 @@ public class Menu {
 
             if (menuComponents.get(4).bounds.contains(x, y))//submit
             {
-                this.processSignUp(menuTextFields.get(0).getText(), menuTextFields.get(1).getText(), menuTextFields.get(2).getText(), menuTextFields.get(3).getText());
+                //this.processSignUp(menuTextFields.get(0).getText(), menuTextFields.get(1).getText(), menuTextFields.get(2).getText(), menuTextFields.get(3).getText());
 
-                this.processSignIn(menuTextFields.get(0).getText(), menuTextFields.get(1).getText());
+                //this.processSignIn(menuTextFields.get(0).getText(), menuTextFields.get(1).getText());
             }
             else if (menuComponents.get(5).bounds.contains(x, y))//return
             {
@@ -251,41 +274,80 @@ public class Menu {
 
     public void splash(){
         shouldClear = true;
-        menu = Assets.splashRegion;
+        menu = Assets.menuSplashCharityChampsRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
         menuNumber = this.MENU_SPLASH;
+        blinkTimer = 0;
+        this.isSplash = true;
     }
 
     public void signIn(){
         shouldClear = true;
-        menu = Assets.menuSigninRegion;
+        menu = Assets.menuLoginRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
 
-        menuComponents.add(0, new MenuComponent(200, 300, 100, 50, Assets.menuUsernameRegion));
-        menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuPasswordRegion));
-        menuComponents.add(2, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
-        menuComponents.add(3, new MenuComponent(400, 50, 100, 50, Assets.menuSignupRegion));
-        menuComponents.add(4, new MenuComponent(45, 45, 178, 267, Assets.menuSpenceRegion));
+        menuComponents.add(0, new MenuComponent(600, 200, 350, 150, Assets.menuLetsGoRegion));
+        menuComponents.add(1, new MenuComponent(200, 200, 350, 150, Assets.menuSignUpRegion));
+
+        //menuComponents.add(0, new MenuComponent(100, 300, 100, 50, Assets.menuUsernameRegion));
+        //menuComponents.add(1, new MenuComponent(500, 300, 100, 50, Assets.menuPasswordRegion));
+        //menuComponents.add(2, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
+        //menuComponents.add(3, new MenuComponent(400, 50, 100, 50, Assets.menuSignupRegion));
+        //menuComponents.add(4, new MenuComponent(45, 45, 178, 267, Assets.menuSpenceRegion));
 
 
-        TextField usernameTextField = new TextField("", Assets.tfs);
-        usernameTextField.setPosition(300, 250);
-        usernameTextField.setWidth(400);
+        final TextField usernameTextField = new TextField("USERNAME", Assets.tfs);
+        usernameTextField.setPosition(50, 270);
+        usernameTextField.setWidth(300);
         usernameTextField.setHeight(50);
         usernameTextField.setFocusTraversal(false);
+        usernameTextField.addListener(new ClickListener() {
+            public void clicked(InputEvent e, float x, float y) {
+                if (usernameTextField.getText().equals("USERNAME"))
+                    usernameTextField.setText("");
 
-        TextField passwordTextField = new TextField("", Assets.tfs);
-        passwordTextField.setPosition(300, 150);
+            }
+        });
+        usernameTextField.setTextFieldListener(new TextField.TextFieldListener() {//if enter is pressed, remove the keyboard
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if ((c == '\r') || (c == '\n')) {
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                    unfocusAll = true;
+                }
+            }
+        });
+
+
+        final TextField passwordTextField = new TextField("PASSWORD", Assets.tfs);
+        passwordTextField.setPosition(450, 270);
         passwordTextField.setPasswordMode(true);
         passwordTextField.setPasswordCharacter('*');
-        passwordTextField.setWidth(400);
+        passwordTextField.setWidth(300);
         passwordTextField.setHeight(50);
         passwordTextField.setFocusTraversal(false);
+        passwordTextField.addListener(new ClickListener() {
+            public void clicked(InputEvent e, float x, float y) {
+                if (passwordTextField.getText().equals("PASSWORD"))
+                    passwordTextField.setText("");
 
-        menuTextFields.add(0, usernameTextField);
-        menuTextFields.add(1, passwordTextField);
+            }
+        });
+        passwordTextField.setTextFieldListener(new TextField.TextFieldListener() {//if enter is pressed, remove the keyboard
+            @Override
+            public void keyTyped(TextField textField, char c) {
+                if ((c == '\r') || (c == '\n')){
+                    Gdx.input.setOnscreenKeyboardVisible(false);
+                    unfocusAll = true;
+                }
+            }
+        });
+
+        menuTextFields.put("usernameTF", usernameTextField);
+        menuTextFields.put("passwordTF", passwordTextField);
+
 
         menuNumber = this.MENU_SIGNIN;
     }
@@ -294,7 +356,7 @@ public class Menu {
         shouldClear = true;
         menu = Assets.menuSignupScreenRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
 
         menuComponents.add(0, new MenuComponent(200, 400, 100, 50, Assets.menuUsernameRegion));
         menuComponents.add(1, new MenuComponent(200, 300, 100, 50, Assets.menuPasswordRegion));
@@ -333,10 +395,10 @@ public class Menu {
         charityTextField.setHeight(50);
         charityTextField.setFocusTraversal(false);
 
-        menuTextFields.add(0, usernameTextField);
-        menuTextFields.add(1, passwordTextField);
-        menuTextFields.add(2, emailTextField);
-        menuTextFields.add(3, charityTextField);
+        menuTextFields.put("usernameTF", usernameTextField);
+        menuTextFields.put("passwordTF", passwordTextField);
+        menuTextFields.put("emailTF", emailTextField);
+        menuTextFields.put("charityTF", charityTextField);
 
         menuNumber = this.MENU_SIGNUP;
     }
@@ -346,7 +408,7 @@ public class Menu {
         shouldClear = true;
         menu = Assets.menuWelcomeRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
 
 
         TextField usernameTextField = new TextField(username, Assets.tfs);
@@ -377,10 +439,11 @@ public class Menu {
         charityTextField.setFocusTraversal(false);
         charityTextField.setDisabled(true);
 
-        menuTextFields.add(0, usernameTextField);
-        menuTextFields.add(1, winsTextField);
-        menuTextFields.add(2, lossesTextField);
-        menuTextFields.add(3, charityTextField);
+        menuTextFields.put("usernameTF", usernameTextField);
+        menuTextFields.put("winsTF", winsTextField);
+        menuTextFields.put("lossesTF", lossesTextField);
+        menuTextFields.put("charityTF", charityTextField);
+
 
         menuNumber = this.MENU_WELCOME;
     }
@@ -389,7 +452,7 @@ public class Menu {
         shouldClear = true;
         menu = Assets.mainMenuRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
         menuComponents.add(0, new MenuComponent(200, 300, 100, 50, Assets.menuPlayRegion));
         menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuOptionsRegion));
         menuNumber = this.MENU_MAINMENU;
@@ -401,7 +464,7 @@ public class Menu {
         menuNumber = this.MENU_OPTIONS;
         menu = Assets.optionsRegion;
         menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new ArrayList<TextField>();
+        menuTextFields = new HashMap<String, TextField>();
         menuComponents.add(0, new MenuComponent(600, 50, 100, 50, Assets.menuReturnRegion));
         menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuOptionsPlayerRegion));
         menuComponents.add(2, new MenuComponent(200, 300, 100, 50, Assets.menuOptionsNotificationRegion));
