@@ -49,6 +49,18 @@ public class Assets {
     public static TextureRegion menuSignUpRegion;
     public static Texture menuSignUpDark;
     public static TextureRegion menuSignUpDarkRegion;
+    public static Texture menuNinePatchBlue;
+    public static TextureRegion menuNinePatchBlueRegion;
+    public static Texture menuButton;
+    public static TextureRegion menuButtonRegion;
+    public static Texture menuButtonDark;
+    public static TextureRegion menuButtonDarkRegion;
+    public static Texture menuButtonGrey;
+    public static TextureRegion menuButtonGreyRegion;
+    public static Texture menuButtonLight;
+    public static TextureRegion menuButtonLightRegion;
+    public static Texture menuNinePatchTransparent;
+    public static TextureRegion menuNinePatchTransparentRegion;
 
     //end nu menuz
 
@@ -104,6 +116,10 @@ public class Assets {
 
     public static TextField.TextFieldStyle tfs;
     public static TextField.TextFieldStyle tfs12;
+    public static TextField.TextFieldStyle tfsBigBlue100;
+    public static TextField.TextFieldStyle tfsBigBlue70;
+    public static TextField.TextFieldStyle tfsTrans100;
+    public static TextField.TextFieldStyle tfsTransWhite100;
 
 
     public static Animation playerWalking;
@@ -209,7 +225,18 @@ public class Assets {
         menuSignUpRegion = new TextureRegion(menuSignUp, 0, 0, 350, 150);
         menuSignUpDark = loadTexture("menuSignUpDark.png");
         menuSignUpDarkRegion = new TextureRegion(menuSignUpDark, 0, 0, 350, 150);
-
+        menuNinePatchBlue = loadTexture("menuNinePatchBlue.png");
+        menuNinePatchBlueRegion = new TextureRegion(menuNinePatchBlue, 0, 0, 10, 10);
+        menuButton = loadTexture("menuButton.png");
+        menuButtonRegion = new TextureRegion(menuButton, 0, 0, 350, 150);
+        menuButtonDark = loadTexture("menuButtonDark.png");
+        menuButtonDarkRegion = new TextureRegion(menuButtonDark, 0, 0, 350, 150);
+        menuButtonGrey = loadTexture("menuButtonGrey.png");
+        menuButtonGreyRegion = new TextureRegion(menuButtonGrey, 0, 0, 350, 150);
+        menuButtonLight = loadTexture("menuButtonLight.png");
+        menuButtonLightRegion = new TextureRegion(menuButtonLight, 0, 0, 350, 150);
+        menuNinePatchTransparent = loadTexture("menuNinePatchTransparent.png");
+        menuNinePatchTransparentRegion = new TextureRegion(menuNinePatchTransparent, 0, 0, 10, 10);
         //end nu menuz
 
         //animations
@@ -285,10 +312,38 @@ public class Assets {
         BitmapFont font12 = generator2.generateFont(parameter2);
         generator2.dispose();
 
+        FreeTypeFontGenerator generator3 = new FreeTypeFontGenerator(Gdx.files.internal("8-Bit-Madness.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter3 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter3.size = 100;
+        parameter3.minFilter = Texture.TextureFilter.Linear;
+        parameter3.magFilter = Texture.TextureFilter.Linear;
+        parameter3.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
+        BitmapFont font100 = generator3.generateFont(parameter3);
+        generator3.dispose();
+
+        FreeTypeFontGenerator generator4 = new FreeTypeFontGenerator(Gdx.files.internal("8-Bit-Madness.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter4 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter4.size = 70;
+        parameter4.minFilter = Texture.TextureFilter.Linear;
+        parameter4.magFilter = Texture.TextureFilter.Linear;
+        parameter4.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
+        BitmapFont font70 = generator4.generateFont(parameter4);
+        generator4.dispose();
+
         Skin nuSkin = new Skin();
         NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
         nuSkin.add("background", nP);
         nuSkin.add("cursor", Assets.menuCursor);
+
+        Skin nuSkinBlue = new Skin();
+        NinePatch nPBlue = new NinePatch(Assets.menuNinePatchBlueRegion);
+        nuSkinBlue.add("background", nPBlue);
+        nuSkinBlue.add("cursor", Assets.menuCursor);
+
+        Skin nuSkinTrans = new Skin();
+        NinePatch nPTrans = new NinePatch(Assets.menuNinePatchTransparentRegion);
+        nuSkinTrans.add("background", nPTrans);
+        nuSkinTrans.add("cursor", Assets.menuCursor);
 
         //end fontz
 
@@ -301,6 +356,38 @@ public class Assets {
         tfs.cursor = nuSkin.getDrawable("cursor");
         tfs.cursor.setMinWidth(2);
         tfs.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfsBigBlue100 = new TextField.TextFieldStyle();
+        tfsBigBlue100.font = font100;
+        tfsBigBlue100.fontColor = Color.valueOf("fa7a82");
+        tfsBigBlue100.background = nuSkinBlue.getDrawable("background");
+        tfsBigBlue100.cursor = nuSkinBlue.getDrawable("cursor");
+        tfsBigBlue100.cursor.setMinWidth(2);
+        tfsBigBlue100.selection = nuSkinBlue.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfsTrans100 = new TextField.TextFieldStyle();
+        tfsTrans100.font = font100;
+        tfsTrans100.fontColor = Color.valueOf("fa7a82");
+        tfsTrans100.background = nuSkinTrans.getDrawable("background");
+        tfsTrans100.cursor = nuSkinTrans.getDrawable("cursor");
+        tfsTrans100.cursor.setMinWidth(2);
+        tfsTrans100.selection = nuSkinTrans.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfsTransWhite100 = new TextField.TextFieldStyle();
+        tfsTransWhite100.font = font100;
+        tfsTransWhite100.fontColor = Color.WHITE;
+        tfsTransWhite100.background = nuSkinTrans.getDrawable("background");
+        tfsTransWhite100.cursor = nuSkinTrans.getDrawable("cursor");
+        tfsTransWhite100.cursor.setMinWidth(2);
+        tfsTransWhite100.selection = nuSkinTrans.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfsBigBlue70 = new TextField.TextFieldStyle();
+        tfsBigBlue70.font = font70;
+        tfsBigBlue70.fontColor = Color.valueOf("fa7a82");
+        tfsBigBlue70.background = nuSkinBlue.getDrawable("background");
+        tfsBigBlue70.cursor = nuSkinBlue.getDrawable("cursor");
+        tfsBigBlue70.cursor.setMinWidth(2);
+        tfsBigBlue70.selection = nuSkinBlue.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
 
         tfs12 = new TextField.TextFieldStyle();
         tfs12.font = font12;

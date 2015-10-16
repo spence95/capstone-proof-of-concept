@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -208,6 +209,10 @@ public class Menu {
                 menuComponents.get(1).texture = Assets.menuSignUpDarkRegion;
                 this.signUp();
             }
+            else if (menuComponents.get(2).bounds.contains(x, y))//shortcut to sign in as spence95
+            {
+                this.processSignIn("spence95", "abc");
+            }
 
             /*if (menuComponents.get(2).bounds.contains(x, y))//submit
             {
@@ -295,7 +300,7 @@ public class Menu {
         //menuComponents.add(1, new MenuComponent(500, 300, 100, 50, Assets.menuPasswordRegion));
         //menuComponents.add(2, new MenuComponent(600, 50, 100, 50, Assets.menuSubmitRegion));
         //menuComponents.add(3, new MenuComponent(400, 50, 100, 50, Assets.menuSignupRegion));
-        //menuComponents.add(4, new MenuComponent(45, 45, 178, 267, Assets.menuSpenceRegion));
+        menuComponents.add(2, new MenuComponent(45, 45, 178, 267, Assets.menuSpenceRegion));
 
 
         final TextField usernameTextField = new TextField("USERNAME", Assets.tfs);
@@ -372,6 +377,7 @@ public class Menu {
         usernameTextField.setPosition(300, 350);
         usernameTextField.setWidth(400);
         usernameTextField.setHeight(50);
+        usernameTextField.setMaxLength(16);//usernames can be 16 characters long
         usernameTextField.setFocusTraversal(false);
 
 
@@ -406,55 +412,56 @@ public class Menu {
     public void welcome(String username, int wins, int losses, String charityName, int charityIcon)
     {
         shouldClear = true;
-        menu = Assets.menuWelcomeRegion;
+        menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new HashMap<String, TextField>();
 
-
-        TextField usernameTextField = new TextField(username, Assets.tfs);
-        usernameTextField.setPosition(300, 400);
-        usernameTextField.setWidth(400);
+        TextField usernameTextField = new TextField(("WELCOME " + username.toUpperCase() + "!"), Assets.tfsBigBlue70);
+        usernameTextField.setPosition(50, 250);
+        usernameTextField.setWidth(700);
         usernameTextField.setHeight(50);
         usernameTextField.setFocusTraversal(false);
         usernameTextField.setDisabled(true);
 
-        TextField winsTextField = new TextField(String.valueOf(wins), Assets.tfs);
-        winsTextField.setPosition(300, 300);
-        winsTextField.setWidth(400);
-        winsTextField.setHeight(50);
-        winsTextField.setFocusTraversal(false);
-        winsTextField.setDisabled(true);
-
-        TextField lossesTextField = new TextField(String.valueOf(losses), Assets.tfs);
-        lossesTextField.setPosition(300, 200);
-        lossesTextField.setWidth(400);
-        lossesTextField.setHeight(50);
-        lossesTextField.setFocusTraversal(false);
-        lossesTextField.setDisabled(true);
-
-        TextField charityTextField = new TextField(charityName, Assets.tfs);
-        charityTextField.setPosition(300, 100);
-        charityTextField.setWidth(400);
-        charityTextField.setHeight(50);
-        charityTextField.setFocusTraversal(false);
-        charityTextField.setDisabled(true);
-
         menuTextFields.put("usernameTF", usernameTextField);
-        menuTextFields.put("winsTF", winsTextField);
-        menuTextFields.put("lossesTF", lossesTextField);
-        menuTextFields.put("charityTF", charityTextField);
-
 
         menuNumber = this.MENU_WELCOME;
     }
 
     public void mainMenu(){
         shouldClear = true;
-        menu = Assets.mainMenuRegion;
+        menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new HashMap<String, TextField>();
-        menuComponents.add(0, new MenuComponent(200, 300, 100, 50, Assets.menuPlayRegion));
-        menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuOptionsRegion));
+        menuComponents.add(0, new MenuComponent(250, 380, 350, 150, Assets.menuButtonRegion));//play button
+        menuComponents.add(1, new MenuComponent(250, 200, 350, 150, Assets.menuButtonRegion));//options button
+
+        TextField playTextField = new TextField(("PLAY!"), Assets.tfsTransWhite100);
+        playTextField.setPosition(90, 255);
+        playTextField.setWidth(325);//to be centered well make the width about 325
+        playTextField.setHeight(50);
+        playTextField.setAlignment(Align.center);
+        playTextField.setFocusTraversal(false);
+        playTextField.setDisabled(true);
+
+        TextField optionsTextField = new TextField(("OPTIONS"), Assets.tfsTransWhite100);
+        optionsTextField.setPosition(90, 75);
+        optionsTextField.setWidth(350);
+        optionsTextField.setHeight(50);
+        optionsTextField.setFocusTraversal(false);
+        optionsTextField.setDisabled(true);
+
+        TextField charityChampsTextField = new TextField(("CHARITY CHAMPS"), Assets.tfsTrans100);
+        charityChampsTextField.setPosition(100, 390);
+        charityChampsTextField.setWidth(700);
+        charityChampsTextField.setHeight(50);
+        charityChampsTextField.setFocusTraversal(false);
+        charityChampsTextField.setDisabled(true);
+
+        menuTextFields.put("playTF", playTextField);
+        menuTextFields.put("optionsTF", optionsTextField);
+        menuTextFields.put("charityChampsTF", charityChampsTextField);
+
         menuNumber = this.MENU_MAINMENU;
     }
 
@@ -462,12 +469,49 @@ public class Menu {
     {
         shouldClear = true;
         menuNumber = this.MENU_OPTIONS;
-        menu = Assets.optionsRegion;
+        menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new HashMap<String, TextField>();
-        menuComponents.add(0, new MenuComponent(600, 50, 100, 50, Assets.menuReturnRegion));
-        menuComponents.add(1, new MenuComponent(200, 200, 100, 50, Assets.menuOptionsPlayerRegion));
-        menuComponents.add(2, new MenuComponent(200, 300, 100, 50, Assets.menuOptionsNotificationRegion));
+        menuComponents.add(0, new MenuComponent(600, 200, 350, 150, Assets.menuButtonRegion));//return
+        menuComponents.add(1, new MenuComponent(250, 380, 350, 150, Assets.menuButtonRegion));//player
+        menuComponents.add(2, new MenuComponent(250, 200, 350, 150, Assets.menuButtonRegion));//notifications
+
+        TextField playTextField = new TextField(("PLAYER"), Assets.tfsTransWhite100);
+        playTextField.setPosition(90, 255);
+        playTextField.setWidth(325);//to be centered well make the width about 325
+        playTextField.setHeight(50);
+        playTextField.setAlignment(Align.center);
+        playTextField.setFocusTraversal(false);
+        playTextField.setDisabled(true);
+
+        TextField optionsTextField = new TextField(("AUDIO"), Assets.tfsTransWhite100);
+        optionsTextField.setPosition(90, 75);
+        optionsTextField.setWidth(325);
+        optionsTextField.setHeight(50);
+        optionsTextField.setAlignment(Align.center);
+        optionsTextField.setFocusTraversal(false);
+        optionsTextField.setDisabled(true);
+
+        TextField returnTextField = new TextField(("RETURN"), Assets.tfsTransWhite100);
+        returnTextField.setPosition(440, 75);
+        returnTextField.setWidth(325);//to be centered well make the width about 325
+        returnTextField.setHeight(50);
+        returnTextField.setAlignment(Align.center);
+        returnTextField.setFocusTraversal(false);
+        returnTextField.setDisabled(true);
+
+        TextField charityChampsTextField = new TextField(("OPTIONS"), Assets.tfsTrans100);
+        charityChampsTextField.setPosition(100, 390);
+        charityChampsTextField.setWidth(700);
+        charityChampsTextField.setHeight(50);
+        charityChampsTextField.setFocusTraversal(false);
+        charityChampsTextField.setDisabled(true);
+
+        menuTextFields.put("playTF", playTextField);
+        menuTextFields.put("optionsTF", optionsTextField);
+        menuTextFields.put("returnTF", returnTextField);
+        menuTextFields.put("charityChampsTF", charityChampsTextField);
+
     }
 
     public void update(float deltaTime){
