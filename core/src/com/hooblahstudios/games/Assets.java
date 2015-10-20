@@ -35,20 +35,8 @@ public class Assets {
     public static TextureRegion playerDyingRegion;
 
     //nu menuz//
-    public static Texture menuSplashCharityChamps;
-    public static TextureRegion menuSplashCharityChampsRegion;
     public static Texture menuSplashBlank;
     public static TextureRegion menuSplashBlankRegion;
-    public static Texture menuLogin;
-    public static TextureRegion menuLoginRegion;
-    public static Texture menuLetsGo;
-    public static TextureRegion menuLetsGoRegion;
-    public static Texture menuLetsGoDark;
-    public static TextureRegion menuLetsGoDarkRegion;
-    public static Texture menuSignUp;
-    public static TextureRegion menuSignUpRegion;
-    public static Texture menuSignUpDark;
-    public static TextureRegion menuSignUpDarkRegion;
     public static Texture menuNinePatchBlue;
     public static TextureRegion menuNinePatchBlueRegion;
     public static Texture menuButton;
@@ -61,52 +49,25 @@ public class Assets {
     public static TextureRegion menuButtonLightRegion;
     public static Texture menuNinePatchTransparent;
     public static TextureRegion menuNinePatchTransparentRegion;
+    public static Texture menuButtonSmall;
+    public static TextureRegion menuButtonSmallRegion;
+    public static Texture menuButtonSmallDark;
+    public static TextureRegion menuButtonSmallDarkRegion;
+    public static Texture menuButtonSmallGrey;
+    public static TextureRegion menuButtonSmallGreyRegion;
+    public static Texture menuButtonSmallLight;
+    public static TextureRegion menuButtonSmallLightRegion;
 
     //end nu menuz
 
-    public static Texture splash;
-    public static TextureRegion splashRegion;
-    public static Texture mainMenu;
-    public static TextureRegion mainMenuRegion;
-    public static Texture menuPlay;
-    public static TextureRegion menuPlayRegion;
-    public static Texture menuOptions;
-    public static TextureRegion menuOptionsRegion;
-    public static Texture Options;
-    public static TextureRegion optionsRegion;
-    public static Texture menuOptionsPlayer;
-    public static TextureRegion menuOptionsPlayerRegion;
-    public static Texture menuOptionsNotification;
-    public static TextureRegion menuOptionsNotificationRegion;
-    public static Texture menuReturn;
-    public static TextureRegion menuReturnRegion;
-    public static Texture menuSignin;
-    public static TextureRegion menuSigninRegion;
-    public static Texture menuUsername;
-    public static TextureRegion menuUsernameRegion;
-    public static Texture menuPassword;
-    public static TextureRegion menuPasswordRegion;
-    public static Texture menuSubmit;
-    public static TextureRegion menuSubmitRegion;
-    public static Texture menuFailed;
-    public static TextureRegion menuFailedRegion;
-    public static Texture menuWelcome;
-    public static TextureRegion menuWelcomeRegion;
-    //public static Texture menuSignup;
-    //public static TextureRegion menuSignupRegion;
-    public static Texture menuSignupScreen;
-    public static TextureRegion menuSignupScreenRegion;
-    public static Texture menuEmail;
-    public static TextureRegion menuEmailRegion;
-    public static Texture menuCharity;
-    public static TextureRegion menuCharityRegion;
+
     public static Texture menuNinePatch;
     public static TextureRegion menuNinePatchRegion;
     public static Texture menuCursor;
     public static TextureRegion menuCursorRegion;
 
-    public static Texture loadingMenu;
-    public static TextureRegion loadingMenuRegion;
+    //public static Texture loadingMenu;
+    //public static TextureRegion loadingMenuRegion;
 
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
@@ -120,6 +81,7 @@ public class Assets {
     public static TextField.TextFieldStyle tfsBigBlue70;
     public static TextField.TextFieldStyle tfsTrans100;
     public static TextField.TextFieldStyle tfsTransWhite100;
+    public static TextField.TextFieldStyle tfsTransWhite40;
 
 
     public static Animation playerWalking;
@@ -155,76 +117,23 @@ public class Assets {
         playerFiringRegion = new TextureRegion(player, 7, 688, 443, 105);
         playerDyingRegion = new TextureRegion(player, 0, 3, 340, 95);
 
-        splash = loadTexture("splashscreen.png");
-        splashRegion = new TextureRegion(splash, 0, 0, 800, 480);
 
-        mainMenu = loadTexture("mainMenu.png");
-        mainMenuRegion = new TextureRegion(mainMenu, 0, 0, 800, 480);
-
-        menuPlay = loadTexture("menuPlay.png");
-        menuPlayRegion = new TextureRegion(menuPlay, 0, 0, 100, 50);
-
-        menuOptions = loadTexture("menuOptions.png");
-        menuOptionsRegion = new TextureRegion(menuOptions, 0, 0, 100, 50);
-
-        Options = loadTexture("options.png");
-        optionsRegion = new TextureRegion(Options, 0, 0, 800, 480);
-        menuOptionsPlayer = loadTexture("menuOptionsPlayer.png");
-        menuOptionsPlayerRegion = new TextureRegion(menuOptionsPlayer, 0, 0, 100, 50);
-        menuOptionsNotification = loadTexture("menuOptionsNotification.png");
-        menuOptionsNotificationRegion = new TextureRegion(menuOptionsNotification, 0, 0, 100, 50);
-
-        menuReturn = loadTexture("menuReturn.png");
-        menuReturnRegion = new TextureRegion(menuReturn, 0, 0, 100, 50);
-
-        menuSignin = loadTexture("menuSignin.png");
-        menuSigninRegion = new TextureRegion(menuSignin, 0, 0, 800, 480);
-        menuUsername = loadTexture("menuUsername.png");
-        menuUsernameRegion = new TextureRegion(menuUsername, 0, 0, 100, 50);
-        menuPassword = loadTexture("menuPassword.png");
-        menuPasswordRegion = new TextureRegion(menuPassword, 0, 0, 100, 50);
-        menuSubmit = loadTexture("menuSubmit.png");
-        menuSubmitRegion = new TextureRegion(menuSubmit, 0, 0, 100, 50);
-        menuFailed = loadTexture("menuFailed.png");
-        menuFailedRegion = new TextureRegion(menuFailed, 0, 0, 100, 50);
-        menuWelcome = loadTexture("menuWelcome.png");
-        menuWelcomeRegion = new TextureRegion(menuWelcome, 0, 0, 800, 480);
-        //menuSignup = loadTexture("menuSignup.png");
-        //menuSignupRegion = new TextureRegion(menuSignup, 0, 0, 100, 50);
-
-        menuEmail = loadTexture("menuEmail.png");
-        menuEmailRegion = new TextureRegion(menuEmail, 0, 0, 100, 50);
-        menuCharity = loadTexture("menuCharity.png");
-        menuCharityRegion = new TextureRegion(menuCharity, 0, 0, 100, 50);
-        menuSignupScreen = loadTexture("menuSignupScreen.png");
-        menuSignupScreenRegion = new TextureRegion(menuSignupScreen, 0, 0, 800, 480);
 
         menuNinePatch = loadTexture("menuNinePatch.png");
         menuNinePatchRegion = new TextureRegion(menuNinePatch, 0, 0, 10, 10);
         menuCursor = loadTexture("menuCursor.png");
         menuCursorRegion = new TextureRegion(menuCursor, 0, 0, 2, 8);
 
-        loadingMenu = loadTexture("loading.png");
-        loadingMenuRegion = new TextureRegion(loadingMenu, 0, 0, 800, 480);
+        //loadingMenu = loadTexture("loading.png");
+        //loadingMenuRegion = new TextureRegion(loadingMenu, 0, 0, 800, 480);
 
         menuSpence = loadTexture("menuSpence.png");
         menuSpenceRegion = new TextureRegion(menuSpence, 0, 0, 534, 799);
 
         //nu menuz
-        menuSplashCharityChamps = loadTexture("menuSplashCharityChamps.png");
-        menuSplashCharityChampsRegion = new TextureRegion(menuSplashCharityChamps, 0, 0, 800, 480);
+
         menuSplashBlank = loadTexture("menuSplashBlank.png");
         menuSplashBlankRegion = new TextureRegion(menuSplashBlank, 0, 0, 800, 480);
-        menuLogin = loadTexture("menuLogin.png");
-        menuLoginRegion = new TextureRegion(menuLogin, 0, 0, 800, 480);
-        menuLetsGo = loadTexture("menuLetsGo.png");
-        menuLetsGoRegion = new TextureRegion(menuLetsGo, 0, 0, 350, 150);
-        menuLetsGoDark = loadTexture("menuLetsGoDark.png");
-        menuLetsGoDarkRegion = new TextureRegion(menuLetsGoDark, 0, 0, 350, 150);
-        menuSignUp = loadTexture("menuSignUpWorkaround.png");
-        menuSignUpRegion = new TextureRegion(menuSignUp, 0, 0, 350, 150);
-        menuSignUpDark = loadTexture("menuSignUpDark.png");
-        menuSignUpDarkRegion = new TextureRegion(menuSignUpDark, 0, 0, 350, 150);
         menuNinePatchBlue = loadTexture("menuNinePatchBlue.png");
         menuNinePatchBlueRegion = new TextureRegion(menuNinePatchBlue, 0, 0, 10, 10);
         menuButton = loadTexture("menuButton.png");
@@ -237,6 +146,14 @@ public class Assets {
         menuButtonLightRegion = new TextureRegion(menuButtonLight, 0, 0, 350, 150);
         menuNinePatchTransparent = loadTexture("menuNinePatchTransparent.png");
         menuNinePatchTransparentRegion = new TextureRegion(menuNinePatchTransparent, 0, 0, 10, 10);
+        menuButtonSmall = loadTexture("menuButtonSmall.png");
+        menuButtonSmallRegion = new TextureRegion(menuButtonSmall, 0, 0, 175, 75);
+        menuButtonSmallDark = loadTexture("menuButtonSmallDark.png");
+        menuButtonSmallDarkRegion = new TextureRegion(menuButtonSmallDark, 0, 0, 175, 75);
+        menuButtonSmallGrey = loadTexture("menuButtonSmallGrey.png");
+        menuButtonSmallGreyRegion = new TextureRegion(menuButtonSmallGrey, 0, 0, 175, 75);
+        menuButtonSmallLight = loadTexture("menuButtonSmallLight.png");
+        menuButtonSmallLightRegion = new TextureRegion(menuButtonSmallLight, 0, 0, 175, 75);
         //end nu menuz
 
         //animations
@@ -330,6 +247,15 @@ public class Assets {
         BitmapFont font70 = generator4.generateFont(parameter4);
         generator4.dispose();
 
+        FreeTypeFontGenerator generator5 = new FreeTypeFontGenerator(Gdx.files.internal("8-Bit-Madness.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter5 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter5.size = 40;
+        parameter5.minFilter = Texture.TextureFilter.Linear;
+        parameter5.magFilter = Texture.TextureFilter.Linear;
+        parameter5.characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.:,;'\"(!?) +-*/=";
+        BitmapFont font40 = generator5.generateFont(parameter5);
+        generator5.dispose();
+
         Skin nuSkin = new Skin();
         NinePatch nP = new NinePatch(Assets.menuNinePatchRegion);
         nuSkin.add("background", nP);
@@ -380,6 +306,14 @@ public class Assets {
         tfsTransWhite100.cursor = nuSkinTrans.getDrawable("cursor");
         tfsTransWhite100.cursor.setMinWidth(2);
         tfsTransWhite100.selection = nuSkinTrans.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfsTransWhite40 = new TextField.TextFieldStyle();
+        tfsTransWhite40.font = font40;
+        tfsTransWhite40.fontColor = Color.WHITE;
+        tfsTransWhite40.background = nuSkinTrans.getDrawable("background");
+        tfsTransWhite40.cursor = nuSkinTrans.getDrawable("cursor");
+        tfsTransWhite40.cursor.setMinWidth(2);
+        tfsTransWhite40.selection = nuSkinTrans.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
 
         tfsBigBlue70 = new TextField.TextFieldStyle();
         tfsBigBlue70.font = font70;

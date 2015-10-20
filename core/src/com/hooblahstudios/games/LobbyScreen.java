@@ -5,6 +5,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.utils.Align;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +21,8 @@ public class LobbyScreen extends ScreenAdapter {
     ApiCall api;
     String putResults;
     World world;
+    TextField loadingText;
+    int loadingDotTimer;
 
 
     public LobbyScreen(proofOfConcept game){
@@ -28,6 +32,17 @@ public class LobbyScreen extends ScreenAdapter {
         api = new ApiCall();
         //call out to server once
         putResults = putReady();
+
+        loadingDotTimer = 0;
+
+        this.loadingText = new TextField(("LOADING"), Assets.tfsTrans100);
+        loadingText.setPosition(250, 190);
+        loadingText.setWidth(700);
+        loadingText.setHeight(150);
+        //loadingText.setAlignment(Align.center);
+        loadingText.setFocusTraversal(false);
+        loadingText.setDisabled(true);
+
     }
 
     public String putReady(){
@@ -110,8 +125,31 @@ public class LobbyScreen extends ScreenAdapter {
 
     public void render(SpriteBatch batch){
         batch.begin();
-        batch.draw(Assets.loadingMenuRegion, guiCam.position.x - 800 / 2, guiCam.position.y - 480 / 2, 800,
+        batch.draw(Assets.menuSplashBlankRegion, guiCam.position.x - 800 / 2, guiCam.position.y - 480 / 2, 800,
                 480);
+
+
+        loadingText.draw(batch, 1);
+
+        if (loadingDotTimer == 15)
+        {
+            loadingText.setText("LOADING.");
+        }
+        else if (loadingDotTimer == 30)
+        {
+            loadingText.setText("LOADING..");
+        }
+        else if (loadingDotTimer == 45)
+        {
+            loadingText.setText("LOADING...");
+        }
+        else if(loadingDotTimer == 75)
+        {
+            loadingText.setText("LOADING");
+            loadingDotTimer = 0;
+        }
+        loadingDotTimer++;
+
         batch.end();
     }
 

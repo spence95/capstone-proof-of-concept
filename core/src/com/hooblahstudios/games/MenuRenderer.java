@@ -47,10 +47,10 @@ public class MenuRenderer {
         if (this.menu.isSplash)
         {
             if (this.menu.blinkTimer == 50) {
-                this.menu.menu = Assets.menuSplashBlankRegion;
+                this.menu.menuTextFields.get("charityChampsTF").setText("");
             }
             if (this.menu.blinkTimer > 70) {
-                this.menu.menu = Assets.menuSplashCharityChampsRegion;
+                this.menu.menuTextFields.get("charityChampsTF").setText("CHARITY CHAMPS!");
                 this.menu.blinkTimer = 0;
             }
         }
