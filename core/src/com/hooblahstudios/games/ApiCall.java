@@ -59,9 +59,7 @@ public class ApiCall {
         Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                System.out.println("handle");
                 String successValue = httpResponse.getResultAsString();
-                System.out.println(successValue);
                 if (successValue.contains("\"total_count\": 0"))//wrong credentials
                 {
                     httpReturns.set(ListNumber, "EMPTY");
@@ -120,9 +118,7 @@ public class ApiCall {
         Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                System.out.println("handle");
                 String successValue = httpResponse.getResultAsString();
-                System.out.println(successValue);
                 if (successValue.contains("\"total_count\": 0"))//wrong credentials
                 {
                     httpReturns.set(ListNumber, "EMPTY");

@@ -9,12 +9,20 @@ package com.hooblahstudios.games;
  */
 public class ScreenController {
     proofOfConcept game;
+    GameScreen gs;
 
-    public ScreenController(proofOfConcept game){
+    public ScreenController(proofOfConcept game, GameScreen gs){
+        this.gs = gs;
         this.game = game;
     }
 
     public void setGameOverScreen(){
         game.setScreen(new GameOverScreen(game));
+    }
+
+    public void setRetrievingScreen(World world) {game.setScreen(new RetrievingScreen(game, world, this, gs.renderer));}
+
+    public void resetGameScreen() {
+        game.setScreen(gs);
     }
 }

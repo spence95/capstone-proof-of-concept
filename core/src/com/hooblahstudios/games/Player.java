@@ -16,6 +16,7 @@ public class Player extends DynamicGameObject{
     boolean isFiring;
     boolean dead;
     int id;
+    int currentTurnId;
     float stateTime;
     private float secondsWaiting;
     Vector2 destination;
@@ -35,8 +36,8 @@ public class Player extends DynamicGameObject{
 
     public Player(int id, float width, float height, boolean isEnemy) {
         super(-1000, -1000, width, height);
-
-        //this.id = id;
+        this.currentTurnId = -100;
+        this.id = id;
         this.isMoving = false;
         this.isDone = false;
         this.isFiring = false;
@@ -52,8 +53,6 @@ public class Player extends DynamicGameObject{
     }
 
     public void spawn(float x, float y){
-        Spawn sp = new Spawn(x, y);
-        actions.add(sp);
 
         position.x = x;
         position.y = y;
@@ -160,9 +159,10 @@ public class Player extends DynamicGameObject{
             //if(turnCounter < actions.size()) {
                 if (actions.get(turnCounter) instanceof Spawn){
                     if(!isDone){
-                        position.set(actions.get(turnCounter).x, actions.get(turnCounter).y);
-                        bounds.x = position.x - bounds.width / 2;
-                        bounds.y = position.y - bounds.height / 2;
+//                        position.set(actions.get(turnCounter).x, actions.get(turnCounter).y);
+//                        bounds.x = position.x - bounds.width / 2;
+//                        bounds.y = position.y - bounds.height / 2;
+                        spawn(actions.get(turnCounter).x,actions.get(turnCounter).y);
                         turnCounter++;
                     }
                 }
@@ -238,5 +238,8 @@ public class Player extends DynamicGameObject{
         yLast = y;
     }
 
+    public void setCurrentTurnId(int currentTurnId){
+        this.currentTurnId = currentTurnId;
+    }
 
 }

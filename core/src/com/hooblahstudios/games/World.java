@@ -53,7 +53,7 @@ public class World {
     public HashMap<Integer, String> playersByID;
     public HashMap<Integer, TextField> playerLabels;
 
-    int turn;
+    int turnNumber;
     int matchID;
     public ArrayList<Integer> turnIDs;
 
@@ -73,10 +73,9 @@ public class World {
         explosions = new ArrayList<Explosion>();
         bullets = new ArrayList<Bullet>();
         actionMenu = new ActionMenu();
-        screenController = new ScreenController(game);
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
-        turn = 0;
+        turnNumber = 0;
         api = new ApiCall(new playerActionRetrievalCallback() {
             @Override
             public void setPlayersForRunning(String actionResults, String playerUrl, int index) {
@@ -125,6 +124,10 @@ public class World {
         blocks.add(block);
         block = new Block(WORLD_WIDTH, 240, 10, WORLD_HEIGHT);
         blocks.add(block);
+    }
+
+    public void createScreenController(GameScreen gs){
+        screenController = new ScreenController(game, gs);
     }
 
     public void addToTurnIDs(int id){
@@ -195,7 +198,6 @@ public class World {
     public void getPlayerDetails() {
         String URL = "http://li1081-187.members.linode.com/api/v1/turn/?match=" + this.matchID + "&turnnumber=0&format=json";
         String getTurns = api.httpGet(URL, 0);
-        System.out.println(getTurns);
         //loop through the players to build the playersByID<int, string> hashmap
         //String turnResults = api.httpGet(url, 0);
         JSONObject turnJson = new JSONObject(getTurns);
@@ -226,20 +228,16 @@ public class World {
             playerLabels.put(playerID,usernameTextField);
         }
 
-        System.out.println(playersByID);
-        System.out.println("playesrbyid:");
-        for (int i : playersByID.keySet()) {
-            System.out.println(i + ": " + playersByID.get(i));
-        }
+//        for (int i : playersByID.keySet()) {
+//            System.out.println(i + ": " + playersByID.get(i));
+//        }
 
 
     }
 
-    public void start(int startingTurnId, float spawnX, float spawnY){
-        //turn = startingTurnId;
+    public void start(){
         this.getPlayerDetails();
         currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
-        currentPlayer.spawn(spawnX, spawnY);
         Player enemy1 = new Player(-1, squareWidth, squareHeight, true);
 //        Player enemy2 = new Player(2, squareWidth, squareHeight, true);
 //        Player enemy3 = new Player(3, squareWidth, squareHeight, true);
@@ -247,6 +245,28 @@ public class World {
         players.add(enemy1);
 //        players.add(enemy2);
 //        players.add(enemy3);
+    }
+
+    public void spawnPlayers(){
+        //TODO: run through players spawn actions
+        for(int i = 0; i < players.size(); i++){
+            players.get(i).spawn(players.get(i).actions.get(0).x, players.get(i).actions.get(0).y);
+            players.get(i).actions.clear();
+        }
+
+        //TODO: post new turn
+        postNewTurn();
+    }
+
+    public Player getNextEnemyPlayerWithoutID(){
+        for(int i = 0; i < players.size(); i++){
+            Player pl = players.get(i);
+            //negative number means not set
+            if(pl.id < 0){
+                return pl;
+            }
+        }
+        return currentPlayer;
     }
 
     public void update(float deltaTime){
@@ -321,7 +341,7 @@ public class World {
 
     private void getRekt(){
         screenController.setGameOverScreen();
-        turn = 0;
+        turnNumber = 0;
     }
 
     //executed after one round has ran (not setting)
@@ -360,7 +380,6 @@ public class World {
         generateTurnJson();
         //newRound();
         this.currentPlayer.resetActions();
-        this.isSetting = false;
         //reset current player
         currentPlayer.position.x = currentPlayer.xLast;
         currentPlayer.position.y = currentPlayer.yLast;
@@ -401,7 +420,8 @@ public class World {
             int targetx = (int) (100 * round(ac.x, 2));
             int targety = (int) (100 * round(ac.y, 2));
 
-            int turnId = turnIDs.get(turnIDs.size() - 1);
+            //int turnId = turnIDs.get(turnIDs.size() - 1);
+            int turnId = currentPlayer.currentTurnId;
 
             String action = "{ \"actionnumber\":" + i + "," +
                     "\"actiontype\":" + actiontype + "," +
@@ -414,51 +434,92 @@ public class World {
 
             actionsJson += action;
         }
-        actionsJson = actionsJson.substring(0, actionsJson.length() - 1);
+        if(currentPlayer.actions.size() > 0) {
+            actionsJson = actionsJson.substring(0, actionsJson.length() - 1);
+        }
         actionsJson += "]}";
         //post turn, needs match, player, and turnnumber
 
-        //TODO: post actions to turn id in world
+        //post actions to turn id in world
         String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", actionsJson, 0, true, false);
+
+        //put received to turn
+        //String putReceivedURL = "http://45.33.62.187/api/v1/turn/" + turnIDs.get(turnIDs.size() - 1) + "/?format=json";
+        String putReceivedURL = "http://45.33.62.187/api/v1/turn/" + currentPlayer.currentTurnId + "/?format=json";
+        String json =  "{" +
+                "\"received\":\"true\"" +
+                "}" ;
+        String receivedResults = api.httpPostPutOrPatch(putReceivedURL, json, 0, false, true);
+
+
+
+        //TODO: update enemies' current turn ids here
+        String url = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&turnnumber=" + turnNumber + "&format=json";
+        String turnResults = api.httpGet(url, 0);
+        JSONObject turnJson = new JSONObject(turnResults);
+        JSONArray turnArray = turnJson.getJSONArray("objects");
+        for(int i = 0; i < turnArray.length(); i++) {
+            JSONObject turnObj = turnArray.getJSONObject(i);
+//            int[] tempTurnIds = new int[4];
+            String playerUrl = turnObj.getString("player");
+            String[] tokens = playerUrl.split("/");
+            int lastPlace = tokens.length - 1;
+            int playerID = Integer.parseInt(tokens[lastPlace]);
+            if (playerID != currentPlayer.id) {
+                Player pl = getPlayerById(playerID);
+                pl.currentTurnId = turnObj.getInt("id");
+            }
+        }
+
+
+        game.setScreen(new LobbyScreen(game, this));
+    }
+
+
+
+    public void runPlayers(){
         //TODO: throw up loading sign
         //TODO: if post unsuccessful try again else retrieve enemy actions
-       // if(!patchResults.contains("error")) {
-            String url = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&turnnumber=" + turn + "&format=json";
-            String turnResults = api.httpGet(url, 0);
-            JSONObject turnJson = new JSONObject(turnResults);
-            JSONArray turnArray = turnJson.getJSONArray("objects");
-            JSONObject turnObj = turnArray.getJSONObject(0);
+        // if(!patchResults.contains("error")) {
+        String url = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&turnnumber=" + turnNumber + "&format=json";
+        String turnResults = api.httpGet(url, 0);
+        JSONObject turnJson = new JSONObject(turnResults);
+        JSONArray turnArray = turnJson.getJSONArray("objects");
+        JSONObject turnObj = turnArray.getJSONObject(0);
 //            int[] tempTurnIds = new int[4];
-            HashMap<Integer, String> tempTurnIds = new HashMap<Integer, String>();
-            tempTurnIds.put(turnObj.getInt("id"), turnObj.getString("player"));
-            turnObj = turnArray.getJSONObject(1);
-            tempTurnIds.put(turnObj.getInt("id"), turnObj.getString("player"));
+        HashMap<Integer, String> tempTurnIds = new HashMap<Integer, String>();
+        tempTurnIds.put(turnObj.getInt("id"), turnObj.getString("player"));
+        turnObj = turnArray.getJSONObject(1);
+        tempTurnIds.put(turnObj.getInt("id"), turnObj.getString("player"));
 //            turnObj = turnArray.getJSONObject(2);
 //            tempTurnIds[2] = turnObj.getInt("id");
 //            turnObj = turnArray.getJSONObject(3);
 //            tempTurnIds[3] = turnObj.getInt("id");
-            int index = 0;
-            for (int i : tempTurnIds.keySet()) {
-                String getActionsUrl = "http://45.33.62.187/api/v1/action/?turn=" + i + "&format=json";
-                String actionResults = "";
-                api.httpGetAndRunPlayers(getActionsUrl, tempTurnIds.get(i), index);
-                index++;
-            }
+        int index = 0;
+        for (int i : tempTurnIds.keySet()) {
+            String getActionsUrl = "http://45.33.62.187/api/v1/action/?turn=" + i + "&format=json";
+            String actionResults = "";
+            api.httpGetAndRunPlayers(getActionsUrl, tempTurnIds.get(i), index);
+            index++;
+        }
 //        } else {
 //
 //        }
         //TODO: upon successful retrieval create turn id for next time and store it in world
+        postNewTurn(); //don't know where to put this
+    }
 
-        turn++;
+    public void postNewTurn(){
+        turnNumber++;
         String turnPostJson = "{" +
                 "\"match\":\"/api/v1/match/" + matchID + "/\"," +
                 "\"player\":\"/api/v1/player/" + game.getPlayerID() + "/\"," +
-                "\"turnnumber\":" + turn + "}";
+                "\"turnnumber\":" + turnNumber + "}";
         String postResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/turn/?format=json", turnPostJson, 0, false, false);
         JSONObject turnIdJsonObj = new JSONObject(postResults);
         int turnId = turnIdJsonObj.getInt("id");
         addToTurnIDs(turnId);
-
+        currentPlayer.currentTurnId = turnId;
     }
 
     public void SetPlayersForRunning(String actionResults, String playerUrl, int index){
@@ -473,7 +534,7 @@ public class World {
             Player pl = players.get(index);
 
             //if first time through
-            if(turn == 0) {
+            if(turnNumber == 0) {
                 if (playerID != game.getPlayerID()) {
                     pl.id = playerID;
                 } else {
@@ -506,11 +567,15 @@ public class World {
                 Attack at = new Attack(targetx, targety, 0);
                 actions.add(at);
             }
+
             pl.actions = actions;
+            if(pl.id != currentPlayer.id) {
+                System.out.println("ACCCCCTIONS");
+                System.out.print(pl.id + " " + pl.actions.get(1).x + " " + pl.actions.get(1).y);
+            }
         }
+        this.isSetting = false;
     }
-
-
 
     public static float round(float d, int decimalPlace) {
         BigDecimal bd = new BigDecimal(Float.toString(d));

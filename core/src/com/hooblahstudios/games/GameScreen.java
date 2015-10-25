@@ -43,6 +43,7 @@ public class GameScreen extends ScreenAdapter {
     public GameScreen(proofOfConcept game, World world){
         this.game = game;
         this.world = world;
+        world.createScreenController(this);
         state = GAME_READY;
         guiCam = new OrthographicCamera(800, 480);
         vp = new StretchViewport(480, 800, guiCam);

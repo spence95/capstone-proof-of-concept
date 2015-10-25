@@ -42,7 +42,6 @@ public class MenuRenderer {
         if (this.menu.shouldClear) {//it should clear because it changed screens and we want to remove the actors from the stage
             stage.clear();
             this.menu.shouldClear = false;
-            System.out.println("should clear was true, so stage was cleared and shouldClear was set to false");
         }
         if (this.menu.isSplash)
         {
@@ -55,7 +54,6 @@ public class MenuRenderer {
             }
         }
         if (this.menu.unfocusAll) {
-            System.out.println("UNFOCUS ALL");
             stage.unfocusAll();
             this.menu.unfocusAll = false;
         }

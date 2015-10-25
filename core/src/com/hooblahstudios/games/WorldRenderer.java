@@ -73,14 +73,11 @@ public class WorldRenderer {
         batch.begin();
         for (Player p : world.players) {
             try {
-                System.out.print("Trying to get the label for " + (p.id + 1));//I set it as p.id + 1 so it would be valid. right now its always 0, id isnt set right spence
-                System.out.println(p);
                 TextField tf = this.world.playerLabels.get((p.id + 1));
-                System.out.println(tf);
                 tf.setPosition(p.xLast, p.yLast + 10);
-                System.out.println("set the position");
                 tf.draw(batch, 1);
             }
+
             catch (Exception e){
                 System.out.println(e);
             }//this will make an exception until the player id in the player thing is correct.
