@@ -112,8 +112,6 @@ public class LobbyScreen extends ScreenAdapter {
             String[] matchmakingResults = getMatchmaking(false);
             String match = matchmakingResults[0];
             String waiting = matchmakingResults[1];
-            int deltaCheck = (int) (delta * 1000);
-            if (deltaCheck % 2 == 0) {
                 if (waiting == "false") {
                     if (match != "null") {
                         //get match id from string
@@ -166,7 +164,6 @@ public class LobbyScreen extends ScreenAdapter {
 
                         game.setScreen(new GameScreen(game, world));
                     }
-                }
             }
         } else {
             isReadyToRun();
