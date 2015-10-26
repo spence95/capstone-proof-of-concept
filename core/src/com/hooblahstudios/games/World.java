@@ -320,6 +320,14 @@ public class World {
                         getRekt();
                     }
                 }
+
+                //check if player has won
+                if (deadPlayerIds.size() == players.size() - 1){
+                    if(currentPlayer.dead == false) {
+                        //oh dang, u just won
+                        setWinScreen();
+                    }
+                }
             }
          //safely remove dead players from list
          removeDeadPlayers(deadPlayerIds);
@@ -340,7 +348,12 @@ public class World {
     }
 
     private void getRekt(){
-        screenController.setGameOverScreen();
+        screenController.setGameOverScreen(false);
+        turnNumber = 0;
+    }
+
+    private void setWinScreen(){
+        screenController.setGameOverScreen(true);
         turnNumber = 0;
     }
 
@@ -560,23 +573,24 @@ public class World {
             float targetx = actionsObj.getInt("targetx")/100;
             float targety = actionsObj.getInt("targety")/100;
             int actiontype = actionsObj.getInt("actiontype");
+            int actionSeqNum = actionsObj.getInt("actionnumber");
             if(actiontype == 0){
                 Spawn sp = new Spawn(originx, originy);
+                sp.setSequenceNum(actionSeqNum);
                 actions.add(sp);
                 pl.spawn(originx, originy);
             } else if(actiontype == 1){
                 Move mv = new Move(targetx, targety, 0);
+                mv.setSequenceNum(actionSeqNum);
                 actions.add(mv);
             } else if(actiontype == 2){
                 Attack at = new Attack(targetx, targety, 0);
+                at.setSequenceNum(actionSeqNum);
                 actions.add(at);
             }
-
-
         }
         pl.actions = actions;
-
-
+        pl.orderActions();
     }
 
     public static float round(float d, int decimalPlace) {

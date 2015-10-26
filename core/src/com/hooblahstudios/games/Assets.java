@@ -72,6 +72,9 @@ public class Assets {
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
 
+    public static Texture winScreenBackground;
+    public static TextureRegion winScreenBackgroundRegion;
+
     public static Texture menuSpence;
     public static TextureRegion menuSpenceRegion;
 
@@ -98,6 +101,9 @@ public class Assets {
 
         getRektBackground = loadTexture("getRektBackground.png");
         rektBackgroundRegion = new TextureRegion(getRektBackground, 0, 0, 800, 480);
+
+        winScreenBackground = loadTexture("winScreenBackground.png");
+        winScreenBackgroundRegion = new TextureRegion(winScreenBackground, 0, 0, 800, 480);
 
         square = loadTexture("square.png");
         squareRegion = new TextureRegion(square, 0, 0, 50, 50);

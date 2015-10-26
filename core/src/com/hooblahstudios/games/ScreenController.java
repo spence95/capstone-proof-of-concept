@@ -16,8 +16,8 @@ public class ScreenController {
         this.game = game;
     }
 
-    public void setGameOverScreen(){
-        game.setScreen(new GameOverScreen(game));
+    public void setGameOverScreen(boolean didWin){
+        game.setScreen(new GameOverScreen(game, didWin));
     }
 
     public void setRetrievingScreen(World world) {game.setScreen(new RetrievingScreen(game, world, this, gs.renderer));}

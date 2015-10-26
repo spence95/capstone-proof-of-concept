@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.hooblahstudios.games.touchCoordinate;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by spence95 on 9/4/2015.
@@ -240,6 +242,14 @@ public class Player extends DynamicGameObject{
 
     public void setCurrentTurnId(int currentTurnId){
         this.currentTurnId = currentTurnId;
+    }
+
+    public void orderActions(){
+        Collections.sort(actions, new Comparator<Action>() {
+            public int compare(Action a1, Action a2) {
+                return a1.sequenceNum < a2.sequenceNum ? -1 : 1;
+            }
+        });
     }
 
 }

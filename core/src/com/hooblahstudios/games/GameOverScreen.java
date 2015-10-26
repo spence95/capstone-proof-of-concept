@@ -12,12 +12,14 @@ import com.badlogic.gdx.math.Vector3;
 public class GameOverScreen extends ScreenAdapter {
     proofOfConcept game;
     Vector3 touchPoint;
+    boolean didWin;
 
     OrthographicCamera guiCam;
     GameOverRenderer renderer;
 
-    public GameOverScreen(proofOfConcept game){
+    public GameOverScreen(proofOfConcept game, boolean didWin){
         this.game = game;
+        this.didWin = didWin;
         renderer = new GameOverRenderer(game.batcher);
         guiCam = new OrthographicCamera(800, 480);
 
@@ -39,7 +41,11 @@ public class GameOverScreen extends ScreenAdapter {
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.render();
+        if(didWin) {
+            renderer.renderWin();
+        } else {
+            renderer.renderLoss();
+        }
 
         guiCam.update();
         game.batcher.setProjectionMatrix(guiCam.combined);

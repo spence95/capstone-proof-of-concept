@@ -17,12 +17,20 @@ public class GameOverRenderer {
         this.cam.position.set(World.WORLD_WIDTH / 2, World.WORLD_HEIGHT / 2, 0);
     }
 
-    public void render(){
+    public void renderLoss(){
         batch.disableBlending();
         batch.begin();
         batch.draw(Assets.rektBackgroundRegion,cam.position.x - World.WORLD_WIDTH / 2, cam.position.y - World.WORLD_HEIGHT / 2, World.WORLD_WIDTH,
                 World.WORLD_HEIGHT);
         batch.end();
 
+    }
+
+    public void renderWin(){
+        batch.disableBlending();
+        batch.begin();
+        batch.draw(Assets.winScreenBackgroundRegion,cam.position.x - World.WORLD_WIDTH / 2, cam.position.y - World.WORLD_HEIGHT / 2, World.WORLD_WIDTH,
+                World.WORLD_HEIGHT);
+        batch.end();
     }
 }
