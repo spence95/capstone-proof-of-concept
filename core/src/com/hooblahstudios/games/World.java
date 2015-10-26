@@ -506,7 +506,8 @@ public class World {
 //
 //        }
         //TODO: upon successful retrieval create turn id for next time and store it in world
-        postNewTurn(); //don't know where to put this
+        postNewTurn();
+        this.isSetting = false;
     }
 
     public void postNewTurn(){
@@ -525,13 +526,17 @@ public class World {
     public void SetPlayersForRunning(String actionResults, String playerUrl, int index){
         JSONObject actionJson = new JSONObject(actionResults);
         JSONArray actionArray = actionJson.getJSONArray("objects");
+        ArrayList<Action> actions = new ArrayList<Action>();
+
+        String[] tokens = playerUrl.split("/");
+        int lastPlace = tokens.length - 1;
+        int playerID = Integer.parseInt(tokens[lastPlace]);
+
+        Player pl = players.get(index);
+
+
         for(int a = 0; a < actionArray.length(); a++) {
 
-            String[] tokens = playerUrl.split("/");
-            int lastPlace = tokens.length - 1;
-            int playerID = Integer.parseInt(tokens[lastPlace]);
-
-            Player pl = players.get(index);
 
             //if first time through
             if(turnNumber == 0) {
@@ -549,7 +554,6 @@ public class World {
 
 
             JSONObject actionsObj = actionArray.getJSONObject(a);
-            ArrayList<Action> actions = new ArrayList<Action>();
 
             float originx = actionsObj.getInt("originx")/100;
             float originy = actionsObj.getInt("originy")/100;
@@ -568,13 +572,11 @@ public class World {
                 actions.add(at);
             }
 
-            pl.actions = actions;
-            if(pl.id != currentPlayer.id) {
-                System.out.println("ACCCCCTIONS");
-                System.out.print(pl.id + " " + pl.actions.get(1).x + " " + pl.actions.get(1).y);
-            }
+
         }
-        this.isSetting = false;
+        pl.actions = actions;
+
+
     }
 
     public static float round(float d, int decimalPlace) {
