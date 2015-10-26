@@ -348,12 +348,19 @@ public class World {
     }
 
     private void getRekt(){
-        screenController.setGameOverScreen(false);
+        //screenController.setGameOverScreen(false);
+        MenuScreen menu = new MenuScreen(game);
+        menu.menu.gameOver(false);
+        game.setScreen(menu);
         turnNumber = 0;
     }
 
     private void setWinScreen(){
-        screenController.setGameOverScreen(true);
+        //screenController.setGameOverScreen(true);
+        MenuScreen menu = new MenuScreen(game);
+        menu.menu.gameOver(true);
+        game.setScreen(menu);
+
         turnNumber = 0;
     }
 

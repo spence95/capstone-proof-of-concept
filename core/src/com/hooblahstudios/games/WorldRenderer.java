@@ -73,8 +73,9 @@ public class WorldRenderer {
         batch.begin();
         for (Player p : world.players) {
             try {
-                TextField tf = this.world.playerLabels.get((p.id + 1));
-                tf.setPosition(p.xLast, p.yLast + 10);
+                TextField tf = this.world.playerLabels.get((p.id));
+                tf.setPosition(p.position.x, p.position.y + 10);
+
                 tf.draw(batch, 1);
             }
 

@@ -51,6 +51,7 @@ public class Menu {
     public static final int MENU_WELCOME = 4;
     public static final int MENU_MAINMENU = 5;
     public static final int MENU_OPTIONS = 6;
+    public static final int MENU_GAMEOVER = 7;
 
     public ArrayList<String> httpReturns;
 
@@ -259,6 +260,10 @@ public class Menu {
             {
                 this.mainMenu();
             }
+        }
+        else if (menuNumber == this.MENU_GAMEOVER) //game over
+        {
+            this.mainMenu();
         }
     }
 
@@ -689,6 +694,33 @@ public class Menu {
         menuTextFields.put("privacyTF", privacyTextField);
         menuTextFields.put("returnTF", returnTextField);
         menuTextFields.put("charityChampsTF", charityChampsTextField);
+
+    }
+
+    public void gameOver(boolean won){
+        shouldClear = true;
+        menu = Assets.menuSplashBlankRegion;
+        menuComponents = new ArrayList<MenuComponent>();
+        menuTextFields = new HashMap<String, TextField>();
+        menuNumber = this.MENU_GAMEOVER;
+        this.isSplash = false;
+
+        TextField resultsTextField = new TextField(("YOU LOSE"), Assets.tfsTrans100);
+        resultsTextField.setPosition(50, 190);
+        resultsTextField.setWidth(700);
+        resultsTextField.setHeight(150);
+        resultsTextField.setAlignment(Align.center);
+        resultsTextField.setFocusTraversal(false);
+        resultsTextField.setDisabled(true);
+
+        if (won)
+        {
+            resultsTextField.setText("YOU WIN!");
+        }
+
+
+        menuTextFields.put("resultsTF", resultsTextField);
+
 
     }
 
