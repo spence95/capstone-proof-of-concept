@@ -6,6 +6,7 @@ package com.hooblahstudios.games;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,6 +25,7 @@ import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,7 +137,58 @@ public class Menu {
                 JSONObject jsonCharity = new JSONObject(getCharity);
                 String charityName = jsonCharity.getString("name");
                 int charityIcon = jsonCharity.getInt("icon");
+
+                Preferences prefs = Gdx.app.getPreferences("LOGIN");
+                prefs.putString("USERNAME_HASHED", sha256(username));
+                prefs.putString("PASSWORD_HASHED", sha256(password));
+                prefs.flush();//this actually is what saves the prefs
+
+                System.out.println("Adding the hashes to prefs");
+
                 this.welcome(username, wins, losses, charityName, charityIcon);
+            }
+        }
+    }
+
+    public void processSignInHASHED(String username, String password) //this is for when we do the auto login cause we getting the hashed prefs
+    {
+
+        String url = "http://45.33.62.187/api/v1/player/?username_hash=" + username + "&password_hash=" + password + "&format=json";
+        String getPlayer = apiCall.httpGet(url, httpReturns.size());
+
+        System.out.println("trying to sign in hashed with " + username + " " + password);
+
+        if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
+        {
+            //menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
+        }
+        else {
+            System.out.println("JSON NOT MEPTY");
+            JSONObject json = new JSONObject(getPlayer);
+            JSONArray playerArray = json.getJSONArray("objects");
+            JSONObject player0 = playerArray.getJSONObject(0);
+            int wins = player0.getInt("wins");
+            int losses = player0.getInt("losses");
+            String usernameS = player0.getString("username");
+            String charityURL = player0.getString("charity");
+
+            //store players id during this playing session in proofOfConcept (best place I can think of at the moment)
+            int id = player0.getInt("id");
+            game.setPlayerID(id);
+
+            String getCharity = apiCall.httpGet("http://45.33.62.187" + charityURL + "?format=json", httpReturns.size());
+            if (getCharity.equalsIgnoreCase("FAILED") || getCharity.equalsIgnoreCase("CANCELLED") || getCharity.equalsIgnoreCase("EMPTY"))
+            {
+                //menuComponents.add(new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion)); //should be 3 unless 3 is already there, then it will be 4
+            }
+            else {
+                JSONObject jsonCharity = new JSONObject(getCharity);
+                String charityName = jsonCharity.getString("name");
+                int charityIcon = jsonCharity.getInt("icon");
+
+                System.out.println("Go to welcome");
+
+                this.welcome(usernameS, wins, losses, charityName, charityIcon);
             }
         }
     }
@@ -194,7 +247,28 @@ public class Menu {
         if (menuNumber == this.MENU_SPLASH)//splash
         {
             this.isSplash = false;
-            this.signIn();
+            try
+            {
+                System.out.println("Trying to get the prefs to login");
+                Preferences prefs = Gdx.app.getPreferences("LOGIN");
+                String username = prefs.getString("USERNAME_HASHED");
+                String password = prefs.getString("PASSWORD_HASHED");
+                if (username.length() > 0 && password.length() > 0)
+                {
+                    System.out.println("gonna log in with " + username + " " + password);
+                    this.processSignInHASHED(username, password);//this should do the this.welcome at the end of it, so this should be ok.
+                }
+                else {
+                    this.signIn();//if they are there, but they are length 0 cause they have logged out before.
+                }
+            }
+            catch (Exception e)
+            {
+                System.out.println("ERROR: " + e);
+                System.out.println("nope, going to sign in instead");
+                this.signIn();
+            }
+
 
         }
         else if (menuNumber == this.MENU_SIGNIN)//sign in
@@ -259,6 +333,14 @@ public class Menu {
             if (menuComponents.get(0).bounds.contains(x, y))//return button
             {
                 this.mainMenu();
+            }
+            else if (menuComponents.get(4).bounds.contains(x, y))//log out button
+            {
+                Preferences prefs = Gdx.app.getPreferences("LOGIN");
+                prefs.putString("USERNAME_HASHED", "");
+                prefs.putString("PASSWORD_HASHED", "");
+                prefs.flush();//saves the blank hashes to the prefs file
+                this.splash();
             }
         }
         else if (menuNumber == this.MENU_GAMEOVER) //game over
@@ -683,6 +765,7 @@ public class Menu {
         menuComponents.add(1, new MenuComponent(250, 350, 175, 75, Assets.menuButtonSmallRegion));//player
         menuComponents.add(2, new MenuComponent(250, 250, 175, 75, Assets.menuButtonSmallRegion));//audio
         menuComponents.add(3, new MenuComponent(250, 150, 175, 75, Assets.menuButtonSmallRegion));//privacy
+        menuComponents.add(4, new MenuComponent(600, 350, 175, 75, Assets.menuButtonSmallRegion));//log out
 
         //right now I am using the metric of setting the width to be 175 and height 50 (for textfields)
         //and making them 88 units below the buttons and 73 units below. thats maybe like 1 or 2 units higher than it needs to be, but it looks aight
@@ -719,6 +802,14 @@ public class Menu {
         returnTextField.setFocusTraversal(false);
         returnTextField.setDisabled(true);
 
+        TextField logoutTextField = new TextField(("LOG OUT"), Assets.tfsTransWhite40);
+        logoutTextField.setPosition(512, 277);
+        logoutTextField.setWidth(175);//to be centered well make the width about 325
+        logoutTextField.setHeight(50);
+        logoutTextField.setAlignment(Align.center);
+        logoutTextField.setFocusTraversal(false);
+        logoutTextField.setDisabled(true);
+
         TextField charityChampsTextField = new TextField(("OPTIONS"), Assets.tfsTrans100);
         charityChampsTextField.setPosition(50, 390);
         charityChampsTextField.setWidth(700);
@@ -731,6 +822,7 @@ public class Menu {
         menuTextFields.put("optionsTF", audioTextField);
         menuTextFields.put("privacyTF", privacyTextField);
         menuTextFields.put("returnTF", returnTextField);
+        menuTextFields.put("logoutTF", logoutTextField);
         menuTextFields.put("charityChampsTF", charityChampsTextField);
 
     }
