@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-
+import java.util.TreeMap;
 
 
 public class Menu {
@@ -626,6 +626,44 @@ public class Menu {
         charityChampsTextField.setFocusTraversal(false);
         charityChampsTextField.setDisabled(true);
 
+        Leaderboard leaderboard = new Leaderboard(game.getPlayerID(), 5, 0);
+        int yOffset = 0;
+        TreeMap<Integer, Integer> sortedMap = new TreeMap<Integer, Integer>();
+
+        for (Integer id : leaderboard.board.keySet())//for each (INT, <String, String>)
+        {
+            System.out.println("sorting " + Integer.parseInt(leaderboard.board.get(id).get("WINS")) + " " + id);
+            sortedMap.put(Integer.parseInt(leaderboard.board.get(id).get("WINS")), id);
+
+        }
+
+        System.out.println(sortedMap.descendingMap());
+
+        for (Integer id : sortedMap.descendingMap().values()) {//the values, is the id. should do it in the order of wins highest
+
+            TextField playerTextField = new TextField(leaderboard.board.get(id).get("USERNAME"), Assets.tfsTrans40);
+            playerTextField.setPosition(400, 260 - (yOffset * 70));
+            playerTextField.setWidth(300);
+            playerTextField.setHeight(50);
+            playerTextField.setAlignment(Align.left);
+            playerTextField.setFocusTraversal(false);
+            playerTextField.setDisabled(true);
+
+            TextField winsTextField = new TextField(leaderboard.board.get(id).get("WINS"), Assets.tfsTrans40);
+            winsTextField.setPosition(700, 260 - (yOffset * 70));
+            winsTextField.setWidth(100);
+            winsTextField.setHeight(50);
+            winsTextField.setAlignment(Align.left);
+            winsTextField.setFocusTraversal(false);
+            winsTextField.setDisabled(true);
+
+            yOffset++;
+            menuTextFields.put(leaderboard.board.get(id).get("USERNAME"), playerTextField);
+            menuTextFields.put(leaderboard.board.get(id).get("WINS"), winsTextField);
+
+        }
+
+
         menuTextFields.put("playTF", playTextField);
         menuTextFields.put("optionsTF", optionsTextField);
         menuTextFields.put("profileTF", profileTextField);
@@ -697,7 +735,7 @@ public class Menu {
 
     }
 
-    public void gameOver(boolean won){
+    public void gameOver(boolean won, ArrayList<Integer> playerIDs, ArrayList<String> playerUsernames){
         shouldClear = true;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
@@ -706,7 +744,7 @@ public class Menu {
         this.isSplash = false;
 
         TextField resultsTextField = new TextField(("YOU LOSE"), Assets.tfsTrans100);
-        resultsTextField.setPosition(50, 190);
+        resultsTextField.setPosition(50, 350);
         resultsTextField.setWidth(700);
         resultsTextField.setHeight(150);
         resultsTextField.setAlignment(Align.center);
@@ -716,6 +754,29 @@ public class Menu {
         if (won)
         {
             resultsTextField.setText("YOU WIN!");
+        }
+
+        int yOffset = 0;
+        for (String s : playerUsernames)//for each player passed in
+        {
+            TextField playerTextField = new TextField(s, Assets.tfsTrans40);
+            playerTextField.setPosition(50, 260 - (yOffset * 70));
+            playerTextField.setWidth(300);
+            playerTextField.setHeight(50);
+            playerTextField.setAlignment(Align.left);
+            playerTextField.setFocusTraversal(false);
+            playerTextField.setDisabled(true);
+
+            TextField friendTextField = new TextField(Integer.toString(playerIDs.get(yOffset)), Assets.tfsTrans40);
+            friendTextField.setPosition(400, 260 - (yOffset * 70));
+            friendTextField.setWidth(300);
+            friendTextField.setHeight(50);
+            friendTextField.setAlignment(Align.left);
+            friendTextField.setFocusTraversal(false);
+            friendTextField.setDisabled(true);
+
+            yOffset++;
+            menuTextFields.put(s, playerTextField);
         }
 
 

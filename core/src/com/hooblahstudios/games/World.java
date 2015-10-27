@@ -317,7 +317,7 @@ public class World {
                     deadPlayerIds.add(pl.id);
                     if(pl.id == currentPlayer.id){
                         //oh dang, u just got Rekt
-                        getRekt();
+                        setGameOverScreen(false);
                     }
                 }
 
@@ -325,7 +325,7 @@ public class World {
                 if (deadPlayerIds.size() == players.size() - 1){
                     if(currentPlayer.dead == false) {
                         //oh dang, u just won
-                        setWinScreen();
+                        setGameOverScreen(true);
                     }
                 }
             }
@@ -347,18 +347,20 @@ public class World {
         }
     }
 
-    private void getRekt(){
-        //screenController.setGameOverScreen(false);
-        MenuScreen menu = new MenuScreen(game);
-        menu.menu.gameOver(false);
-        game.setScreen(menu);
-        turnNumber = 0;
-    }
 
-    private void setWinScreen(){
+
+    private void setGameOverScreen(boolean won){
         //screenController.setGameOverScreen(true);
+        ArrayList<Integer> playerIDs = new ArrayList<Integer>();
+        ArrayList<String> playerUsernames = new ArrayList<String>();
+        for (Player p : players)
+        {
+            playerIDs.add(p.id);
+            playerUsernames.add(playerLabels.get(p.id).getText());
+        }
+
         MenuScreen menu = new MenuScreen(game);
-        menu.menu.gameOver(true);
+        menu.menu.gameOver(won, playerIDs, playerUsernames);
         game.setScreen(menu);
 
         turnNumber = 0;

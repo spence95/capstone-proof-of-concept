@@ -83,6 +83,7 @@ public class Assets {
     public static TextField.TextFieldStyle tfsBigBlue100;
     public static TextField.TextFieldStyle tfsBigBlue70;
     public static TextField.TextFieldStyle tfsTrans100;
+    public static TextField.TextFieldStyle tfsTrans40;
     public static TextField.TextFieldStyle tfsTransWhite100;
     public static TextField.TextFieldStyle tfsTransWhite40;
 
@@ -304,6 +305,14 @@ public class Assets {
         tfsTrans100.cursor = nuSkinTrans.getDrawable("cursor");
         tfsTrans100.cursor.setMinWidth(2);
         tfsTrans100.selection = nuSkinTrans.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
+
+        tfsTrans40 = new TextField.TextFieldStyle();
+        tfsTrans40.font = font40;
+        tfsTrans40.fontColor = Color.valueOf("fa7a82");
+        tfsTrans40.background = nuSkinTrans.getDrawable("background");
+        tfsTrans40.cursor = nuSkinTrans.getDrawable("cursor");
+        tfsTrans40.cursor.setMinWidth(2);
+        tfsTrans40.selection = nuSkinTrans.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
 
         tfsTransWhite100 = new TextField.TextFieldStyle();
         tfsTransWhite100.font = font100;
