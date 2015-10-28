@@ -492,7 +492,7 @@ public class World {
 
 
     public void runPlayers(){
-
+        WorldJSONHandler.runPlayers(this);
     }
 
     public void postNewTurn(){
