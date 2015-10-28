@@ -137,6 +137,8 @@ public class Menu {
                 JSONObject jsonCharity = new JSONObject(getCharity);
                 String charityName = jsonCharity.getString("name");
                 int charityIcon = jsonCharity.getInt("icon");
+                int charityID = jsonCharity.getInt("id");
+                game.setCharityID(charityID);
 
                 Preferences prefs = Gdx.app.getPreferences("LOGIN");
                 prefs.putString("USERNAME_HASHED", sha256(username));
@@ -161,6 +163,12 @@ public class Menu {
         if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
         {
             //menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
+            System.out.println("login with hash " + getPlayer);
+            Preferences prefs = Gdx.app.getPreferences("LOGIN");
+            prefs.putString("USERNAME_HASHED", "");
+            prefs.putString("PASSWORD_HASHED", "");
+            prefs.flush();//saves the blank hashes to the prefs file
+            this.signIn();
         }
         else {
             System.out.println("JSON NOT MEPTY");
@@ -185,6 +193,8 @@ public class Menu {
                 JSONObject jsonCharity = new JSONObject(getCharity);
                 String charityName = jsonCharity.getString("name");
                 int charityIcon = jsonCharity.getInt("icon");
+                int charityID = jsonCharity.getInt("id");
+                game.setCharityID(charityID);
 
                 System.out.println("Go to welcome");
 

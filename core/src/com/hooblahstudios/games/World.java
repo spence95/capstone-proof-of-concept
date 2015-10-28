@@ -357,6 +357,9 @@ public class World {
         {
             playerIDs.add(p.id);
             playerUsernames.add(playerLabels.get(p.id).getText());
+
+
+
         }
 
         MenuScreen menu = new MenuScreen(game);

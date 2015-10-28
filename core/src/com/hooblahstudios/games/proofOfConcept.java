@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class proofOfConcept extends Game {
     public SpriteBatch batcher;
     private int playerID;
+    private int charityID;
 
     //Calls out to Assets class to create square
     @Override
@@ -31,4 +32,9 @@ public class proofOfConcept extends Game {
     public int getPlayerID(){
         return playerID;
     }
+
+    public void setCharityID(int id) { charityID = id; }
+
+    public int getCharityID() { return charityID; }
+
 }

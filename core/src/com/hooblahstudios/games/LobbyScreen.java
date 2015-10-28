@@ -121,6 +121,24 @@ public class LobbyScreen extends ScreenAdapter {
                         world = new World(game, matchID);
                         world.start();
 
+                        //post an entry into player-match. you can find a lot of the player stuff in here
+
+                        String URL = "http://45.33.62.187/api/v1/playermatch/?format=json";//I think that this should actually be ADDED at the start of the match, and just updated here
+                        String Body = "" +
+                                "{" +
+                                "   \"character\": \"/api/v1/charity/" + 1 + "/\"," + //so this is a dumb placeholder while we only have 1 character
+                                "   \"charity\": \"" + game.getCharityID() + "\"," +
+                                "   \"match\": \"" + matchID + "\"," +
+                                "   \"outcome\": \"" + 1 + "\"," + //we're assuming that 0 is a loss, 1 is a disconnect/unfinished (so default), and 2 is a victory
+                                "   \"player\": " + game.getPlayerID() + "," + //add the current player (each client adds one of these)
+                                "   \"skin\": 1" + //dumb placeholder until we have skin implementation
+                                "   \"weapon\": 1" + //dumb placeholder until we have weapon implementation
+                                "}";
+
+
+                        String results = api.httpPostPutOrPatch(URL, Body, 0, false, false);//makes the first call to post playermatch to table. this is updated at gameover
+                        System.out.println("Posted the playermatch" + results);
+
                         //get enemy ids
                         String getEnemyIDsURL = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&format=json";
                         String getEnemyIDs = api.httpGet(getEnemyIDsURL, 0);

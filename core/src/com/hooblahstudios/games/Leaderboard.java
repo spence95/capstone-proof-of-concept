@@ -53,6 +53,9 @@ public class Leaderboard {
             String url = "http://45.33.62.187/api/v1/playermatch/?player=" + id + "&format=json";
             String playerMatchResults = apiCall.httpGet(url, 0);
 
+            System.out.println("url for generateLeaderboard " + url);
+            System.out.println("raw json for generateLeaderboard " + playerMatchResults);
+
             if (playerMatchResults.equalsIgnoreCase("FAILED") || playerMatchResults.equalsIgnoreCase("CANCELLED"))
             {
                 //menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
@@ -71,6 +74,7 @@ public class Leaderboard {
                 }
             }
             else {
+
                 JSONObject json = new JSONObject(playerMatchResults);
                 JSONArray playerMatchArray = json.getJSONArray("objects");
                 board.put(id, new HashMap<String, String>());
@@ -108,6 +112,8 @@ public class Leaderboard {
             String url = "http://45.33.62.187/api/v1/player/" + i + "/?format=json";
             String getPlayer = apiCall.httpGet(url, 0);
 
+            System.out.println("url for generateUsernames " + url);
+            System.out.println("raw json for generateUsernames " + getPlayer);
             if (getPlayer.equalsIgnoreCase("FAILED") || getPlayer.equalsIgnoreCase("CANCELLED") || getPlayer.equalsIgnoreCase("EMPTY"))
             {
                 //menuComponents.add(3, new MenuComponent(300, 400, 100, 50, Assets.menuFailedRegion));
