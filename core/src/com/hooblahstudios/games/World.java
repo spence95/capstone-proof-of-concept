@@ -59,6 +59,9 @@ public class World {
 
     ApiCall api;
 
+    //used to let losers and winners see after match for a second before end game screen
+    float afterDeathCounter;
+
     //define callback interface
     interface playerActionRetrievalCallback {
 
@@ -76,6 +79,7 @@ public class World {
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
         turnNumber = 0;
+        afterDeathCounter = 0;
         api = new ApiCall(new playerActionRetrievalCallback() {
             @Override
             public void setPlayersForRunning(String actionResults, String playerUrl, int index) {
@@ -291,7 +295,7 @@ public class World {
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
             if(this.currentPlayer.isDone){
-                actionMenu.makeReadyToSubmit();
+                submit();
             }
         }
 

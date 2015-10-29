@@ -25,6 +25,7 @@ public class LobbyScreen extends ScreenAdapter {
     int loadingDotTimer;
     boolean inGame;
     boolean nextRound;
+    WorldRenderer worldRenderer;
 
 
     public LobbyScreen(proofOfConcept game){
@@ -57,6 +58,7 @@ public class LobbyScreen extends ScreenAdapter {
         guiCam = new OrthographicCamera(800, 480);
         guiCam.position.set(800 / 2, 480 / 2, 0);
         api = new ApiCall();
+        worldRenderer = new WorldRenderer(batch, world);
 
         loadingDotTimer = 0;
 
@@ -198,8 +200,12 @@ public class LobbyScreen extends ScreenAdapter {
 
     public void render(SpriteBatch batch){
         batch.begin();
-        batch.draw(Assets.menuSplashBlankRegion, guiCam.position.x - 800 / 2, guiCam.position.y - 480 / 2, 800,
-                480);
+        if(!inGame) {
+            batch.draw(Assets.menuSplashBlankRegion, guiCam.position.x - 800 / 2, guiCam.position.y - 480 / 2, 800,
+                    480);
+        } else{
+            //worldRenderer.render();
+        }
 
 
         loadingText.draw(batch, 1);
