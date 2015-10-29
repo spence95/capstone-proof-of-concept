@@ -293,8 +293,8 @@ public class World {
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
             if(this.currentPlayer.isDone){
-                actionMenu.makeReadyToSubmit();
-                //submit();
+                //actionMenu.makeReadyToSubmit();
+                submit();
             }
         }
 
