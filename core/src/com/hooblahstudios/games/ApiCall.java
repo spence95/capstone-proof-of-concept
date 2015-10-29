@@ -98,6 +98,11 @@ public class ApiCall {
     public String httpPostPutOrPatch (String URL, String Body, final int ListNumber, boolean isPatch, boolean isPut) {
 
 
+        //a put is to update 1 thing, a patch is how to post a bunch of things
+        //oh, so when you do a put I guess you cant do a put on like a ..api/v1/playermatch/?player=2&match=3&format=json
+        //instead, you have to do a get on that or just keep the ID it created (for the playermatch) so you can instead do
+        //...api/v1/playermatch/6/?format=json and do a PUT on that.
+
         httpReturns.add(ListNumber, "");
         Net.HttpRequest httpRequest;
         if(isPut){

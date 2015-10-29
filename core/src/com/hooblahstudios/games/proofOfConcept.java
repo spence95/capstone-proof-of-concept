@@ -7,6 +7,7 @@ public class proofOfConcept extends Game {
     public SpriteBatch batcher;
     private int playerID;
     private int charityID;
+    private int playerMatchID;
 
     //Calls out to Assets class to create square
     @Override
@@ -36,5 +37,9 @@ public class proofOfConcept extends Game {
     public void setCharityID(int id) { charityID = id; }
 
     public int getCharityID() { return charityID; }
+
+    public void setPlayerMatchID(int id) { playerMatchID = id; }
+
+    public int getPlayerMatchID() { return playerMatchID; }
 
 }

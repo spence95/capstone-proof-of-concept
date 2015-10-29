@@ -126,18 +126,22 @@ public class LobbyScreen extends ScreenAdapter {
                         String URL = "http://45.33.62.187/api/v1/playermatch/?format=json";//I think that this should actually be ADDED at the start of the match, and just updated here
                         String Body = "" +
                                 "{" +
-                                "   \"character\": \"/api/v1/charity/" + 1 + "/\"," + //so this is a dumb placeholder while we only have 1 character
-                                "   \"charity\": \"" + game.getCharityID() + "\"," +
-                                "   \"match\": \"" + matchID + "\"," +
+                                "   \"character\": \"/api/v1/character/" + 1 + "/\"," + //so this is a dumb placeholder while we only have 1 character
+                                "   \"charity\": \"/api/v1/charity/" + game.getCharityID() + "/\"," +
+                                "   \"match\": \"/api/v1/match/" + matchID + "/\"," +
                                 "   \"outcome\": \"" + 1 + "\"," + //we're assuming that 0 is a loss, 1 is a disconnect/unfinished (so default), and 2 is a victory
-                                "   \"player\": " + game.getPlayerID() + "," + //add the current player (each client adds one of these)
-                                "   \"skin\": 1" + //dumb placeholder until we have skin implementation
-                                "   \"weapon\": 1" + //dumb placeholder until we have weapon implementation
+                                "   \"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +//add the current player (each client adds one of these)
+                                "   \"skin\": \"/api/v1/skin/" + 1 + "/\"," + //dumb placeholder until we have skin implementation
+                                "   \"weapon\": \"/api/v1/weapon/" + 1 + "/\"" + //dumb placeholder until we have weapon implementation
                                 "}";
 
-
+                        System.out.println("going to attemppt to ost with body " + URL + " " + Body);
                         String results = api.httpPostPutOrPatch(URL, Body, 0, false, false);//makes the first call to post playermatch to table. this is updated at gameover
                         System.out.println("Posted the playermatch" + results);
+
+                        JSONObject jsonCharity = new JSONObject(results);
+                        int playermatchID = jsonCharity.getInt("id");
+                        game.setPlayerMatchID(playermatchID);
 
                         //get enemy ids
                         String getEnemyIDsURL = "http://45.33.62.187/api/v1/turn/?match=" + matchID + "&format=json";

@@ -358,7 +358,38 @@ public class World {
             playerIDs.add(p.id);
             playerUsernames.add(playerLabels.get(p.id).getText());
 
+            String URL = "http://45.33.62.187/api/v1/playermatch/" + game.getPlayerMatchID() + "/?format=json";//I think that this should actually be ADDED at the start of the match, and just updated here
+            String Body = "";
+            if (won)
+            {
+                Body = "" +
+                        "{" +
+                        "   \"character\": \"/api/v1/character/" + 1 + "/\"," + //so this is a dumb placeholder while we only have 1 character
+                        "   \"charity\": \"/api/v1/charity/" + game.getCharityID() + "/\"," +
+                        "   \"match\": \"/api/v1/match/" + matchID + "/\"," +
+                        "   \"outcome\": \"" + 2 + "\"," + //we're assuming that 0 is a loss, 1 is a disconnect/unfinished (so default), and 2 is a victory
+                        "   \"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +//add the current player (each client adds one of these)
+                        "   \"skin\": \"/api/v1/skin/" + 1 + "/\"," + //dumb placeholder until we have skin implementation
+                        "   \"weapon\": \"/api/v1/weapon/" + 1 + "/\"" + //dumb placeholder until we have weapon implementation
+                        "}";
+            }
+            else {
+                Body = "" +
+                        "{" +
+                        "   \"character\": \"/api/v1/character/" + 1 + "/\"," + //so this is a dumb placeholder while we only have 1 character
+                        "   \"charity\": \"/api/v1/charity/" + game.getCharityID() + "/\"," +
+                        "   \"match\": \"/api/v1/match/" + matchID + "/\"," +
+                        "   \"outcome\": \"" + 0 + "\"," + //we're assuming that 0 is a loss, 1 is a disconnect/unfinished (so default), and 2 is a victory
+                        "   \"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +//add the current player (each client adds one of these)
+                        "   \"skin\": \"/api/v1/skin/" + 1 + "/\"," + //dumb placeholder until we have skin implementation
+                        "   \"weapon\": \"/api/v1/weapon/" + 1 + "/\"" + //dumb placeholder until we have weapon implementation
+                        "}";
+            }
 
+
+            System.out.println("going to attemppt to ost with body " + URL + " " + Body);
+            String results = api.httpPostPutOrPatch(URL, Body, 0, false, true);//sets the last isPut to true, to make it a put (update)
+            System.out.println("Posted the playermatch" + results);
 
         }
 
