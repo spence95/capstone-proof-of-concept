@@ -38,6 +38,9 @@ public class World {
     boolean hasStarted = false;
     boolean isSetting = true;
     boolean readyToEndRound = true;
+    boolean isSettingGameOverScreen = false;
+    boolean gameWon = false;
+    float settingGameOverCounter = 0;
     float lastTouchedX;
     float lastTouchedY;
     Rectangle menuBounds;
@@ -320,7 +323,8 @@ public class World {
                     deadPlayerIds.add(pl.id);
                     if(pl.id == currentPlayer.id){
                         //oh dang, u just got Rekt
-                        setGameOverScreen(false);
+                        isSettingGameOverScreen = true;
+                        //setGameOverScreen(false);
                     }
                 }
 
@@ -328,15 +332,27 @@ public class World {
                 if (deadPlayerIds.size() == players.size() - 1){
                     if(currentPlayer.dead == false) {
                         //oh dang, u just won
-                        setGameOverScreen(true);
+                        isSettingGameOverScreen = true;
+                        gameWon = true;
+                        //setGameOverScreen(true);
                     }
                 }
+
+
             }
          //safely remove dead players from list
          removeDeadPlayers(deadPlayerIds);
      }
 
         updateExplosions(deltaTime);
+
+        if(isSettingGameOverScreen){
+            if(settingGameOverCounter > 2){
+                setGameOverScreen(gameWon);
+            } else{
+                settingGameOverCounter += deltaTime;
+            }
+        }
     }
 
     private void removeDeadPlayers(ArrayList<Integer> deadPlayerIds){
