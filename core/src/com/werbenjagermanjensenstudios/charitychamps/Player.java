@@ -33,6 +33,8 @@ public class Player extends DynamicGameObject{
     float yLast;
     float side;
 
+    public static int time = 17;
+
     public final int speed = 180;
 
     public Player(int id, float width, float height, boolean isEnemy) {
@@ -99,7 +101,7 @@ public class Player extends DynamicGameObject{
 
     public void update(float deltaTime, boolean isRunning){
         //ten seconds per turn
-        if(stateTime <= 17) {
+        if(stateTime <= time) {
             dir = new Vector2();
             //on touch event set the touch vector then get direction vector
             dir.set(this.destination).sub(position).nor();

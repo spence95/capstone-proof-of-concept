@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 //import com.badlogicgames.superjumper.World.WorldListener;
@@ -22,6 +23,7 @@ public class GameScreen extends ScreenAdapter {
     static final int GAME_OVER = 4;
     private Viewport vp;
     proofOfConcept game;
+    TextField countdownText;
 
     int state;
     Vector3 touchPoint;
@@ -65,6 +67,16 @@ public class GameScreen extends ScreenAdapter {
         }
 
         world.update(deltaTime);
+        int time = (int)(Player.time - world.currentPlayer.stateTime);
+        if(time < 0)
+            time = 0;
+        this.countdownText = new TextField(Integer.toString(time), Assets.tfsTrans100);
+        countdownText.setPosition(15, 0);
+        countdownText.setWidth(150);
+        countdownText.setHeight(50);
+        //loadingText.setAlignment(Align.center);
+        countdownText.setFocusTraversal(false);
+        countdownText.setDisabled(true);
     }
 
     public void draw(){
@@ -76,6 +88,12 @@ public class GameScreen extends ScreenAdapter {
         guiCam.update();
         game.batcher.setProjectionMatrix(guiCam.combined);
         game.batcher.enableBlending();
+
+        if(world.isSetting) {
+            game.batcher.begin();
+            countdownText.draw(game.batcher, 1);
+            game.batcher.end();
+        }
 //        game.batcher.begin();
 //        switch (state) {
 //            case GAME_READY:
