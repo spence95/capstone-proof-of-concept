@@ -53,6 +53,11 @@ public class MenuRenderer {
             stage.unfocusAll();
             this.menu.unfocusAll = false;
         }
+        if (this.menu.shouldAddScrollPane)//if theres a scrollPane what needs adding
+        {
+            System.out.println("Adding scroll pane container");
+            stage.addActor(this.menu.scrollPaneContainer);
+        }
 
 
         this.menu.blinkTimer++;
@@ -71,6 +76,8 @@ public class MenuRenderer {
             stage.addActor(tF);
 
         }
+
+        stage.act();//this is added for the scrollpane to work correctly
 
         batch.end();
         batch.disableBlending();

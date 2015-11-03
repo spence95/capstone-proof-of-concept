@@ -60,6 +60,11 @@ public class Assets {
 
     //end nu menuz
 
+    //charity icons (placeholders for now)
+    public static Texture menuCharity1;
+    public static TextureRegion menuCharity1Region;
+    //end charity icons
+
 
     public static Texture menuNinePatch;
     public static TextureRegion menuNinePatchRegion;
@@ -162,6 +167,11 @@ public class Assets {
         menuButtonSmallLight = loadTexture("menuButtonSmallLight.png");
         menuButtonSmallLightRegion = new TextureRegion(menuButtonSmallLight, 0, 0, 175, 75);
         //end nu menuz
+
+        //charity icons
+        menuCharity1 = loadTexture("icon-heart.png");
+        menuCharity1Region = new TextureRegion(menuCharity1, 0, 0, 100, 100);
+        //end charity icons
 
         //animations
         playerWalking = new Animation(.05f,
