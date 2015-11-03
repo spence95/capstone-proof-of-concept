@@ -191,8 +191,8 @@ public class LobbyScreen extends ScreenAdapter {
         } else {
             isReadyToRun();
             if(nextRound == true){
-                world.runPlayers();
-                world.screenController.resetGameScreen();
+                    world.runPlayers();
+                    world.screenController.resetGameScreen();
             }
         }
     }

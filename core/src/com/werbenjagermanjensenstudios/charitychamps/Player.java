@@ -33,6 +33,11 @@ public class Player extends DynamicGameObject{
     float yLast;
     float side;
 
+    int health;
+    boolean isImmune;
+    float immuneCounter;
+    public static float immuneCounterLimit = 1;
+
     public static int time = 17;
 
     public final int speed = 180;
@@ -53,6 +58,9 @@ public class Player extends DynamicGameObject{
         savedActions = new ArrayList<Action>();
         bullet = new Bullet(-100, -100, 200);
         side = 1;
+        health = 3;
+        isImmune = false;
+        immuneCounter = 0;
     }
 
     public void spawn(float x, float y){
@@ -100,6 +108,14 @@ public class Player extends DynamicGameObject{
     }
 
     public void update(float deltaTime, boolean isRunning){
+        if(isImmune){
+            if(immuneCounter < immuneCounterLimit){
+                immuneCounter += deltaTime;
+            } else{
+                isImmune = false;
+                immuneCounter = 0;
+            }
+        }
         //ten seconds per turn
         if(stateTime <= time) {
             dir = new Vector2();
@@ -230,6 +246,13 @@ public class Player extends DynamicGameObject{
         stateTime = 0;
         isDone = false;
         //bullet.reset();
+    }
+
+    public void takeHit(int damage){
+        this.health -= damage;
+        if(this.health < 1){
+            die();
+        }
     }
 
     public void die() {

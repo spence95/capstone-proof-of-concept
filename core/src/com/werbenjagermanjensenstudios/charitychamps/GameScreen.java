@@ -34,6 +34,7 @@ public class GameScreen extends ScreenAdapter {
     WorldRenderer renderer;
 
     Rectangle submitBounds;
+    TextField loadingText;
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
@@ -47,9 +48,18 @@ public class GameScreen extends ScreenAdapter {
         guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
 
+
         //TODO: Move creation of world to lobbyscreen so we can instantiate players with spawn move
         //TODO: accept world as parameter here
         renderer = new WorldRenderer(game.batcher, world);
+
+        this.loadingText = new TextField(("SYNCING"), Assets.tfsTrans100);
+        loadingText.setPosition(250, 190);
+        loadingText.setWidth(700);
+        loadingText.setHeight(150);
+        //loadingText.setAlignment(Align.center);
+        loadingText.setFocusTraversal(false);
+        loadingText.setDisabled(true);
     }
 
     public void update(float deltaTime){
@@ -67,6 +77,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         world.update(deltaTime);
+
         int time = (int)(Player.time - world.currentPlayer.stateTime);
         if(time < 0)
             time = 0;
@@ -85,6 +96,14 @@ public class GameScreen extends ScreenAdapter {
 
         renderer.render();
 
+        if(world.roundWaitingCounter < world.roundWaitingAmount && !world.isSetting) {
+            game.batcher.begin();
+            game.batcher.enableBlending();
+
+            loadingText.draw(game.batcher, 1);
+            game.batcher.end();
+        }
+    
         guiCam.update();
         game.batcher.setProjectionMatrix(guiCam.combined);
         game.batcher.enableBlending();

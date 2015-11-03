@@ -63,6 +63,11 @@ public class World {
     //used to let losers and winners see after match for a second before end game screen
     float afterDeathCounter;
 
+    //used to prevent lagging once actions are received
+    float roundWaitingCounter = 0;
+
+    public static int roundWaitingAmount = 1;
+
     //define callback interface
     interface playerActionRetrievalCallback {
 
@@ -148,7 +153,7 @@ public class World {
                         submit();
                         return;
                     }
-
+                    System.out.println(x);
                     if(!currentPlayer.isDone) {
                         if (x > 439) {
                             moveClicked(lastTouchedX, lastTouchedY);
@@ -296,52 +301,55 @@ public class World {
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
             if(this.currentPlayer.isDone){
-                //actionMenu.makeReadyToSubmit();
                 submit();
             }
         }
 
         else{
-         int doneCounter = 0;
-         ArrayList<Integer> deadPlayerIds = new ArrayList<Integer>();
-         //run all players at once
-            for (int i = 0; i < this.players.size(); i++) {
-                Player pl = players.get(i);
-                if (pl.isDone) {
-                    doneCounter++;
-                }
+         if(roundWaitingCounter > roundWaitingAmount) {
+             int doneCounter = 0;
+             ArrayList<Integer> deadPlayerIds = new ArrayList<Integer>();
+             //run all players at once
+             for (int i = 0; i < this.players.size(); i++) {
+                 Player pl = players.get(i);
+                 if (pl.isDone) {
+                     doneCounter++;
+                 }
 
-                pl.updateRunning(deltaTime);
-                //check if all players are done and start a new round
-                if (doneCounter >= players.size()) {
-                    if(readyToEndRound)
-                        newRound();
-                }
+                 pl.updateRunning(deltaTime);
+                 //check if all players are done and start a new round
+                 if (doneCounter >= players.size()) {
+                     if (readyToEndRound)
+                         newRound();
+                 }
 
-                //check for dead players and remove them
-                if (pl.dead) {
-                    deadPlayerIds.add(pl.id);
-                    if(pl.id == currentPlayer.id){
-                        //oh dang, u just got Rekt
-                        isSettingGameOverScreen = true;
-                        //setGameOverScreen(false);
-                    }
-                }
+                 //check for dead players and remove them
+                 if (pl.dead) {
+                     deadPlayerIds.add(pl.id);
+                     if (pl.id == currentPlayer.id) {
+                         //oh dang, u just got Rekt
+                         isSettingGameOverScreen = true;
+                         //setGameOverScreen(false);
+                     }
+                 }
 
-                //check if player has won
-                if (deadPlayerIds.size() == players.size() - 1){
-                    if(currentPlayer.dead == false) {
-                        //oh dang, u just won
-                        isSettingGameOverScreen = true;
-                        gameWon = true;
-                        //setGameOverScreen(true);
-                    }
-                }
+                 //check if player has won
+                 if (deadPlayerIds.size() == players.size() - 1) {
+                     if (currentPlayer.dead == false) {
+                         //oh dang, u just won
+                         isSettingGameOverScreen = true;
+                         gameWon = true;
+                         //setGameOverScreen(true);
+                     }
+                 }
 
 
-            }
-         //safely remove dead players from list
-         removeDeadPlayers(deadPlayerIds);
+             }
+             //safely remove dead players from list
+             removeDeadPlayers(deadPlayerIds);
+         } else {
+             roundWaitingCounter += deltaTime;
+         }
      }
 
         updateExplosions(deltaTime);
@@ -417,6 +425,7 @@ public class World {
 
     public void submit(){
         hideDot();
+        roundWaitingCounter = 0;
         this.actionMenu.changeState(2);
         generateTurnJson();
         //newRound();

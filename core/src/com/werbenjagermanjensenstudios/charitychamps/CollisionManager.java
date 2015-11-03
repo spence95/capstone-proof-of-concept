@@ -23,10 +23,12 @@ public class CollisionManager {
             for(int p = 0; p < world.players.size(); p++){
                 Player pl = world.players.get(p);
                 if(pl.bounds.overlaps(e.bounds)){
-                        pl.die();
-                        System.out.println("should die");
+                        if(!pl.isImmune) {
+                            pl.takeHit(1);
+                            pl.isImmune = true;
+                        }
                     }
-            }
+                }
             }
         }
     }
