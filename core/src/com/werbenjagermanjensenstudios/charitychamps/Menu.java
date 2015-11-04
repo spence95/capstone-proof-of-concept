@@ -11,9 +11,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 import org.json.JSONArray;
@@ -45,6 +47,7 @@ public class Menu {
     public static final int MENU_MAINMENU = 5;
     public static final int MENU_OPTIONS = 6;
     public static final int MENU_GAMEOVER = 7;
+    public static final int MENU_SIGNUP_SCROLLER = 8;
 
     public ArrayList<String> httpReturns;
 
@@ -248,7 +251,7 @@ public class Menu {
 
     public void touched(float x, float y){
 
-        System.out.println("touched: " + x + "," + y);
+
 
         if (menuNumber == this.MENU_SPLASH)//splash
         {
@@ -306,10 +309,11 @@ public class Menu {
 
             if (menuComponents.get(0).containsXY(x, y))//submit
             {
+                //this.signUpScroller(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText());
 
-                this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText(), menuTextFields.get("charityTF").getText());
+                //this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText(), menuTextFields.get("charityTF").getText());
 
-                this.processSignIn(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText());
+                //this.processSignIn(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText());
             }
             else if (menuComponents.get(1).containsXY(x, y))//return
             {
@@ -320,10 +324,6 @@ public class Menu {
         }
         else if (menuNumber == this.MENU_MAINMENU)//main menu
         {
-            System.out.println("options x: " + menuComponents.get(1).bounds.getX());
-            System.out.println("options y: " + menuComponents.get(1).bounds.getY());
-            System.out.println("height: " + menuComponents.get(1).bounds.getHeight());
-            System.out.println("width: " + menuComponents.get(1).bounds.getWidth());
             if (menuComponents.get(0).containsXY(x, y))//play!
             {
                 //goes to lobby (loading), lobby goes to game when ready
@@ -494,6 +494,7 @@ public class Menu {
 
     public void signUp(){
         shouldClear = true;
+        //shouldAddScrollPane = false;
         shouldAddScrollPane = true;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
@@ -578,7 +579,7 @@ public class Menu {
             }
         });
 
-        final TextField emailTextField = new TextField("EMAIL 2.0 CHANGED BABY", Assets.tfs);
+        final TextField emailTextField = new TextField("EMAIL", Assets.tfs);
         emailTextField.setPosition(450, 300);
         emailTextField.setWidth(300);
         emailTextField.setHeight(50);
@@ -623,32 +624,8 @@ public class Menu {
         });
 
 
-        Table table = new Table();
-        //MenuComponent x = new MenuComponent(0,0,100,100,Assets.menuCharity1Region);
-        //table.add(x);
-        //table.addActor(x);
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.add(new Image(Assets.menuCharity1Region)).expandY().fillY();
-        table.row();
-        this.scrollPaneContainer = new Table();
 
-        ScrollPane scrollPane = new ScrollPane(table);
-        scrollPane.setScrollingDisabled(false, true);//should set it as Y-disabled aka side scrolling.
-        scrollPaneContainer.add(scrollPane).width(700).height(200);
-        scrollPaneContainer.row();
+
 
 
         menuTextFields.put("usernameTF", usernameTextField);
@@ -662,6 +639,16 @@ public class Menu {
 
         menuNumber = this.MENU_SIGNUP;
     }
+
+    /*public void signUpScroller(String username, String password, String email)
+    {
+        shouldClear = true;
+        shouldAddScrollPane = true;
+        menu = Assets.menuSplashBlankRegion;
+        menuComponents = new ArrayList<MenuComponent>();
+        menuTextFields = new HashMap<String, TextField>();
+        menuNumber = this.MENU_SIGNUP_SCROLLER;
+    }*/
 
     public void welcome(String username, int wins, int losses, String charityName, int charityIcon)
     {
@@ -715,13 +702,13 @@ public class Menu {
         optionsTextField.setFocusTraversal(false);
         optionsTextField.setDisabled(true);
 
-        /*TextField profileTextField = new TextField(("PROFILE"), Assets.tfsTransWhite40);
+        TextField profileTextField = new TextField(("PROFILE"), Assets.tfsTransWhite40);
         profileTextField.setPosition(112, 77);
         profileTextField.setWidth(175);
         profileTextField.setHeight(50);
         profileTextField.setAlignment(Align.center);
         profileTextField.setFocusTraversal(false);
-        profileTextField.setDisabled(true);*/
+        profileTextField.setDisabled(true);
 
         TextField charityChampsTextField = new TextField(("CHARITY CHAMPS"), Assets.tfsTrans100);
         charityChampsTextField.setPosition(50, 390);
@@ -771,7 +758,7 @@ public class Menu {
 
         menuTextFields.put("playTF", playTextField);
         menuTextFields.put("optionsTF", optionsTextField);
-        //menuTextFields.put("profileTF", profileTextField); TEMPORARILY DISABLED TO SEE HOW IT HANDLES THE PROFILE BUTTON
+        menuTextFields.put("profileTF", profileTextField);
         menuTextFields.put("charityChampsTF", charityChampsTextField);
 
         menuNumber = this.MENU_MAINMENU;
