@@ -81,10 +81,10 @@ public class GameScreen extends ScreenAdapter {
         int time = (int)(Player.time - world.currentPlayer.stateTime);
         if(time < 0)
             time = 0;
-        this.countdownText = new TextField(Integer.toString(time), Assets.tfsTrans100);
-        countdownText.setPosition(15, 0);
-        countdownText.setWidth(150);
-        countdownText.setHeight(50);
+        this.countdownText = new TextField(Integer.toString(time), Assets.tfsTrans40);
+        countdownText.setPosition(5, 30);
+        countdownText.setWidth(75);
+        countdownText.setHeight(40);
         //loadingText.setAlignment(Align.center);
         countdownText.setFocusTraversal(false);
         countdownText.setDisabled(true);
@@ -107,12 +107,24 @@ public class GameScreen extends ScreenAdapter {
         guiCam.update();
         game.batcher.setProjectionMatrix(guiCam.combined);
         game.batcher.enableBlending();
-
+        game.batcher.begin();
+        game.batcher.draw(Assets.sideBarRegion, 0, 0, 40, 480);
         if(world.isSetting) {
-            game.batcher.begin();
             countdownText.draw(game.batcher, 1);
-            game.batcher.end();
         }
+        if(world.currentPlayer.health > 2){
+            game.batcher.draw(Assets.heartRegion, 0, 445, 35, 30);
+            game.batcher.draw(Assets.heartRegion, 0, 410, 35, 30);
+            game.batcher.draw(Assets.heartRegion, 0, 375, 35, 30);
+        } else if(world.currentPlayer.health > 1){
+            game.batcher.draw(Assets.heartRegion, 0, 445, 35, 30);
+            game.batcher.draw(Assets.heartRegion, 0, 410, 35, 30);
+        } else if(world.currentPlayer.health > 0){
+            game.batcher.draw(Assets.heartRegion, 0, 445, 35, 30);
+        } else {
+
+        }
+        game.batcher.end();
 //        game.batcher.begin();
 //        switch (state) {
 //            case GAME_READY:

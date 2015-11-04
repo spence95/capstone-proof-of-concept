@@ -101,38 +101,38 @@ public class World {
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
         placeOutsideWalls();
-        Block block = new Block(125, 75, 100, 5);
-        blocks.add(block);
-        block = new Block(78, 100, 5, 50);
-        blocks.add(block);
+//        Block block = new Block(125 + 20, 75, 100, 5);
+//        blocks.add(block);
+//        block = new Block(78 + 20, 100, 5, 50);
+//        blocks.add(block);
+//
+//        block = new Block(WORLD_WIDTH-125 + 20, 75, 100, 5);
+//        blocks.add(block);
+//        block = new Block(WORLD_WIDTH-77 + 20, 100, 5, 50);
+//        blocks.add(block);
+//
+//        block = new Block(125 + 20, 480-75, 100, 5);
+//        blocks.add(block);
+//        block = new Block(78 + 20, 480 - 100, 5, 50);
+//        blocks.add(block);
+//
+//        block = new Block(WORLD_WIDTH-125 + 20, 480-75, 100, 5);
+//        blocks.add(block);
+//        block = new Block(WORLD_WIDTH-77 + 20, 480-100, 5, 50);
+//        blocks.add(block);
 
-        block = new Block(800-125, 75, 100, 5);
-        blocks.add(block);
-        block = new Block(800-77, 100, 5, 50);
-        blocks.add(block);
-
-        block = new Block(125, 480-75, 100, 5);
-        blocks.add(block);
-        block = new Block(78, 480 - 100, 5, 50);
-        blocks.add(block);
-
-        block = new Block(800-125, 480-75, 100, 5);
-        blocks.add(block);
-        block = new Block(800-77, 480-100, 5, 50);
-        blocks.add(block);
-
-        block = new Block(400, 240, 50, 50);
+        Block block = new Block(400 + 20, 240, 50, 50);
         blocks.add(block);
     }
 
     private void placeOutsideWalls(){
-        Block block = new Block(400, 0, 800, 10);
+        Block block = new Block((WORLD_WIDTH / 2)+20, 0, WORLD_WIDTH, 10);
         blocks.add(block);
-        block = new Block(400, 480, 800, 10);
+        block = new Block(WORLD_WIDTH / 2+20, WORLD_HEIGHT, WORLD_WIDTH, 10);
         blocks.add(block);
-        block = new Block(0, 240, 10, WORLD_HEIGHT);
+        block = new Block(40, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
         blocks.add(block);
-        block = new Block(WORLD_WIDTH, 240, 10, WORLD_HEIGHT);
+        block = new Block(WORLD_WIDTH, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
         blocks.add(block);
     }
 
@@ -300,6 +300,7 @@ public class World {
 
      if(isSetting){
             this.currentPlayer.updateSetting(deltaTime);
+
             if(this.currentPlayer.isDone){
                 submit();
             }

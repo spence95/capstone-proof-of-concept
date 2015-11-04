@@ -208,7 +208,7 @@ public class LobbyScreen extends ScreenAdapter {
         }
         batch.begin();
         batch.enableBlending();
-
+        game.batcher.draw(Assets.sideBarRegion, 0, 0, 40, 480);
         loadingText.draw(batch, 1);
 
         if (loadingDotTimer == 15)

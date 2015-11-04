@@ -74,6 +74,11 @@ public class Assets {
     //public static Texture loadingMenu;
     //public static TextureRegion loadingMenuRegion;
 
+    public static Texture sideBar;
+    public static TextureRegion sideBarRegion;
+    public static Texture heart;
+    public static TextureRegion heartRegion;
+
     public static Texture getRektBackground;
     public static TextureRegion rektBackgroundRegion;
 
@@ -172,6 +177,11 @@ public class Assets {
         menuCharity1 = loadTexture("icon-heart.png");
         menuCharity1Region = new TextureRegion(menuCharity1, 0, 0, 100, 100);
         //end charity icons
+
+        sideBar = loadTexture("inGameBar.png");
+        sideBarRegion = new TextureRegion(sideBar, 0, 0, 40, 480);
+        heart = loadTexture("heart.png");
+        heartRegion = new TextureRegion(heart, 0, 0, 16, 14);
 
         //animations
         playerWalking = new Animation(.05f,
