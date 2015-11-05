@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -24,6 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 
+import java.util.Map;
+
 public class MenuRenderer {
     Menu menu;
     OrthographicCamera cam;
@@ -32,6 +35,7 @@ public class MenuRenderer {
     StretchViewport viewport;
     Table container;
     //Stage scrollerStage;
+
 
     public MenuRenderer(SpriteBatch batch, Menu menu) {
         this.menu = menu;
@@ -53,7 +57,7 @@ public class MenuRenderer {
 
         //stage = new Stage(viewport, batch);
         //Gdx.input.setInputProcessor(stage);
-        Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+        //Skin skin = new Skin(Gdx.files.internal("data/uiskin.json"));
         container = new Table();
         stage.addActor(container);
         //container.setFillParent(true);
@@ -66,7 +70,8 @@ public class MenuRenderer {
 
         // table.debug();
 
-        final ScrollPane scroll = new ScrollPane(table, skin);
+        //final ScrollPane scroll = new ScrollPane(table, skin);
+        ScrollPane scroll = new ScrollPane(table);
 
         InputListener stopTouchDown = new InputListener() {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -80,16 +85,30 @@ public class MenuRenderer {
         table.pad(10);
         //table.setBounds(100, 100, 400, 200);
         table.row();
-        for (int i = 0; i < 20; i++) {
+        /*for (int i = 0; i < 20; i++) {
 
-            Image img = new Image(Assets.menuCharity1Region);
+            final Image img = new Image(Assets.menuCharity1Region);
+            img.setName("Image: " + i);
             table.add(img);
             img.addListener(new ClickListener() {
                 public void clicked (InputEvent event, float x, float y) {
-                    System.out.println("click " + x + ", " + y);
+                    System.out.println("click " + x + ", " + y + " on " + img.getName());
                 }
             });
 
+        }*/
+        //for (int i = 1; i < Assets.charityIconTreeMap.size() + 1; i++)//for each icon in the treemap (i starts at one cause thats what index i initialized the tree map with)
+        for(Map.Entry<String, TextureRegion> entry : Assets.charityIconTreeMap.entrySet())
+        {
+            final Image img = new Image(Assets.charityIconTreeMap.get(entry.getKey()));
+            img.setName(entry.getKey());
+            table.add(img);
+            img.addListener(new ClickListener() {
+                public void clicked (InputEvent event, float x, float y) {
+                    System.out.println("click " + x + ", " + y + " on " + img.getName());
+                    updateSetCharity(img.getName());
+                }
+            });
         }
         table.row();
 
@@ -104,6 +123,11 @@ public class MenuRenderer {
         //container.setBounds(100, 100, 400, 200);
 
         //end that troll stuff
+    }
+
+    public void updateSetCharity(String setCharity){
+        this.menu.setCharity(setCharity);
+
     }
 
     public void render () {

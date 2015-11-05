@@ -65,6 +65,7 @@ public class Menu {
     Boolean unfocusAll;
     Boolean shouldAddScrollPane;
     Table scrollPaneContainer;
+    String charityID;
 
 
     public Menu(proofOfConcept game) {
@@ -82,6 +83,7 @@ public class Menu {
         scrollPaneContainer = null;
         isSplash = true;
         unfocusAll = false;
+        charityID = "" + 1;
     }
 
     public static String sha256(String base) { //this is almost certainly a really bad idea. eff it
@@ -309,11 +311,11 @@ public class Menu {
 
             if (menuComponents.get(0).containsXY(x, y))//submit
             {
-                //this.signUpScroller(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText());
 
-                //this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText(), menuTextFields.get("charityTF").getText());
 
-                //this.processSignIn(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText());
+                this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText(), charityID);
+
+                this.processSignIn(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText());
             }
             else if (menuComponents.get(1).containsXY(x, y))//return
             {
@@ -601,31 +603,12 @@ public class Menu {
             }
         });
 
-        final TextField charityTextField = new TextField("CHARITY", Assets.tfs);//obviously want to replace these with a real charity selection
+        final TextField charityTextField = new TextField("SELECT A CHARITY", Assets.tfsTrans40);//obviously want to replace these with a real charity selection
         charityTextField.setPosition(450, 240);
+        charityTextField.setDisabled(true);
         charityTextField.setWidth(300);
         charityTextField.setHeight(50);
         charityTextField.setFocusTraversal(false);
-        charityTextField.addListener(new ClickListener() {
-            public void clicked(InputEvent e, float x, float y) {
-                if (charityTextField.getText().equals("CHARITY"))
-                    charityTextField.setText("");
-
-            }
-        });
-        charityTextField.setTextFieldListener(new TextField.TextFieldListener() {//if enter is pressed, remove the keyboard
-            @Override
-            public void keyTyped(TextField textField, char c) {
-                if ((c == '\r') || (c == '\n')) {
-                    Gdx.input.setOnscreenKeyboardVisible(false);
-                    unfocusAll = true;
-                }
-            }
-        });
-
-
-
-
 
 
         menuTextFields.put("usernameTF", usernameTextField);
@@ -640,15 +623,19 @@ public class Menu {
         menuNumber = this.MENU_SIGNUP;
     }
 
-    /*public void signUpScroller(String username, String password, String email)
+
+    public void setCharity(String setCharity)
     {
-        shouldClear = true;
-        shouldAddScrollPane = true;
-        menu = Assets.menuSplashBlankRegion;
-        menuComponents = new ArrayList<MenuComponent>();
-        menuTextFields = new HashMap<String, TextField>();
-        menuNumber = this.MENU_SIGNUP_SCROLLER;
-    }*/
+        try
+        {
+            this.menuTextFields.get("charityTF").setText(setCharity.split(":")[1]);//get the part after the : (i formatted it that way in Assets.java)
+            this.charityID = setCharity.split(":")[0];
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
 
     public void welcome(String username, int wins, int losses, String charityName, int charityIcon)
     {

@@ -13,6 +13,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.TreeMap;
+
 public class Assets {
     public static Texture background;
     public static TextureRegion backgroundRegion;
@@ -61,8 +65,27 @@ public class Assets {
     //end nu menuz
 
     //charity icons (placeholders for now)
-    public static Texture menuCharity1;
-    public static TextureRegion menuCharity1Region;
+    public static Texture charityIconAmericanCancerSociety;
+    public static TextureRegion charityIconAmericanCancerSocietyRegion;
+    public static Texture charityIconFeedingAmerica;
+    public static TextureRegion charityIconFeedingAmericaRegion;
+    public static Texture charityIconFoodForThePoor;
+    public static TextureRegion charityIconFoodForThePoorRegion;
+    public static Texture charityIconGoodwill;
+    public static TextureRegion charityIconGoodwillRegion;
+    public static Texture charityIconRedCross;
+    public static TextureRegion charityIconRedCrossRegion;
+    public static Texture charityIconSalvationArmy;
+    public static TextureRegion charityIconSalvationArmyRegion;
+    public static Texture charityIconStJudes;
+    public static TextureRegion charityIconStJudesRegion;
+    public static Texture charityIconTaskForceGlobalHealth;
+    public static TextureRegion charityIconTaskForceGlobalHealthRegion;
+    public static Texture charityIconUnitedWay;
+    public static TextureRegion charityIconUnitedWayRegion;
+    public static Texture charityIconYMCA;
+    public static TextureRegion charityIconYMCARegion;
+    public static TreeMap<String, TextureRegion> charityIconTreeMap;
     //end charity icons
 
 
@@ -174,8 +197,38 @@ public class Assets {
         //end nu menuz
 
         //charity icons
-        menuCharity1 = loadTexture("icon-heart.png");
-        menuCharity1Region = new TextureRegion(menuCharity1, 0, 0, 100, 100);
+        charityIconAmericanCancerSociety = loadTexture("charityIconAmericanCancerSociety.png");
+        charityIconAmericanCancerSocietyRegion = new TextureRegion(charityIconAmericanCancerSociety, 0, 0, 100, 100);
+        charityIconFeedingAmerica = loadTexture("charityIconFeedingAmerica.png");
+        charityIconFeedingAmericaRegion = new TextureRegion(charityIconFeedingAmerica, 0, 0, 100, 100);
+        charityIconFoodForThePoor = loadTexture("charityIconFoodForThePoor.png");
+        charityIconFoodForThePoorRegion = new TextureRegion(charityIconFoodForThePoor, 0, 0, 100, 100);
+        charityIconGoodwill = loadTexture("charityIconGoodwill.png");
+        charityIconGoodwillRegion = new TextureRegion(charityIconGoodwill, 0, 0, 100, 100);
+        charityIconRedCross = loadTexture("charityIconRedCross.png");
+        charityIconRedCrossRegion = new TextureRegion(charityIconRedCross, 0, 0, 100, 100);
+        charityIconSalvationArmy = loadTexture("charityIconSalvationArmy.png");
+        charityIconSalvationArmyRegion = new TextureRegion(charityIconSalvationArmy, 0, 0, 100, 100);
+        charityIconStJudes = loadTexture("charityIconStJudes.png");
+        charityIconStJudesRegion = new TextureRegion(charityIconStJudes, 0, 0, 100, 100);
+        charityIconTaskForceGlobalHealth = loadTexture("charityIconTaskForceGlobalHealth.png");
+        charityIconTaskForceGlobalHealthRegion = new TextureRegion(charityIconTaskForceGlobalHealth, 0, 0, 100, 100);
+        charityIconUnitedWay = loadTexture("charityIconUnitedWay.png");
+        charityIconUnitedWayRegion = new TextureRegion(charityIconUnitedWay, 0, 0, 100, 100);
+        charityIconYMCA = loadTexture("charityIconYMCA.png");
+        charityIconYMCARegion = new TextureRegion(charityIconYMCA, 0, 0, 100, 100);
+
+        charityIconTreeMap = new TreeMap<String, TextureRegion>();
+        charityIconTreeMap.put(1 + ":American Cancer Society", charityIconAmericanCancerSocietyRegion);
+        charityIconTreeMap.put(2 + ":Feeding America", charityIconFeedingAmericaRegion);
+        charityIconTreeMap.put(3 + ":Food for the Poor", charityIconFoodForThePoorRegion);
+        charityIconTreeMap.put(4 + ":Goodwill", charityIconGoodwillRegion);
+        charityIconTreeMap.put(5 + ":Red Cross", charityIconRedCrossRegion);
+        charityIconTreeMap.put(6 + ":Salvation Army", charityIconSalvationArmyRegion);
+        charityIconTreeMap.put(7 + ":St. Judes", charityIconStJudesRegion);
+        charityIconTreeMap.put(8 + ":Task Force for Global Health", charityIconTaskForceGlobalHealthRegion);
+        charityIconTreeMap.put(9 + ":United Way", charityIconUnitedWayRegion);
+        charityIconTreeMap.put(10 + ":YMCA", charityIconYMCARegion);
         //end charity icons
 
         sideBar = loadTexture("inGameBar.png");
