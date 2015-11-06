@@ -125,8 +125,57 @@ public class MenuRenderer {
         //end that troll stuff
     }
 
+    public void addCharacterScrollPaneToStage()
+    {
+        container = new Table();
+        stage.addActor(container);
+        container.setBackground(new TextureRegionDrawable(Assets.menuSplashBlankRegion));
+        container.setBounds(0, 100, 800, 300);
+
+        Table table = new Table();
+        table.setBackground(new TextureRegionDrawable(Assets.menuSplashBlankRegion));
+
+        ScrollPane scroll = new ScrollPane(table);
+
+        InputListener stopTouchDown = new InputListener() {
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                event.stop();
+                return false;
+            }
+        };
+
+        table.pad(10);
+        table.row();
+
+        for(Map.Entry<String, TextureRegion> entry : Assets.characterIconTreeMap.entrySet())
+        {
+            final Image img = new Image(Assets.characterIconTreeMap.get(entry.getKey()));
+            img.setName(entry.getKey());
+            table.add(img);
+            img.addListener(new ClickListener() {
+                public void clicked (InputEvent event, float x, float y) {
+                    System.out.println("click " + x + ", " + y + " on " + img.getName());
+                    updateSetCharacter(img.getName());
+                }
+            });
+        }
+        table.row();
+
+        scroll.setFlickScroll(true);
+        scroll.setupFadeScrollBars(0, 0);
+        scroll.setupOverscroll(0, 0, 0);
+        scroll.setScrollingDisabled(false, true);
+        container.add(scroll);
+        container.row();
+    }
+
     public void updateSetCharity(String setCharity){
         this.menu.setCharity(setCharity);
+
+    }
+
+    public void updateSetCharacter(String setCharacter){
+        this.menu.setCharacter(setCharacter);
 
     }
 
@@ -142,7 +191,15 @@ public class MenuRenderer {
                 System.out.println("did this once");
                 stage.clear();
                 this.menu.shouldClear = false;
-                this.addCharityScrollPaneToStage();
+                if (this.menu.charityScrollPane)
+                {
+                    this.addCharityScrollPaneToStage();
+                }
+                else if (this.menu.characterScrollPane)
+                {
+                    this.addCharacterScrollPaneToStage();
+                }
+
 
             }
 

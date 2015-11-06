@@ -47,7 +47,7 @@ public class Menu {
     public static final int MENU_MAINMENU = 5;
     public static final int MENU_OPTIONS = 6;
     public static final int MENU_GAMEOVER = 7;
-    public static final int MENU_SIGNUP_SCROLLER = 8;
+    public static final int MENU_PICK_CLASS = 8;
 
     public ArrayList<String> httpReturns;
 
@@ -64,8 +64,11 @@ public class Menu {
     Boolean isSplash;
     Boolean unfocusAll;
     Boolean shouldAddScrollPane;
+    Boolean charityScrollPane;
+    Boolean characterScrollPane;
     Table scrollPaneContainer;
     String charityID;
+    String characterID;
 
 
     public Menu(proofOfConcept game) {
@@ -80,10 +83,13 @@ public class Menu {
         blinkTimer = 0;
         shouldClear = false;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         isSplash = true;
         unfocusAll = false;
         charityID = "" + 1;
+        characterID = "" + 1;
     }
 
     public static String sha256(String base) { //this is almost certainly a really bad idea. eff it
@@ -329,8 +335,8 @@ public class Menu {
             if (menuComponents.get(0).containsXY(x, y))//play!
             {
                 //goes to lobby (loading), lobby goes to game when ready
-                
-                game.setScreen(new LobbyScreen(game));
+                this.pickClass();
+                //game.setScreen(new LobbyScreen(game));
             }
             else if (menuComponents.get(1).containsXY(x, y))//oiptions buttons
             {
@@ -364,6 +370,17 @@ public class Menu {
         {
             this.mainMenu();
         }
+        else if (menuNumber == this.MENU_PICK_CLASS)
+        {
+            if (menuComponents.get(0).containsXY(x, y))//continue
+            {
+                game.setScreen(new LobbyScreen(game));
+            }
+            else if (menuComponents.get(1).containsXY(x, y))//return
+            {
+                this.mainMenu();
+            }
+        }
     }
 
 
@@ -372,6 +389,8 @@ public class Menu {
     public void splash(){
         shouldClear = true;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
@@ -396,6 +415,8 @@ public class Menu {
     public void signIn(){
         shouldClear = true;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
@@ -498,6 +519,8 @@ public class Menu {
         shouldClear = true;
         //shouldAddScrollPane = false;
         shouldAddScrollPane = true;
+        charityScrollPane = true;
+        characterScrollPane = false;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
         menuTextFields = new HashMap<String, TextField>();
@@ -637,10 +660,25 @@ public class Menu {
         }
     }
 
+    public void setCharacter(String setCharacter)
+    {
+        try
+        {
+            this.menuTextFields.get("characterTF").setText(setCharacter.split(":")[1]);//get the part after the : (i formatted it that way in Assets.java)
+            this.characterID = setCharacter.split(":")[0];
+        }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
     public void welcome(String username, int wins, int losses, String charityName, int charityIcon)
     {
         shouldClear = true;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
@@ -662,6 +700,8 @@ public class Menu {
     public void mainMenu(){
         shouldClear = true;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();
@@ -751,10 +791,56 @@ public class Menu {
         menuNumber = this.MENU_MAINMENU;
     }
 
+    public void pickClass(){
+        shouldClear = true;
+        shouldAddScrollPane = true;
+        charityScrollPane = false;
+        characterScrollPane = true;
+        menu = Assets.menuSplashBlankRegion;
+        menuComponents = new ArrayList<MenuComponent>();
+        menuTextFields = new HashMap<String, TextField>();
+
+        menuComponents.add(0, new MenuComponent(700, 100, 175, 75, Assets.menuButtonSmallRegion));//continue
+        menuComponents.add(1, new MenuComponent(100, 100, 175, 75, Assets.menuButtonSmallRegion));//return
+
+        final TextField characterTextField = new TextField("SELECT A CHARACTER", Assets.tfsTrans40);//obviously want to replace these with a real charity selection
+        characterTextField.setPosition(50, 390);
+        characterTextField.setWidth(700);
+        characterTextField.setHeight(50);
+        characterTextField.setAlignment(Align.center);
+        characterTextField.setFocusTraversal(false);
+        characterTextField.setDisabled(true);
+
+        TextField continueTextField = new TextField(("CONTINUE"), Assets.tfsTransWhite40);
+        continueTextField.setPosition(612, 27);
+        continueTextField.setWidth(175);//to be centered well make the width about 325
+        continueTextField.setHeight(50);
+        continueTextField.setAlignment(Align.center);
+        continueTextField.setFocusTraversal(false);
+        continueTextField.setDisabled(true);
+
+        TextField returnTextField = new TextField(("RETURN"), Assets.tfsTransWhite40);
+        returnTextField.setPosition(12, 27);
+        returnTextField.setWidth(175);//to be centered well make the width about 325
+        returnTextField.setHeight(50);
+        returnTextField.setAlignment(Align.center);
+        returnTextField.setFocusTraversal(false);
+        returnTextField.setDisabled(true);
+
+        menuTextFields.put("characterTF", characterTextField);
+        menuTextFields.put("continueTF", continueTextField);
+        menuTextFields.put("returnTF", returnTextField);
+
+
+        menuNumber = this.MENU_PICK_CLASS;
+    }
+
     public void options()
     {
         shouldClear = true;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         menuNumber = this.MENU_OPTIONS;
         menu = Assets.menuSplashBlankRegion;
@@ -829,6 +915,8 @@ public class Menu {
     public void gameOver(boolean won, ArrayList<Integer> playerIDs, ArrayList<String> playerUsernames){
         shouldClear = true;
         shouldAddScrollPane = false;
+        charityScrollPane = false;
+        characterScrollPane = false;
         scrollPaneContainer = null;
         menu = Assets.menuSplashBlankRegion;
         menuComponents = new ArrayList<MenuComponent>();

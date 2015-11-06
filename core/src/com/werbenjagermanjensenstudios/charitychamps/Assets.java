@@ -88,6 +88,20 @@ public class Assets {
     public static TreeMap<String, TextureRegion> charityIconTreeMap;
     //end charity icons
 
+    //character icons
+    public static Texture characterIcon1;
+    public static TextureRegion characterIcon1Region;
+    public static Texture characterIcon2;
+    public static TextureRegion characterIcon2Region;
+    public static Texture characterIcon3;
+    public static TextureRegion characterIcon3Region;
+    public static Texture characterIcon4;
+    public static TextureRegion characterIcon4Region;
+    public static Texture characterIcon5;
+    public static TextureRegion characterIcon5Region;
+    public static TreeMap<String, TextureRegion> characterIconTreeMap;
+    //end character icons
+
 
     public static Texture menuNinePatch;
     public static TextureRegion menuNinePatchRegion;
@@ -230,6 +244,25 @@ public class Assets {
         charityIconTreeMap.put(9 + ":United Way", charityIconUnitedWayRegion);
         charityIconTreeMap.put(10 + ":YMCA", charityIconYMCARegion);
         //end charity icons
+
+        //character icons
+        characterIcon1 = loadTexture("characterIcon1.png");
+        characterIcon1Region = new TextureRegion(characterIcon1, 0, 0, 204, 279);
+        characterIcon2 = loadTexture("characterIcon2.png");
+        characterIcon2Region = new TextureRegion(characterIcon2, 0, 0, 204, 279);
+        characterIcon3 = loadTexture("characterIcon3.png");
+        characterIcon3Region = new TextureRegion(characterIcon3, 0, 0, 204, 279);
+        characterIcon4 = loadTexture("characterIcon4.png");
+        characterIcon4Region = new TextureRegion(characterIcon4, 0, 0, 204, 279);
+        characterIcon5 = loadTexture("characterIcon5.png");
+        characterIcon5Region = new TextureRegion(characterIcon5, 0, 0, 204, 279);
+        characterIconTreeMap = new TreeMap<String, TextureRegion>();
+        characterIconTreeMap.put(1 + ":Rocketman", characterIcon1Region);
+        characterIconTreeMap.put(2 + ":Sniper", characterIcon2Region);
+        characterIconTreeMap.put(3 + ":Master Blaster", characterIcon3Region);
+        characterIconTreeMap.put(4 + ":Dangus", characterIcon4Region);
+        characterIconTreeMap.put(5 + ":Prangus", characterIcon5Region);
+        //end character icons
 
         sideBar = loadTexture("inGameBar.png");
         sideBarRegion = new TextureRegion(sideBar, 0, 0, 40, 480);
