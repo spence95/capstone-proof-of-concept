@@ -90,11 +90,11 @@ public class GameScreen extends ScreenAdapter {
         countdownText.setDisabled(true);
     }
 
-    public void draw(){
+    public void draw(float delta){
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.render();
+        renderer.render(delta);
 
         if(world.roundWaitingCounter < world.roundWaitingAmount && !world.isSetting) {
             game.batcher.begin();
@@ -108,22 +108,20 @@ public class GameScreen extends ScreenAdapter {
         game.batcher.setProjectionMatrix(guiCam.combined);
         game.batcher.enableBlending();
         game.batcher.begin();
-        game.batcher.draw(Assets.sideBarRegion, 0, 0, 40, 480);
-        if(world.isSetting) {
-            countdownText.draw(game.batcher, 1);
-        }
-        if(world.currentPlayer.health > 2){
-            game.batcher.draw(Assets.heartRegion, 0, 445, 35, 30);
-            game.batcher.draw(Assets.heartRegion, 0, 410, 35, 30);
-            game.batcher.draw(Assets.heartRegion, 0, 375, 35, 30);
-        } else if(world.currentPlayer.health > 1){
-            game.batcher.draw(Assets.heartRegion, 0, 445, 35, 30);
-            game.batcher.draw(Assets.heartRegion, 0, 410, 35, 30);
-        } else if(world.currentPlayer.health > 0){
-            game.batcher.draw(Assets.heartRegion, 0, 445, 35, 30);
-        } else {
 
+
+            if(world.isSetting) {
+                countdownText.draw(game.batcher, 1);
+            }
+        float heartSpot = 445;
+        float heartWidth = 35;
+        float heartHeight = 30;
+        float heartMargin = 35;
+        for(int h = 0; h < world.currentPlayer.health; h++){
+            game.batcher.draw(Assets.heartRegion, 0, heartSpot, heartWidth, heartHeight);
+            heartSpot -= heartMargin;
         }
+
         game.batcher.end();
 //        game.batcher.begin();
 //        switch (state) {
@@ -149,7 +147,7 @@ public class GameScreen extends ScreenAdapter {
 
     public void render (float delta) {
         update(delta);
-        draw();
+        draw(delta);
     }
 
 }

@@ -12,25 +12,61 @@ public class CollisionManager {
 
     public void updateCollisions(){
         updateBlockCollisions();
+        //updateBullets();
         updateExplosions();
+        updatePowerups();
+    }
+
+    private void updateBullets(){
+        for(int i = 0; i < world.players.size(); i++){
+            Player pl = world.players.get(i);
+            Bullet bu = pl.bullet;
+            for(int j = 0; j < world.players.size(); j++){
+                Player opl = world.players.get(j);
+                if(pl.id != opl.id){
+                    if(opl.bounds.overlaps(bu.bounds)){
+                        if(!opl.isImmune){
+                            opl.takeHit(1);
+                            opl.isImmune = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void updatePowerups() {
+        for(int p = 0; p < world.players.size(); p++){
+            for(int i = 0; i < world.powerups.size(); i++){
+                if(world.players.get(p).bounds.overlaps(world.powerups.get(i).bounds)){
+                    if(!world.isSetting) {
+                        world.powerups.get(i).absorbed(world.players.get(p));
+                    }
+                }
+            }
+        }
     }
 
     private void updateExplosions() {
         //only kill if in running mode
-        if(!world.isSetting) {
+        //if(!world.isSetting) {
+//            Explosion dummyEx = new Explosion(-1000, -1000);
+//            world.explosions.add(dummyEx);
             for(int i = 0; i < world.explosions.size(); i++){
             Explosion e = world.explosions.get(i);
             for(int p = 0; p < world.players.size(); p++){
                 Player pl = world.players.get(p);
                 if(pl.bounds.overlaps(e.bounds)){
-                        //if(!pl.isImmune) {
+                    System.out.println("Colliding explosion");
+                        if(!pl.isImmune) {
+                            System.out.println("Taking hit");
                             pl.takeHit(1);
                             pl.isImmune = true;
-                       // }
+                        }
                     }
                 }
             }
-        }
+        //}
     }
 
     private void updateBlockCollisions(){
@@ -51,7 +87,7 @@ public class CollisionManager {
                     double degrees;
                     float bumpbackX;
                     float bumpbackY;
-                    float bumpbackTotal = 15;
+                    float bumpbackTotal = 25;
                     if(dx > px) {
                         degrees = Math.toDegrees(Math.atan(yDist / xDist));
                         bumpbackY = (float)(degrees/90) * bumpbackTotal;

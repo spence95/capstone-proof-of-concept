@@ -36,7 +36,7 @@ public class Player extends DynamicGameObject{
     int health;
     boolean isImmune;
     float immuneCounter;
-    public static float immuneCounterLimit = 1;
+    public static float immuneCounterLimit = 2f;
 
     public static int time = 17;
 
@@ -58,7 +58,7 @@ public class Player extends DynamicGameObject{
         savedActions = new ArrayList<Action>();
         bullet = new Bullet(-100, -100, 200);
         side = 1;
-        health = 3;
+        health = 2;
         isImmune = false;
         immuneCounter = 0;
     }
@@ -108,57 +108,48 @@ public class Player extends DynamicGameObject{
     }
 
     public void update(float deltaTime, boolean isRunning){
-        if(isImmune){
-            if(immuneCounter < immuneCounterLimit){
-                immuneCounter += deltaTime;
-            } else{
-                isImmune = false;
-                immuneCounter = 0;
-            }
-        }
-        //ten seconds per turn
-        if(stateTime <= time) {
-            dir = new Vector2();
-            //on touch event set the touch vector then get direction vector
-            dir.set(this.destination).sub(position).nor();
-            movement = new Vector2();
-            velocity = new Vector2(dir).scl(speed);
-            movement.set(velocity).scl(deltaTime);
+            //ten seconds per turn
+            if (stateTime <= time) {
+                dir = new Vector2();
+                //on touch event set the touch vector then get direction vector
+                dir.set(this.destination).sub(position).nor();
+                movement = new Vector2();
+                velocity = new Vector2(dir).scl(speed);
+                movement.set(velocity).scl(deltaTime);
 
-            if(velocity.x < 0){
-                side = -1;
-            }
-            else if(velocity.x > 0) {
-                side = 1;
-            }
+                if (velocity.x < 0) {
+                    side = -1;
+                } else if (velocity.x > 0) {
+                    side = 1;
+                }
 
-            if (position.dst2(destination) > movement.len2()) {
-                this.isMoving = true;
-                position.add(movement);
-                bounds.x = position.x - bounds.width / 2;
-                bounds.y = position.y - bounds.height / 2;
-            } else {
-                position.set(destination);
-                bounds.x = position.x - bounds.width / 2;
-                bounds.y = position.y - bounds.height / 2;
-                stop();
-                if(isRunning){
-                    if(actions.size() > turnCounter + 1 && !isWaiting) {
-                        secondsWaiting = 0;
-                        turnCounter++;
-                    } else if(turnCounter + 1 <= actions.size() && !isWaiting){
-                        isDone = true;
+                if (position.dst2(destination) > movement.len2()) {
+                    this.isMoving = true;
+                    position.add(movement);
+                    bounds.x = position.x - bounds.width / 2;
+                    bounds.y = position.y - bounds.height / 2;
+                } else {
+                    position.set(destination);
+                    bounds.x = position.x - bounds.width / 2;
+                    bounds.y = position.y - bounds.height / 2;
+                    stop();
+                    if (isRunning) {
+                        if (actions.size() > turnCounter + 1 && !isWaiting) {
+                            secondsWaiting = 0;
+                            turnCounter++;
+                        } else if (turnCounter + 1 <= actions.size() && !isWaiting) {
+                            isDone = true;
+                        }
                     }
                 }
+            } else {
+                isDone = true;
+                stop();
             }
-        } else {
-            isDone = true;
-            stop();
-        }
-        if(!isRunning) {
-            secondsWaiting += deltaTime;
-        }
-        stateTime += deltaTime;
+            if (!isRunning) {
+                secondsWaiting += deltaTime;
+            }
+            stateTime += deltaTime;
     }
 
     public void updateAttack(float deltaTime){

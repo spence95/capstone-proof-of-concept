@@ -24,6 +24,9 @@ public class ActionMenu extends DynamicGameObject {
     Vector2 movement;
     Vector2 velocity;
 
+    /*
+    DEPRECATED
+     */
     public ActionMenu(){
         super((World.WORLD_WIDTH / 2) - ((World.MENU_WIDTH/2)/2), -World.MENU_HEIGHT, World.MENU_WIDTH / 2, World.MENU_HEIGHT / 2);
         this.stateTime = 0;

@@ -28,6 +28,12 @@ public class Assets {
     public static TextureRegion menuRegion;
     public static TextureRegion submitRegion;
 
+    public static Texture newActionMenu;
+    public static TextureRegion selectedMove;
+    public static TextureRegion selectedAttack;
+    public static TextureRegion deselectedMove;
+    public static TextureRegion deselectedAttack;
+
     public static Texture player;
     public static TextureRegion playerWalkingRegion;
     public static TextureRegion playerStill;
@@ -159,6 +165,14 @@ public class Assets {
         actions = loadTexture("actions.png");
         menuRegion = new TextureRegion(actions, 0, 0, 392, 127);
         submitRegion = new TextureRegion(actions, 0, 127, 392, 127);
+
+
+        newActionMenu = loadTexture("newactionmenu.png");
+        selectedMove = new TextureRegion(newActionMenu, 0, 0, 32, 32);
+        selectedAttack = new TextureRegion(newActionMenu, 32, 0, 32, 32);
+        deselectedMove = new TextureRegion(newActionMenu, 64, 0, 32, 32);
+        deselectedAttack = new TextureRegion(newActionMenu, 96, 0, 32, 32);
+
 
         //506 by 169
         player = loadTexture("playerBig.png");

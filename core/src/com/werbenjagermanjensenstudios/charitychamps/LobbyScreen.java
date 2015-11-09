@@ -22,10 +22,13 @@ public class LobbyScreen extends ScreenAdapter {
     World world;
     TextField loadingText;
     int loadingDotTimer;
+    String currentMatchMakingID;
     boolean inGame;
     boolean nextRound;
     WorldRenderer worldRenderer;
     GameScreen gs;
+    public static float timeOutLimit = 10;
+    float timeOutTimer;
 
 
     public LobbyScreen(proofOfConcept game){
@@ -37,6 +40,8 @@ public class LobbyScreen extends ScreenAdapter {
         api = new ApiCall();
         //call out to server once
         putResults = putReady();
+
+        timeOutTimer = 0;
 
         loadingDotTimer = 0;
 
@@ -75,6 +80,7 @@ public class LobbyScreen extends ScreenAdapter {
         public String putReady(){
         //url is: http://45.33.62.187/api/v1/matchmaking/(id)/?format=json
         String[] matchmakingId = getMatchmaking(true);
+        currentMatchMakingID = matchmakingId[0];
         String URL = "http://45.33.62.187/api/v1/matchmaking/" + matchmakingId[0] + "/?player=" + game.getPlayerID() + "&format=json";
         String Body = "{" +
                 "\"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +
@@ -98,11 +104,11 @@ public class LobbyScreen extends ScreenAdapter {
         return results;
     }
 
-    public void draw(){
+    public void draw(float delta){
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        render(game.batcher);
+        render(game.batcher, delta);
 
 
         guiCam.update();
@@ -110,7 +116,7 @@ public class LobbyScreen extends ScreenAdapter {
     }
 
     public void update(float delta){
-        draw();
+        draw(delta);
         if(inGame == false) {
             String[] matchmakingResults = getMatchmaking(false);
             String match = matchmakingResults[0];
@@ -187,7 +193,22 @@ public class LobbyScreen extends ScreenAdapter {
                         world.spawnPlayers();
                         game.setScreen(new GameScreen(game, world));
                     }
-            }
+            } else{
+                    if(timeOutTimer > timeOutLimit){
+                        timeOutTimer = 0;
+
+                        //call out to api to set waiting = false
+                        String URL = "http://45.33.62.187/api/v1/matchmaking/" + currentMatchMakingID + "/?player=" + game.getPlayerID() + "&format=json";
+                        String Body = "{" +
+                                "\"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +
+                                "\"waiting\": \"FALSE\"}";
+                        api.httpPostPutOrPatch(URL, Body, 0, false, true);
+
+                        game.setScreen(new MenuScreen(game));
+                    } else {
+                        timeOutTimer += delta;
+                    }
+                }
         } else {
             isReadyToRun();
             if(nextRound == true){
@@ -197,14 +218,14 @@ public class LobbyScreen extends ScreenAdapter {
         }
     }
 
-    public void render(SpriteBatch batch){
+    public void render(SpriteBatch batch, float delta){
         if(!inGame) {
             batch.begin();
             batch.draw(Assets.menuSplashBlankRegion, guiCam.position.x - 800 / 2, guiCam.position.y - 480 / 2, 800,
                     480);
             batch.end();
         } else{
-            gs.renderer.render();
+            gs.renderer.render(delta);
         }
         batch.begin();
         batch.enableBlending();
@@ -235,7 +256,7 @@ public class LobbyScreen extends ScreenAdapter {
 
     public void render (float delta) {
         update(delta);
-        draw();
+        draw(delta);
     }
 
     public void isReadyToRun(){

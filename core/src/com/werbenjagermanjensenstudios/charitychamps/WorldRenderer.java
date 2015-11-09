@@ -14,6 +14,7 @@ public class WorldRenderer {
     OrthographicCamera cam;
     SpriteBatch batch;
     StretchViewport viewport;
+    float showImmuneCounter;
 
     public WorldRenderer (SpriteBatch batch, World world) {
         this.world = world;
@@ -21,11 +22,13 @@ public class WorldRenderer {
         this.cam.position.set(this.world.WORLD_WIDTH / 2, this.world.WORLD_HEIGHT / 2, 0);
         this.batch = batch;
         viewport = new StretchViewport(800, 480, cam);
+
+        showImmuneCounter = 0;
     }
 
-    public void render () {
+    public void render (float delta) {
         renderBackground();
-        renderObjects();
+        renderObjects(delta);
     }
 
     public void renderBackground () {
@@ -38,16 +41,28 @@ public class WorldRenderer {
         batch.end();
     }
 
-    public void renderObjects () {
+    public void renderObjects (float delta) {
         batch.enableBlending();
         //renderSquares();
-        renderPlayers();
+        renderPlayers(delta);
         renderLabels();
         renderActionButtons();
         renderDot();
         renderBlocks();
         renderExplosions();
+        renderSideActionButtons();
+        renderPowerups();
         batch.disableBlending();
+    }
+
+    private void renderPowerups() {
+        batch.begin();
+        for(int i = 0; i < world.powerups.size(); i++){
+            if(world.powerups.get(i) instanceof HeartPowerup){
+                batch.draw(Assets.heartRegion, world.powerups.get(i).position.x - (world.powerups.get(i).bounds.width / 2), world.powerups.get(i).position.y - (world.powerups.get(i).bounds.height / 2), world.powerups.get(i).bounds.width, world.powerups.get(i).bounds.height);
+            }
+        }
+        batch.end();
     }
 
     private void renderExplosions() {
@@ -99,8 +114,10 @@ public class WorldRenderer {
 
     }
 
-    private void renderPlayers(){
+    private void renderPlayers(float delta){
         batch.begin();
+        batch.draw(Assets.sideBarRegion, 0, 0, 48, 480);
+
         for(int i = 0; i < world.players.size(); i++){
             Player pl = world.players.get(i);
             TextureRegion keyFrame = Assets.playerStill;
@@ -117,14 +134,25 @@ public class WorldRenderer {
 //                side = pl.velocity.x < 0 ? -1 : 1;
             boolean show = true;
             if(pl.isImmune){
+//                if(showImmuneCounter < .1){
+//                    show = false;
+//                } else if(showImmuneCounter < .3){
+//                    show = true;
+//                } else {
+//                    showImmuneCounter = 0;
+//                }
                 int Min = 1;
                 int Max = 10;
                 float rand = Min + (int)(Math.random() * ((Max - Min) + 1));
                 if(rand % 2 == 0){
-                    //show = false;
-                    show = true;
+                    show = false;
+                    //show = true;
                 }
+//            } else {
+//                showImmuneCounter = 0;
             }
+            //showImmuneCounter += delta;
+
             if(show || world.isSetting) {
                 batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth * pl.side, world.squareHeight);
             }
@@ -138,6 +166,9 @@ public class WorldRenderer {
 //            batch.draw(keyFrame, world.bob.position.x - 0.5f, world.bob.position.y - 0.5f, side * 1, 1);
     }
 
+    /*
+    Deprecated
+     */
     public void renderActionButtons(){
         batch.begin();
         if(! world.actionMenu.isReadyToSubmit) {
@@ -145,6 +176,20 @@ public class WorldRenderer {
         }
         else
             batch.draw(Assets.submitRegion, world.actionMenu.position.x - (World.MENU_WIDTH/4), world.actionMenu.position.y, world.MENU_WIDTH, world.MENU_HEIGHT);
+        batch.end();
+    }
+
+    public void renderSideActionButtons(){
+        batch.begin();
+        ActionButton activeButton = world.getActiveButton();
+        String activeName = activeButton.getActionName();
+        if(activeName == ActionButton.moveName){
+            batch.draw(Assets.selectedMove, world.moveActionButton.position.x - (world.moveActionButton.bounds.width / 2), world.moveActionButton.position.y - (world.moveActionButton.bounds.height / 2), world.moveActionButton.bounds.width, world.moveActionButton.bounds.height);
+            batch.draw(Assets.deselectedAttack, world.attackActionButton.position.x - (world.attackActionButton.bounds.width / 2), world.attackActionButton.position.y - (world.attackActionButton.bounds.height / 2), world.attackActionButton.bounds.width, world.attackActionButton.bounds.height);
+        } else {
+            batch.draw(Assets.deselectedMove, world.moveActionButton.position.x - (world.moveActionButton.bounds.width / 2), world.moveActionButton.position.y - (world.moveActionButton.bounds.height / 2), world.moveActionButton.bounds.width, world.moveActionButton.bounds.height);
+            batch.draw(Assets.selectedAttack, world.attackActionButton.position.x - (world.attackActionButton.bounds.width / 2), world.attackActionButton.position.y - (world.attackActionButton.bounds.height / 2), world.attackActionButton.bounds.width, world.attackActionButton.bounds.height);
+        }
         batch.end();
     }
 

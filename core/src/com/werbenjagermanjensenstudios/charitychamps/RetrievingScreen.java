@@ -29,11 +29,11 @@ public class RetrievingScreen extends ScreenAdapter {
         this.renderer = renderer;
     }
 
-    public void draw(){
+    public void draw(float delta){
         GL20 gl = Gdx.gl;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.render();
+        renderer.render(delta);
 
         guiCam.update();
         game.batcher.setProjectionMatrix(guiCam.combined);
@@ -49,7 +49,7 @@ public class RetrievingScreen extends ScreenAdapter {
 
     public void render(float delta){
         update(delta);
-        draw();
+        draw(delta);
     }
 
     }

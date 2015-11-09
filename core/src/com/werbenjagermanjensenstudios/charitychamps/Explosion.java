@@ -6,8 +6,8 @@ package com.werbenjagermanjensenstudios.charitychamps;
 public class Explosion extends GameObject{
     private boolean isDone;
     private float rate;
-    private static final float width = 75;
-    private static final float height = 75;
+    private static final float width = 50;
+    private static final float height = 50;
     //assume exploding on creation
     public Explosion(float x, float y){
         super(x, y, Bullet.width, Bullet.height);

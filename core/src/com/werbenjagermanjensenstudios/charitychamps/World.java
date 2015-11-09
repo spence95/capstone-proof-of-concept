@@ -24,8 +24,8 @@ public class World {
     public static final float Move_menu_height = 127 / 2;
     public static final float Attack_menu_width = 150 / 2;
     public static final float Attack_menu_height = 127 / 2;
-    public final float squareWidth = 15;
-    public final float squareHeight = 30;
+    public final float squareWidth = 12;
+    public final float squareHeight = 24;
     //origin start points
     //(20, 40)
     //(20, 440)
@@ -35,6 +35,7 @@ public class World {
     public ArrayList<Block> blocks;
     public ArrayList<Explosion> explosions;
     public ArrayList<Bullet> bullets;
+    public ArrayList<Powerup> powerups;
     boolean hasStarted = false;
     boolean isSetting = true;
     boolean readyToEndRound = true;
@@ -46,7 +47,13 @@ public class World {
     Rectangle menuBounds;
     public Player currentPlayer;
     public Dot dot;
+
+    //TODO: Get rid of ActionMenu
     public ActionMenu actionMenu;
+
+    public ActionButton moveActionButton;
+    public ActionButton attackActionButton;
+
     public CollisionManager collisionManager;
     public ScreenController screenController;
     proofOfConcept game;
@@ -81,7 +88,12 @@ public class World {
         blocks = new ArrayList<Block>();
         explosions = new ArrayList<Explosion>();
         bullets = new ArrayList<Bullet>();
+        powerups = new ArrayList<Powerup>();
         actionMenu = new ActionMenu();
+
+        moveActionButton = new ActionButton(ActionButton.moveName, true, 20, 100, 40, 40);
+        attackActionButton = new ActionButton(ActionButton.attackName, false, 20, 150, 40, 40);
+
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
         turnNumber = 0;
@@ -94,6 +106,7 @@ public class World {
         });
         //place blocks on arena
         placeBlocks();
+        placePowerups();
         turnIDs = new ArrayList<Integer>();
         playersByID = new HashMap<Integer, String>();
         playerLabels = new HashMap<Integer, TextField>();
@@ -101,39 +114,133 @@ public class World {
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
         placeOutsideWalls();
-//        Block block = new Block(125 + 20, 75, 100, 5);
-//        blocks.add(block);
-//        block = new Block(78 + 20, 100, 5, 50);
-//        blocks.add(block);
-//
-//        block = new Block(WORLD_WIDTH-125 + 20, 75, 100, 5);
-//        blocks.add(block);
-//        block = new Block(WORLD_WIDTH-77 + 20, 100, 5, 50);
-//        blocks.add(block);
-//
-//        block = new Block(125 + 20, 480-75, 100, 5);
-//        blocks.add(block);
-//        block = new Block(78 + 20, 480 - 100, 5, 50);
-//        blocks.add(block);
-//
-//        block = new Block(WORLD_WIDTH-125 + 20, 480-75, 100, 5);
-//        blocks.add(block);
-//        block = new Block(WORLD_WIDTH-77 + 20, 480-100, 5, 50);
-//        blocks.add(block);
-
-        Block block = new Block(400 + 20, 240, 50, 50);
+        Block block = new Block(350 + 20, 240, 10, 10);
         blocks.add(block);
+        block = new Block(350 + 20, 250, 10, 10);
+        blocks.add(block);
+        block = new Block(350 + 20, 260, 10, 10);
+        blocks.add(block);
+        block = new Block(350 + 20, 270, 10, 10);
+        blocks.add(block);
+        block = new Block(350 + 20, 280, 10, 10);
+        blocks.add(block);
+        block = new Block(350 + 20, 240, 10, 10);
+        blocks.add(block);
+        block = new Block(350 + 20, 230, 10, 10);
+        blocks.add(block);
+        block = new Block(350 + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(360 + 20, 280, 10, 10);
+        blocks.add(block);
+        block = new Block(370 + 20, 280, 10, 10);
+        blocks.add(block);
+        block = new Block(380 + 20, 280, 10, 10);
+        blocks.add(block);
+
+
+        block = new Block(450 + 20, 250, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + 20, 260, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + 20, 270, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + 20, 280, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + 20, 240, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + 20, 230, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(440 + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(430 + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(420 + 20, 220, 10, 10);
+        blocks.add(block);
+
+        block = new Block(200  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(210  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(220  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(230  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(240  + 20, 220, 10, 10);
+        blocks.add(block);
+
+        block = new Block(600  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(590  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(580  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(570  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(560  + 20, 220, 10, 10);
+        blocks.add(block);
+
+        block = new Block(40  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(50  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(60  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(70  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(80  + 20, 220, 10, 10);
+        blocks.add(block);
+
+        block = new Block(770  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(760  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(750  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(740  + 20, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(730  + 20, 220, 10, 10);
+        blocks.add(block);
+
+        block = new Block(400  + 20, 10, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 20, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 30, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 40, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 50, 10, 10);
+        blocks.add(block);
+
+        block = new Block(400  + 20, 470, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 460, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 450, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 440, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + 20, 430, 10, 10);
+        blocks.add(block);
+
     }
 
     private void placeOutsideWalls(){
-        Block block = new Block((WORLD_WIDTH / 2)+20, 0, WORLD_WIDTH, 10);
+        Block block = new Block((WORLD_WIDTH / 2)+48, 0, WORLD_WIDTH, 10);
         blocks.add(block);
-        block = new Block(WORLD_WIDTH / 2+20, WORLD_HEIGHT, WORLD_WIDTH, 10);
+        block = new Block((WORLD_WIDTH / 2)+48, WORLD_HEIGHT, WORLD_WIDTH, 10);
         blocks.add(block);
-        block = new Block(40, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
+        block = new Block(48, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
         blocks.add(block);
         block = new Block(WORLD_WIDTH, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
         blocks.add(block);
+    }
+
+    private void placePowerups(){
+        HeartPowerup hp = new HeartPowerup(400 + 20, 250, 25, 25);
+        this.powerups.add(hp);
     }
 
     public void createScreenController(GameScreen gs){
@@ -144,27 +251,37 @@ public class World {
         turnIDs.add(id);
     }
 
+    public ActionButton getActiveButton(){
+        if(moveActionButton.isActive){
+            return moveActionButton;
+        } else {
+            return attackActionButton;
+        }
+    }
+
     public void touched(float x, float y){
-        //render actions menu
-            //check if click in menu bounds
-            if(actionMenu != null) {
-                if (actionMenu.menuBounds.contains(x, y) && actionMenu.isShown) {
-                    if(actionMenu.isReadyToSubmit && readyToEndRound){
-                        submit();
-                        return;
-                    }
-                    System.out.println(x);
-                    if(!currentPlayer.isDone) {
-                        if (x > 439) {
-                            moveClicked(lastTouchedX, lastTouchedY);
-                        } else {
-                            attackClicked(lastTouchedX, lastTouchedY);
-                        }
-                    }
+        if(moveActionButton.bounds.contains(x, y)){
+            moveActionButton.toggleActive();
+            attackActionButton.toggleActive();
+        }
+        else if(attackActionButton.bounds.contains(x, y)){
+            attackActionButton.toggleActive();
+            moveActionButton.toggleActive();
+        } else {
+            bringUpMenu(x, y);
+            if(!currentPlayer.isDone) {
+                ActionButton activeButton = getActiveButton();
+                System.out.println("ACTIVE BUTTON: ");
+                System.out.println(activeButton.getActionName());
+                if (activeButton.getActionName() == ActionButton.moveName) {
+                    //moveClicked(lastTouchedX, lastTouchedY);
+                    moveClicked(x, y);
                 } else {
-                    bringUpMenu(x, y);
+                    //attackClicked(lastTouchedX, lastTouchedY);
+                    attackClicked(x, y);
                 }
             }
+        }
     }
 
     private void bringUpMenu(float x, float y){
@@ -173,31 +290,38 @@ public class World {
             if (this.currentPlayer.velocity.x == 0 && this.currentPlayer.velocity.y == 0) {
                 lastTouchedX = x;
                 lastTouchedY = y;
-                dot.position.x = x;
-                dot.position.y = y;
+//                dot.position.x = x;
+//                dot.position.y = y;
                 //if hidden
-                if (this.actionMenu.state == 0 && this.actionMenu.position.y < 0) {
-                    this.actionMenu.changeState(1);
-                    this.actionMenu.isShown = true;
-                }
+//                if (this.actionMenu.state == 0 && this.actionMenu.position.y < 0) {
+//                    this.actionMenu.changeState(1);
+//                    this.actionMenu.isShown = true;
+//                }
             }
         }
     }
 
     public void moveClicked(float x, float y){
-        hideDot();
-        this.currentPlayer.addMove(x, y);
-        this.actionMenu.changeState(2);
-        this.actionMenu.isShown = false;
+        //if player is in middle of move update that move's ending to current position
+        if(!this.currentPlayer.isMoving) {
+//            this.currentPlayer.stop();
+//            this.currentPlayer.actions.get(this.currentPlayer.turnCounter).x = this.currentPlayer.position.x;
+//            this.currentPlayer.actions.get(this.currentPlayer.turnCounter).y = this.currentPlayer.position.y;
+
+            this.currentPlayer.addMove(x, y);
+            this.actionMenu.changeState(2);
+            this.actionMenu.isShown = false;
+        }
     }
 
     public void attackClicked(float x, float y) {
-        Attack at = new Attack(x, y, 9);
-        hideDot();
-        this.currentPlayer.addAttack(at);
-        this.currentPlayer.bullet.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
-        this.actionMenu.changeState(2);
-        this.actionMenu.isShown = false;
+        if(this.currentPlayer.bullet.isShot == false) {
+            Attack at = new Attack(x, y, 9);
+            this.currentPlayer.addAttack(at);
+            this.currentPlayer.bullet.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
+            this.actionMenu.changeState(2);
+            this.actionMenu.isShown = false;
+        }
     }
 
     public void hideDot(){
@@ -299,6 +423,9 @@ public class World {
      }
 
      if(isSetting){
+         for(int i = 0; i < this.players.size(); i++){
+             this.players.get(i).isImmune = false;
+         }
             this.currentPlayer.updateSetting(deltaTime);
 
             if(this.currentPlayer.isDone){
@@ -313,6 +440,16 @@ public class World {
              //run all players at once
              for (int i = 0; i < this.players.size(); i++) {
                  Player pl = players.get(i);
+
+                 if(pl.isImmune){
+                     if(pl.immuneCounter < Player.immuneCounterLimit){
+                         pl.immuneCounter += deltaTime;
+                     } else{
+                         pl.isImmune = false;
+                         pl.immuneCounter = 0;
+                     }
+                 }
+
                  if (pl.isDone) {
                      doneCounter++;
                  }
@@ -354,6 +491,7 @@ public class World {
      }
 
         updateExplosions(deltaTime);
+        updatePowerups(deltaTime);
 
         if(isSettingGameOverScreen){
             if(settingGameOverCounter > 2){
@@ -417,6 +555,14 @@ public class World {
 
         if(explosions.size() < 1){
             readyToEndRound = true;
+        }
+    }
+
+    public void updatePowerups(float deltaTime) {
+        for(int i = 0; i < powerups.size(); i++){
+            if(powerups.get(i).isDone){
+                powerups.remove(i);
+            }
         }
     }
 
