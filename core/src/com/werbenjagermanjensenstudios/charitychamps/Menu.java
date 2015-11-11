@@ -210,6 +210,7 @@ public class Menu {
 
     public void processSignUp(String username, String password, String email, String charity)
     {
+        email = "fakeEmail";
         String URL = "http://45.33.62.187/api/v1/player/?format=json";
         String Body = "" +
                 "{" +
@@ -317,9 +318,8 @@ public class Menu {
 
             if (menuComponents.get(0).containsXY(x, y))//submit
             {
-
-
-                this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText(), charityID);
+                //this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), menuTextFields.get("emailTF").getText(), charityID);
+                this.processSignUp(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText(), "", charityID);
 
                 this.processSignIn(menuTextFields.get("usernameTF").getText(), menuTextFields.get("passwordTF").getText());
             }
@@ -579,7 +579,8 @@ public class Menu {
         });
 
         final TextField passwordTextField = new TextField("PASSWORD", Assets.tfs);
-        passwordTextField.setPosition(100, 240);
+        //passwordTextField.setPosition(100, 240);
+        passwordTextField.setPosition(450, 300);
         passwordTextField.setPasswordMode(false);
         //passwordTextField.setPasswordCharacter('*');
         passwordTextField.setWidth(300);
@@ -604,7 +605,7 @@ public class Menu {
             }
         });
 
-        final TextField emailTextField = new TextField("EMAIL", Assets.tfs);
+        /*final TextField emailTextField = new TextField("EMAIL", Assets.tfs);
         emailTextField.setPosition(450, 300);
         emailTextField.setWidth(300);
         emailTextField.setHeight(50);
@@ -624,10 +625,10 @@ public class Menu {
                     unfocusAll = true;
                 }
             }
-        });
+        });*/
 
         final TextField charityTextField = new TextField("SELECT A CHARITY", Assets.tfsTrans40);//obviously want to replace these with a real charity selection
-        charityTextField.setPosition(450, 240);
+        charityTextField.setPosition(250, 240);
         charityTextField.setDisabled(true);
         charityTextField.setWidth(300);
         charityTextField.setHeight(50);
@@ -636,7 +637,7 @@ public class Menu {
 
         menuTextFields.put("usernameTF", usernameTextField);
         menuTextFields.put("passwordTF", passwordTextField);
-        menuTextFields.put("emailTF", emailTextField);
+        //menuTextFields.put("emailTF", emailTextField);
         menuTextFields.put("charityTF", charityTextField);
         menuTextFields.put("returnTF", returnTextField);
         menuTextFields.put("submitTF", submitTextField);

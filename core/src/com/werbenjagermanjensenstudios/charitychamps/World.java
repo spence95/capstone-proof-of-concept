@@ -274,11 +274,11 @@ public class World {
                 System.out.println("ACTIVE BUTTON: ");
                 System.out.println(activeButton.getActionName());
                 if (activeButton.getActionName() == ActionButton.moveName) {
-                    //moveClicked(lastTouchedX, lastTouchedY);
-                    moveClicked(x, y);
+                    moveClicked(lastTouchedX, lastTouchedY);
+                    //moveClicked(x, y);
                 } else {
-                    //attackClicked(lastTouchedX, lastTouchedY);
-                    attackClicked(x, y);
+                    attackClicked(lastTouchedX, lastTouchedY);
+                    //attackClicked(x, y);
                 }
             }
         }
@@ -434,6 +434,7 @@ public class World {
         }
 
         else{
+         boolean bulletsAreOut = false;
          if(roundWaitingCounter > roundWaitingAmount) {
              int doneCounter = 0;
              ArrayList<Integer> deadPlayerIds = new ArrayList<Integer>();
@@ -459,6 +460,10 @@ public class World {
                  if (doneCounter >= players.size()) {
                      if (readyToEndRound)
                          newRound();
+                 }
+
+                 if(pl.bullet.isShot){
+                     bulletsAreOut = true;
                  }
 
                  //check for dead players and remove them
@@ -488,8 +493,14 @@ public class World {
          } else {
              roundWaitingCounter += deltaTime;
          }
+         if(explosions.size() < 1){
+             if(!bulletsAreOut) {
+                 readyToEndRound = true;
+             }
+         }
      }
 
+        System.out.println(readyToEndRound);
         updateExplosions(deltaTime);
         updatePowerups(deltaTime);
 
@@ -553,9 +564,7 @@ public class World {
             }
         }
 
-        if(explosions.size() < 1){
-            readyToEndRound = true;
-        }
+
     }
 
     public void updatePowerups(float deltaTime) {

@@ -49,7 +49,7 @@ public class CollisionManager {
 
     private void updateExplosions() {
         //only kill if in running mode
-        //if(!world.isSetting) {
+        if(!world.isSetting) {
 //            Explosion dummyEx = new Explosion(-1000, -1000);
 //            world.explosions.add(dummyEx);
             for(int i = 0; i < world.explosions.size(); i++){
@@ -66,7 +66,7 @@ public class CollisionManager {
                     }
                 }
             }
-        //}
+        }
     }
 
     private void updateBlockCollisions(){
@@ -128,8 +128,10 @@ public class CollisionManager {
                     player.stop();
                     //reset current move destination to current position instead of original touch
                     if(world.isSetting) {
-                        player.actions.get(player.turnCounter).x = player.position.x;
-                        player.actions.get(player.turnCounter).y = player.position.y;
+//                        player.actions.get(player.turnCounter).x = player.position.x;
+//                        player.actions.get(player.turnCounter).y = player.position.y;
+                        player.actions.get(player.actions.size() - 1).x = player.position.x;
+                        player.actions.get(player.actions.size() - 1).y = player.position.y;
                     }
 
                 }

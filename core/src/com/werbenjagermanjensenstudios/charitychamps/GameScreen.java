@@ -38,6 +38,10 @@ public class GameScreen extends ScreenAdapter {
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
+    float arenaWidth;
+    float arenaHeight;
+    float sideBarWidth;
+
     public GameScreen(proofOfConcept game, World world){
         this.game = game;
         this.world = world;
@@ -47,6 +51,8 @@ public class GameScreen extends ScreenAdapter {
         vp = new StretchViewport(480, 800, guiCam);
         guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
+
+
 
 
         //TODO: Move creation of world to lobbyscreen so we can instantiate players with spawn move

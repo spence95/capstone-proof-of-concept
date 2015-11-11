@@ -226,6 +226,8 @@ public class Player extends DynamicGameObject{
     public void stop() {
         velocity.x = 0;
         velocity.y = 0;
+        movement.x = 0;
+        movement.y = 0;
         this.isMoving = false;
         this.destination.set(position.x, position.y);
     }
