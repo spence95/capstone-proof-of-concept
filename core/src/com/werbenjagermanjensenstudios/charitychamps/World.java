@@ -3,6 +3,7 @@ package com.werbenjagermanjensenstudios.charitychamps;
 /**
  * Created by spence95 on 9/4/2015.
  */
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import java.math.BigDecimal;
@@ -444,7 +445,7 @@ public class World {
 
                  if(pl.isImmune){
                      if(pl.immuneCounter < Player.immuneCounterLimit){
-                         pl.immuneCounter += deltaTime;
+                         pl.immuneCounter += Gdx.graphics.getRawDeltaTime();
                      } else{
                          pl.isImmune = false;
                          pl.immuneCounter = 0;
@@ -500,7 +501,6 @@ public class World {
          }
      }
 
-        System.out.println(readyToEndRound);
         updateExplosions(deltaTime);
         updatePowerups(deltaTime);
 
@@ -508,7 +508,7 @@ public class World {
             if(settingGameOverCounter > 2){
                 setGameOverScreen(gameWon);
             } else{
-                settingGameOverCounter += deltaTime;
+                settingGameOverCounter += Gdx.graphics.getRawDeltaTime();
             }
         }
     }
@@ -545,6 +545,12 @@ public class World {
 
     //executed after one round has ran (not setting)
     public void newRound(){
+
+        //check if dead one last time
+       if(currentPlayer.dead == true){
+           setGameOverScreen(gameWon);
+       }
+
         for(int i = 0; i < players.size(); i++){
             players.get(i).forgetActions();
         }
