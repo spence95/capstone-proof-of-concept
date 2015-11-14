@@ -8,6 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
 
 public class WorldRenderer {
     World world;
@@ -196,7 +200,9 @@ public class WorldRenderer {
     public void renderDot(){
         batch.begin();
         TextureRegion keyFrame = Assets.dotOscillating.getKeyFrame(world.dot.stateTime, Animation.ANIMATION_LOOPING);
-        batch.draw(keyFrame, world.dot.position.x - (world.dot.bounds.width / 2), world.dot.position.y - (world.dot.bounds.height / 2), world.dot.bounds.width, world.dot.bounds.height);
+        if(world.currentPlayer.isMoving || world.currentPlayer.bullet.isShot) {
+            batch.draw(keyFrame, world.dot.position.x - (world.dot.bounds.width / 2), world.dot.position.y - (world.dot.bounds.height / 2), world.dot.bounds.width, world.dot.bounds.height);
+        }
         batch.end();
     }
 }

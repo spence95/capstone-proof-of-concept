@@ -1,4 +1,4 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.boilerplate;
 
 /**
  * Created by spence95 on 9/5/2015.

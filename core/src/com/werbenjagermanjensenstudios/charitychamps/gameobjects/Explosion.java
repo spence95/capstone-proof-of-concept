@@ -1,9 +1,12 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.gameobjects;
+
+import com.werbenjagermanjensenstudios.charitychamps.boilerplate.GameObject;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
 
 /**
  * Created by spence95 on 9/29/2015.
  */
-public class Explosion extends GameObject{
+public class Explosion extends GameObject {
     private boolean isDone;
     private float rate;
     private static final float width = 50;

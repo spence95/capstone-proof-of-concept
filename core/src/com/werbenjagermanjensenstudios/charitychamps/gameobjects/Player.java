@@ -1,6 +1,12 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.gameobjects;
 
 import com.badlogic.gdx.math.Vector2;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Action;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Attack;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Move;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Spawn;
+import com.werbenjagermanjensenstudios.charitychamps.World;
+import com.werbenjagermanjensenstudios.charitychamps.boilerplate.DynamicGameObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,33 +15,33 @@ import java.util.Comparator;
 /**
  * Created by spence95 on 9/4/2015.
  */
-public class Player extends DynamicGameObject{
-    boolean isMoving;
-    boolean isEnemy;
-    boolean isDone;
-    boolean isWaiting;
-    boolean isFiring;
-    boolean dead;
-    int id;
-    int currentTurnId;
-    float stateTime;
+public class Player extends DynamicGameObject {
+    public boolean isMoving;
+    public boolean isEnemy;
+    public boolean isDone;
+    public boolean isWaiting;
+    public boolean isFiring;
+    public boolean dead;
+    public int id;
+    public int currentTurnId;
+    public float stateTime;
     private float secondsWaiting;
-    Vector2 destination;
+    public Vector2 destination;
     Vector2 vectorPosition;
     int turnCounter;
-    ArrayList<Action> actions;
+    public ArrayList<Action> actions;
     ArrayList<Action> savedActions;
-    Vector2 velocity;
+    public Vector2 velocity;
     Vector2 movement;
     Vector2 dir;
-    Bullet bullet;
-    float xLast;
-    float yLast;
-    float side;
+    public Bullet bullet;
+    public float xLast;
+    public float yLast;
+    public float side;
 
-    int health;
-    boolean isImmune;
-    float immuneCounter;
+    public int health;
+    public boolean isImmune;
+    public float immuneCounter;
     public static float immuneCounterLimit = 2f;
 
     public static int time = 10;

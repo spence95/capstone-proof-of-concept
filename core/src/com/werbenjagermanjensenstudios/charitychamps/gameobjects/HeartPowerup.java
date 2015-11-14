@@ -1,4 +1,4 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.gameobjects;
 
 /**
  * Created by spence95 on 11/8/2015.

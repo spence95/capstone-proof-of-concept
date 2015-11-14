@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
 //import com.badlogicgames.superjumper.World.WorldListener;
 
 /**

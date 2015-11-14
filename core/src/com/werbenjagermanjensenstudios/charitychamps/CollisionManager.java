@@ -1,5 +1,10 @@
 package com.werbenjagermanjensenstudios.charitychamps;
 
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
+
 /**
  * Created by spence95 on 9/24/2015.
  */

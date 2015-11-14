@@ -1,5 +1,7 @@
 package com.werbenjagermanjensenstudios.charitychamps;
 
+import com.werbenjagermanjensenstudios.charitychamps.boilerplate.GameObject;
+
 /**
  * Created by spence95 on 11/6/2015.
  */

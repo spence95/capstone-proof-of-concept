@@ -1,13 +1,13 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.actions;
 
 /**
  * Created by spence95 on 9/6/2015.
  */
 public class Action {
-    int sequenceNum;
-    float x;
-    float y;
-    float secondsToWait;
+    public int sequenceNum;
+    public float x;
+    public float y;
+    public float secondsToWait;
     public Action(float x, float y, float secondsToWait){
         this.x = x;
         this.y = y;

@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Spawn;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -11,6 +11,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Action;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Attack;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Move;
+import com.werbenjagermanjensenstudios.charitychamps.actions.Spawn;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Dot;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Powerup;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,8 +36,8 @@ public class World {
     public static final float Move_menu_height = 127 / 2;
     public static final float Attack_menu_width = 150 / 2;
     public static final float Attack_menu_height = 127 / 2;
-    public final float squareWidth = 9;
-    public final float squareHeight = 18;
+    public final float squareWidth = 8;
+    public final float squareHeight = 16;
     //origin start points
     //(20, 40)
     //(20, 440)
@@ -237,7 +248,7 @@ public class World {
         mm.setNineBlockSquare(50, 399);
         mm.setNineBlockSquare(725, 75);
         mm.setNineBlockSquare(675, 210);
-        mm.setNineBlockSquare(396, 310);
+        mm.setNineBlockSquare(396, 335);
 
         mm.setWall(200, 400, 5, true);
         mm.setWall(600, 100, 4, false);
@@ -283,30 +294,28 @@ public class World {
     }
 
     public void touched(float x, float y){
-
-        if(moveActionButton.bounds.contains(x, y)){
-            moveActionButton.toggleActive();
-            attackActionButton.toggleActive();
-        }
-        else if(attackActionButton.bounds.contains(x, y)){
-            attackActionButton.toggleActive();
-            moveActionButton.toggleActive();
-        }
-        else if(x <= 51){
-            return;
-        }
-        else {
-            bringUpMenu(x, y);
-            if(!currentPlayer.isDone) {
-                ActionButton activeButton = getActiveButton();
-                System.out.println("ACTIVE BUTTON: ");
-                System.out.println(activeButton.getActionName());
-                if (activeButton.getActionName() == ActionButton.moveName) {
-                    moveClicked(lastTouchedX, lastTouchedY);
-                    //moveClicked(x, y);
-                } else {
-                    attackClicked(lastTouchedX, lastTouchedY);
-                    //attackClicked(x, y);
+        if(isSetting) {
+            if (moveActionButton.bounds.contains(x, y)) {
+                moveActionButton.toggleActive();
+                attackActionButton.toggleActive();
+            } else if (attackActionButton.bounds.contains(x, y)) {
+                attackActionButton.toggleActive();
+                moveActionButton.toggleActive();
+            } else if (x <= 51) {
+                return;
+            } else {
+                bringUpMenu(x, y);
+                if (!currentPlayer.isDone) {
+                    ActionButton activeButton = getActiveButton();
+                    System.out.println("ACTIVE BUTTON: ");
+                    System.out.println(activeButton.getActionName());
+                    if (activeButton.getActionName() == ActionButton.moveName) {
+                        moveClicked(lastTouchedX, lastTouchedY);
+                        //moveClicked(x, y);
+                    } else {
+                        attackClicked(lastTouchedX, lastTouchedY);
+                        //attackClicked(x, y);
+                    }
                 }
             }
         }
@@ -318,8 +327,8 @@ public class World {
             if (this.currentPlayer.velocity.x == 0 && this.currentPlayer.velocity.y == 0) {
                 lastTouchedX = x;
                 lastTouchedY = y;
-//                dot.position.x = x;
-//                dot.position.y = y;
+                dot.position.x = x;
+                dot.position.y = y;
                 //if hidden
 //                if (this.actionMenu.state == 0 && this.actionMenu.position.y < 0) {
 //                    this.actionMenu.changeState(1);

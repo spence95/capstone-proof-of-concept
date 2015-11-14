@@ -1,5 +1,7 @@
 package com.werbenjagermanjensenstudios.charitychamps;
 
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
+
 /**
  * Created by spence95 on 11/14/2015.
  */

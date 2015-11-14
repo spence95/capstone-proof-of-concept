@@ -1,6 +1,7 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.gameobjects;
 
 import com.badlogic.gdx.math.Vector2;
+import com.werbenjagermanjensenstudios.charitychamps.boilerplate.DynamicGameObject;
 
 /**
  * Created by spence95 on 9/19/2015.
@@ -15,8 +16,8 @@ public class Bullet extends DynamicGameObject {
     Vector2 movement;
     Vector2 vectorPosition;
     Vector2 velocity;
-    float rotation;
-    boolean isShot;
+    public float rotation;
+    public boolean isShot;
 
     public Bullet(float x, float y, float speed){
         super(x, y, width, height);

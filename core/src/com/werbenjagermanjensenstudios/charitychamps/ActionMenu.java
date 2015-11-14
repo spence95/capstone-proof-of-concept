@@ -2,6 +2,7 @@ package com.werbenjagermanjensenstudios.charitychamps;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.werbenjagermanjensenstudios.charitychamps.boilerplate.DynamicGameObject;
 
 /**
  * Created by spence95 on 9/16/2015.

@@ -1,12 +1,14 @@
-package com.werbenjagermanjensenstudios.charitychamps;
+package com.werbenjagermanjensenstudios.charitychamps.gameobjects;
+
+import com.werbenjagermanjensenstudios.charitychamps.boilerplate.DynamicGameObject;
 
 /**
  * Created by spence95 on 9/16/2015.
  */
 public class Dot extends DynamicGameObject {
-    float x;
-    float y;
-    float stateTime;
+    public float x;
+    public float y;
+    public float stateTime;
     public Dot(float x, float y){
         super(x, y, 20, 20);
         stateTime = 0;
