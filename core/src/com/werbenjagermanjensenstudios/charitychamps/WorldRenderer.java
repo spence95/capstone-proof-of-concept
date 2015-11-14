@@ -116,7 +116,7 @@ public class WorldRenderer {
 
     private void renderPlayers(float delta){
         batch.begin();
-        batch.draw(Assets.sideBarRegion, 0, 0, 48, 480);
+        batch.draw(Assets.sideBarRegion, 0, 0, 51, 480);
 
         for(int i = 0; i < world.players.size(); i++){
             Player pl = world.players.get(i);

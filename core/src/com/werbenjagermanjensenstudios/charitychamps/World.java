@@ -25,8 +25,8 @@ public class World {
     public static final float Move_menu_height = 127 / 2;
     public static final float Attack_menu_width = 150 / 2;
     public static final float Attack_menu_height = 127 / 2;
-    public final float squareWidth = 12;
-    public final float squareHeight = 24;
+    public final float squareWidth = 9;
+    public final float squareHeight = 18;
     //origin start points
     //(20, 40)
     //(20, 440)
@@ -68,6 +68,8 @@ public class World {
 
     ApiCall api;
 
+    MapManager mm;
+
     //used to let losers and winners see after match for a second before end game screen
     float afterDeathCounter;
 
@@ -97,6 +99,7 @@ public class World {
 
         dot = new Dot(-1000, -1000);
         collisionManager = new CollisionManager(this);
+        mm = new MapManager(this, 51/2);
         turnNumber = 0;
         afterDeathCounter = 0;
         api = new ApiCall(new playerActionRetrievalCallback() {
@@ -114,126 +117,145 @@ public class World {
     }
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
+        float offset = 51 / 2;
         placeOutsideWalls();
-        Block block = new Block(350 + 20, 240, 10, 10);
+        Block block = new Block(350 + offset, 240, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 250, 10, 10);
+        block = new Block(350 + offset, 250, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 260, 10, 10);
+        block = new Block(350 + offset, 260, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 270, 10, 10);
+        block = new Block(350 + offset, 270, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 280, 10, 10);
+        block = new Block(350 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 240, 10, 10);
+        block = new Block(350 + offset, 240, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 230, 10, 10);
+        block = new Block(350 + offset, 230, 10, 10);
         blocks.add(block);
-        block = new Block(350 + 20, 220, 10, 10);
+        block = new Block(350 + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(360 + 20, 280, 10, 10);
+        block = new Block(360 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(370 + 20, 280, 10, 10);
+        block = new Block(370 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(380 + 20, 280, 10, 10);
-        blocks.add(block);
-
-
-        block = new Block(450 + 20, 250, 10, 10);
-        blocks.add(block);
-        block = new Block(450 + 20, 260, 10, 10);
-        blocks.add(block);
-        block = new Block(450 + 20, 270, 10, 10);
-        blocks.add(block);
-        block = new Block(450 + 20, 280, 10, 10);
-        blocks.add(block);
-        block = new Block(450 + 20, 240, 10, 10);
-        blocks.add(block);
-        block = new Block(450 + 20, 230, 10, 10);
-        blocks.add(block);
-        block = new Block(450 + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(440 + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(430 + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(420 + 20, 220, 10, 10);
+        block = new Block(380 + offset, 280, 10, 10);
         blocks.add(block);
 
-        block = new Block(200  + 20, 220, 10, 10);
+
+        block = new Block(450 + offset, 250, 10, 10);
         blocks.add(block);
-        block = new Block(210  + 20, 220, 10, 10);
+        block = new Block(450 + offset, 260, 10, 10);
         blocks.add(block);
-        block = new Block(220  + 20, 220, 10, 10);
+        block = new Block(450 + offset, 270, 10, 10);
         blocks.add(block);
-        block = new Block(230  + 20, 220, 10, 10);
+        block = new Block(450 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(240  + 20, 220, 10, 10);
+        block = new Block(450 + offset, 240, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + offset, 230, 10, 10);
+        blocks.add(block);
+        block = new Block(450 + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(440 + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(430 + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(420 + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new Block(600  + 20, 220, 10, 10);
+        block = new Block(200  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(590  + 20, 220, 10, 10);
+        block = new Block(210  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(580  + 20, 220, 10, 10);
+        block = new Block(220  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(570  + 20, 220, 10, 10);
+        block = new Block(230  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(560  + 20, 220, 10, 10);
-        blocks.add(block);
-
-        block = new Block(40  + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(50  + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(60  + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(70  + 20, 220, 10, 10);
-        blocks.add(block);
-        block = new Block(80  + 20, 220, 10, 10);
+        block = new Block(240  + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new Block(770  + 20, 220, 10, 10);
+        block = new Block(600  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(760  + 20, 220, 10, 10);
+        block = new Block(590  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(750  + 20, 220, 10, 10);
+        block = new Block(580  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(740  + 20, 220, 10, 10);
+        block = new Block(570  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(730  + 20, 220, 10, 10);
-        blocks.add(block);
-
-        block = new Block(400  + 20, 10, 10, 10);
-        blocks.add(block);
-        block = new Block(400  + 20, 20, 10, 10);
-        blocks.add(block);
-        block = new Block(400  + 20, 30, 10, 10);
-        blocks.add(block);
-        block = new Block(400  + 20, 40, 10, 10);
-        blocks.add(block);
-        block = new Block(400  + 20, 50, 10, 10);
+        block = new Block(560  + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new Block(400  + 20, 470, 10, 10);
+        block = new Block(40  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(400  + 20, 460, 10, 10);
+        block = new Block(50  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(400  + 20, 450, 10, 10);
+        block = new Block(60  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(400  + 20, 440, 10, 10);
+        block = new Block(70  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(400  + 20, 430, 10, 10);
+        block = new Block(80  + offset, 220, 10, 10);
         blocks.add(block);
+
+        block = new Block(770  + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(760  + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(750  + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(740  + offset, 220, 10, 10);
+        blocks.add(block);
+        block = new Block(730  + offset, 220, 10, 10);
+        blocks.add(block);
+
+        block = new Block(400  + offset, 10, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 20, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 30, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 40, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 50, 10, 10);
+        blocks.add(block);
+
+        block = new Block(400  + offset, 470, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 460, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 450, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 440, 10, 10);
+        blocks.add(block);
+        block = new Block(400  + offset, 430, 10, 10);
+        blocks.add(block);
+
+        mm.setNineBlockSquare(200, 300);
+        mm.setNineBlockSquare(200, 100);
+        mm.setNineBlockSquare(400, 75);
+        mm.setNineBlockSquare(500, 367);
+        mm.setNineBlockSquare(50, 399);
+        mm.setNineBlockSquare(725, 75);
+        mm.setNineBlockSquare(675, 210);
+        mm.setNineBlockSquare(396, 310);
+
+        mm.setWall(200, 400, 5, true);
+        mm.setWall(600, 100, 4, false);
+        mm.setWall(350, 100, 7, false);
+        mm.setWall(425, 400, 1, true);
+        mm.setWall(600, 300, 13, true);
+        mm.setWall(150, 175, 13, true);
+        mm.setWall(515, 65, 8, true);
+        mm.setWall(275, 320, 6, false);
 
     }
 
     private void placeOutsideWalls(){
-        Block block = new Block((WORLD_WIDTH / 2)+48, 0, WORLD_WIDTH, 10);
+        Block block = new Block((WORLD_WIDTH / 2)+51, 0, WORLD_WIDTH, 10);
         blocks.add(block);
-        block = new Block((WORLD_WIDTH / 2)+48, WORLD_HEIGHT, WORLD_WIDTH, 10);
+        block = new Block((WORLD_WIDTH / 2)+51, WORLD_HEIGHT, WORLD_WIDTH, 10);
         blocks.add(block);
-        block = new Block(48, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
+        block = new Block(51, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
         blocks.add(block);
         block = new Block(WORLD_WIDTH, WORLD_HEIGHT / 2, 10, WORLD_HEIGHT);
         blocks.add(block);
@@ -261,6 +283,7 @@ public class World {
     }
 
     public void touched(float x, float y){
+
         if(moveActionButton.bounds.contains(x, y)){
             moveActionButton.toggleActive();
             attackActionButton.toggleActive();
@@ -268,7 +291,11 @@ public class World {
         else if(attackActionButton.bounds.contains(x, y)){
             attackActionButton.toggleActive();
             moveActionButton.toggleActive();
-        } else {
+        }
+        else if(x <= 51){
+            return;
+        }
+        else {
             bringUpMenu(x, y);
             if(!currentPlayer.isDone) {
                 ActionButton activeButton = getActiveButton();
@@ -569,8 +596,6 @@ public class World {
                 explosions.remove(i);
             }
         }
-
-
     }
 
     public void updatePowerups(float deltaTime) {

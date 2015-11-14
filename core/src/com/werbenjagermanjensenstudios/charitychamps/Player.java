@@ -38,7 +38,7 @@ public class Player extends DynamicGameObject{
     float immuneCounter;
     public static float immuneCounterLimit = 2f;
 
-    public static int time = 17;
+    public static int time = 10;
 
     public final int speed = 180;
 
