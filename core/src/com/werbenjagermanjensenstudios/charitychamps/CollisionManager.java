@@ -3,6 +3,7 @@ package com.werbenjagermanjensenstudios.charitychamps;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Mine;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
 
 /**
@@ -20,6 +21,7 @@ public class CollisionManager {
         //updateBullets();
         updateExplosions();
         updatePowerups();
+        updateMines();
     }
 
     private void updateBullets(){
@@ -62,15 +64,35 @@ public class CollisionManager {
             for(int p = 0; p < world.players.size(); p++){
                 Player pl = world.players.get(p);
                 if(pl.bounds.overlaps(e.bounds)){
-                    System.out.println("Colliding explosion");
-                        if(!pl.isImmune) {
-                            System.out.println("Taking hit");
-                            pl.takeHit(1);
-                            pl.isImmune = true;
+                        playerHit(pl);
+                    }
+                }
+            }
+        }
+    }
+
+    private void updateMines() {
+        if(!world.isSetting){
+            for(int i = 0; i < world.mines.size(); i++){
+                Mine m = world.mines.get(i);
+                for(int p = 0; p < world.players.size(); p++){
+                    Player pl = world.players.get(p);
+                    if(pl.bounds.overlaps(m.bounds)){
+                        if(m.exploded == false){
+                            m.exploded = true;
+                            Explosion e = new Explosion(m.position.x, m.position.y);
+                            world.explosions.add(e);
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void playerHit(Player pl){
+        if(!pl.isImmune) {
+            pl.takeHit(1);
+            pl.isImmune = true;
         }
     }
 
@@ -132,12 +154,12 @@ public class CollisionManager {
                     //stop the player
                     player.stop();
                     //reset current move destination to current position instead of original touch
-                    if(world.isSetting) {
+                   // if(world.isSetting) {
 //                        player.actions.get(player.turnCounter).x = player.position.x;
 //                        player.actions.get(player.turnCounter).y = player.position.y;
                         player.actions.get(player.actions.size() - 1).x = player.position.x;
                         player.actions.get(player.actions.size() - 1).y = player.position.y;
-                    }
+                   // }
 
                 }
             }

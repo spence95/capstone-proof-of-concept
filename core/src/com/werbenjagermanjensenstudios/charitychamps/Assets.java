@@ -33,6 +33,8 @@ public class Assets {
     public static TextureRegion selectedAttack;
     public static TextureRegion deselectedMove;
     public static TextureRegion deselectedAttack;
+    public static TextureRegion mineButton;
+    public static TextureRegion mineButtonTouched;
 
     public static Texture player;
     public static TextureRegion playerWalkingRegion;
@@ -43,6 +45,9 @@ public class Assets {
     public static TextureRegion blockRegion;
     public static TextureRegion playerFiringRegion;
     public static TextureRegion playerDyingRegion;
+
+    public static Texture mine;
+    public static TextureRegion mineRegion;
 
     //nu menuz//
     public static Texture menuSplashBlank;
@@ -172,6 +177,9 @@ public class Assets {
         selectedAttack = new TextureRegion(newActionMenu, 32, 0, 32, 32);
         deselectedMove = new TextureRegion(newActionMenu, 64, 0, 32, 32);
         deselectedAttack = new TextureRegion(newActionMenu, 96, 0, 32, 32);
+        mineButton = new TextureRegion(newActionMenu, 0, 32, 32, 32);
+        mineButtonTouched = new TextureRegion(newActionMenu, 0, 64, 32, 32);
+
 
 
         //506 by 169
@@ -185,6 +193,8 @@ public class Assets {
         playerFiringRegion = new TextureRegion(player, 7, 688, 443, 105);
         playerDyingRegion = new TextureRegion(player, 0, 3, 340, 95);
 
+        mine = loadTexture("mine.png");
+        mineRegion = new TextureRegion(mine, 15, 15);
 
 
         menuNinePatch = loadTexture("menuNinePatch.png");

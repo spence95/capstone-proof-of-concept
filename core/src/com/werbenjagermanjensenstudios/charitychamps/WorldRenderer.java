@@ -56,7 +56,18 @@ public class WorldRenderer {
         renderExplosions();
         renderSideActionButtons();
         renderPowerups();
+        renderMines();
         batch.disableBlending();
+    }
+
+    private void renderMines() {
+        batch.begin();
+        for(int i = 0; i < world.mines.size(); i++){
+            if(world.mines.get(i).exploded == false) {
+                batch.draw(Assets.mineRegion, world.mines.get(i).position.x - (world.mines.get(i).bounds.width / 2), world.mines.get(i).position.y - (world.mines.get(i).bounds.height / 2), world.mines.get(i).bounds.width, world.mines.get(i).bounds.height);
+            }
+        }
+        batch.end();
     }
 
     private void renderPowerups() {

@@ -20,6 +20,7 @@ import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Dot;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Mine;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Powerup;
 
@@ -47,6 +48,7 @@ public class World {
     public ArrayList<Block> blocks;
     public ArrayList<Explosion> explosions;
     public ArrayList<Bullet> bullets;
+    public ArrayList<Mine> mines;
     public ArrayList<Powerup> powerups;
     boolean hasStarted = false;
     boolean isSetting = true;
@@ -65,6 +67,7 @@ public class World {
 
     public ActionButton moveActionButton;
     public ActionButton attackActionButton;
+    public ActionButton mineActionButton;
 
     public CollisionManager collisionManager;
     public ScreenController screenController;
@@ -102,6 +105,7 @@ public class World {
         blocks = new ArrayList<Block>();
         explosions = new ArrayList<Explosion>();
         bullets = new ArrayList<Bullet>();
+        mines = new ArrayList<Mine>();
         powerups = new ArrayList<Powerup>();
         actionMenu = new ActionMenu();
 
@@ -125,6 +129,8 @@ public class World {
         turnIDs = new ArrayList<Integer>();
         playersByID = new HashMap<Integer, String>();
         playerLabels = new HashMap<Integer, TextField>();
+
+
     }
     //mocked out with specific placements for blocks (no pseudo-randomness)
     public void placeBlocks(){
@@ -273,8 +279,8 @@ public class World {
     }
 
     private void placePowerups(){
-        HeartPowerup hp = new HeartPowerup(400 + 20, 250, 25, 25);
-        this.powerups.add(hp);
+        //HeartPowerup hp = new HeartPowerup(400 + 20, 250, 25, 25);
+        //this.powerups.add(hp);
     }
 
     public void createScreenController(GameScreen gs){
