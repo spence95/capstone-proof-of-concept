@@ -140,25 +140,25 @@ public class World {
 
         Block block = new Block(350 + offset, 240, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(350 + offset, 250, 10, 10);
+        block = new Block(350 + offset, 250, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(350 + offset, 260, 10, 10);
+        block = new Block(350 + offset, 260, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(350 + offset, 270, 10, 10);
+        block = new Block(350 + offset, 270, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(350 + offset, 280, 10, 10);
+        block = new Block(350 + offset, 280, 10, 10);
         blocks.add(block);
         block = new Block(350 + offset, 240, 10, 10);
         blocks.add(block);
         block = new Block(350 + offset, 230, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(350 + offset, 220, 10, 10);
+        block = new Block(350 + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(360 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(370 + offset, 280, 10, 10);
+        block = new Block(370 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(380 + offset, 280, 10, 10);
+        block = new Block(380 + offset, 280, 10, 10);
         blocks.add(block);
 
 
@@ -170,11 +170,11 @@ public class World {
         blocks.add(block);
         block = new Block(450 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(450 + offset, 240, 10, 10);
+        block = new Block(450 + offset, 240, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(450 + offset, 230, 10, 10);
+        block = new Block(450 + offset, 230, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(450 + offset, 220, 10, 10);
+        block = new Block(450 + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(440 + offset, 220, 10, 10);
         blocks.add(block);
@@ -183,22 +183,22 @@ public class World {
         block = new Block(420 + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new CrumblingBlock(200  + offset, 220, 10, 10);
+        block = new Block(200  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(210  + offset, 220, 10, 10);
+        block = new Block(210  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(220  + offset, 220, 10, 10);
+        block = new Block(220  + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(230  + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(240  + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new CrumblingBlock(600  + offset, 220, 10, 10);
+        block = new Block(600  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(590  + offset, 220, 10, 10);
+        block = new Block(590  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new CrumblingBlock(580  + offset, 220, 10, 10);
+        block = new Block(580  + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(570  + offset, 220, 10, 10);
         blocks.add(block);

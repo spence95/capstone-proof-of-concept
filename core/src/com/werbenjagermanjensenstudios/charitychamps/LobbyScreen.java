@@ -197,16 +197,16 @@ public class LobbyScreen extends ScreenAdapter {
                     }
             } else{
                     if(timeOutTimer > timeOutLimit){
-                        timeOutTimer = 0;
-
-                        //call out to api to set waiting = false
-                        String URL = "http://45.33.62.187/api/v1/matchmaking/" + currentMatchMakingID + "/?player=" + game.getPlayerID() + "&format=json";
-                        String Body = "{" +
-                                "\"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +
-                                "\"waiting\": \"FALSE\"}";
-                        api.httpPostPutOrPatch(URL, Body, 0, false, true);
-
-                        game.setScreen(new MenuScreen(game));
+//                        timeOutTimer = 0;
+//
+//                        //call out to api to set waiting = false
+//                        String URL = "http://45.33.62.187/api/v1/matchmaking/" + currentMatchMakingID + "/?player=" + game.getPlayerID() + "&format=json";
+//                        String Body = "{" +
+//                                "\"player\": \"/api/v1/player/" + game.getPlayerID() + "/\"," +
+//                                "\"waiting\": \"FALSE\"}";
+//                        api.httpPostPutOrPatch(URL, Body, 0, false, true);
+//
+//                        game.setScreen(new MenuScreen(game));
                     } else {
                         timeOutTimer += delta;
                     }
