@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.CrumblingBlock;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
@@ -93,7 +94,11 @@ public class WorldRenderer {
         batch.begin();
         for(int i = 0; i < world.blocks.size(); i++) {
             Block bl = world.blocks.get(i);
-            batch.draw(Assets.blockRegion, bl.position.x - (bl.bounds.width / 2), bl.position.y - (bl.bounds.height/2), bl.bounds.width, bl.bounds.height);
+            if(bl instanceof CrumblingBlock){
+                batch.draw(Assets.crumblingBlockRegion, bl.position.x - (bl.bounds.width / 2), bl.position.y - (bl.bounds.height / 2), bl.bounds.width, bl.bounds.height);
+            } else {
+                batch.draw(Assets.blockRegion, bl.position.x - (bl.bounds.width / 2), bl.position.y - (bl.bounds.height / 2), bl.bounds.width, bl.bounds.height);
+            }
         }
         batch.end();
     }

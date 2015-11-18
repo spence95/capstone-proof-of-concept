@@ -19,7 +19,9 @@ public class Explosion extends GameObject {
     }
 
     public void update(float deltaTime){
-        if (bounds.width < width && bounds.height < height) {
+        float widthCheck = bounds.width + deltaTime * rate;
+        float heightCheck = bounds.height + deltaTime * rate;
+        if (widthCheck < width && heightCheck < height) {
             bounds.width += deltaTime * rate;
             bounds.height += deltaTime * rate;
             rate = rate + (rate * deltaTime);

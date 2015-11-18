@@ -17,6 +17,7 @@ import com.werbenjagermanjensenstudios.charitychamps.actions.Move;
 import com.werbenjagermanjensenstudios.charitychamps.actions.Spawn;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.CrumblingBlock;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Dot;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
@@ -136,27 +137,28 @@ public class World {
     public void placeBlocks(){
         float offset = 51 / 2;
         placeOutsideWalls();
+
         Block block = new Block(350 + offset, 240, 10, 10);
         blocks.add(block);
-        block = new Block(350 + offset, 250, 10, 10);
+        block = new CrumblingBlock(350 + offset, 250, 10, 10);
         blocks.add(block);
-        block = new Block(350 + offset, 260, 10, 10);
+        block = new CrumblingBlock(350 + offset, 260, 10, 10);
         blocks.add(block);
-        block = new Block(350 + offset, 270, 10, 10);
+        block = new CrumblingBlock(350 + offset, 270, 10, 10);
         blocks.add(block);
-        block = new Block(350 + offset, 280, 10, 10);
+        block = new CrumblingBlock(350 + offset, 280, 10, 10);
         blocks.add(block);
         block = new Block(350 + offset, 240, 10, 10);
         blocks.add(block);
         block = new Block(350 + offset, 230, 10, 10);
         blocks.add(block);
-        block = new Block(350 + offset, 220, 10, 10);
+        block = new CrumblingBlock(350 + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(360 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(370 + offset, 280, 10, 10);
+        block = new CrumblingBlock(370 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(380 + offset, 280, 10, 10);
+        block = new CrumblingBlock(380 + offset, 280, 10, 10);
         blocks.add(block);
 
 
@@ -168,11 +170,11 @@ public class World {
         blocks.add(block);
         block = new Block(450 + offset, 280, 10, 10);
         blocks.add(block);
-        block = new Block(450 + offset, 240, 10, 10);
+        block = new CrumblingBlock(450 + offset, 240, 10, 10);
         blocks.add(block);
-        block = new Block(450 + offset, 230, 10, 10);
+        block = new CrumblingBlock(450 + offset, 230, 10, 10);
         blocks.add(block);
-        block = new Block(450 + offset, 220, 10, 10);
+        block = new CrumblingBlock(450 + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(440 + offset, 220, 10, 10);
         blocks.add(block);
@@ -181,22 +183,22 @@ public class World {
         block = new Block(420 + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new Block(200  + offset, 220, 10, 10);
+        block = new CrumblingBlock(200  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(210  + offset, 220, 10, 10);
+        block = new CrumblingBlock(210  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(220  + offset, 220, 10, 10);
+        block = new CrumblingBlock(220  + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(230  + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(240  + offset, 220, 10, 10);
         blocks.add(block);
 
-        block = new Block(600  + offset, 220, 10, 10);
+        block = new CrumblingBlock(600  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(590  + offset, 220, 10, 10);
+        block = new CrumblingBlock(590  + offset, 220, 10, 10);
         blocks.add(block);
-        block = new Block(580  + offset, 220, 10, 10);
+        block = new CrumblingBlock(580  + offset, 220, 10, 10);
         blocks.add(block);
         block = new Block(570  + offset, 220, 10, 10);
         blocks.add(block);
@@ -265,6 +267,19 @@ public class World {
         mm.setWall(515, 65, 8, true);
         mm.setWall(275, 320, 6, false);
 
+    }
+
+    private void randomizeBlock(float x, float y, float width, float height){
+        Block bl;
+        int Min = 1;
+        int Max = 10;
+        float rand = Min + (int)(Math.random() * ((Max - Min) + 1));
+        if(rand % 2 == 0){
+            bl = new CrumblingBlock(x, y, width, height);
+        } else {
+            bl = new CrumblingBlock(x, y, width, height);
+        }
+        blocks.add(bl);
     }
 
     private void placeOutsideWalls(){
@@ -447,6 +462,8 @@ public class World {
     }
 
     public void update(float deltaTime){
+
+
      //update collisions
      collisionManager.updateCollisions();
 
@@ -635,7 +652,8 @@ public class World {
         //reset current player
         currentPlayer.position.x = currentPlayer.xLast;
         currentPlayer.position.y = currentPlayer.yLast;
-        explosions.clear();
+        explosions = new ArrayList<Explosion>();
+        currentPlayer.bullet.reset();
     }
 
     public Player getPlayerById(int id){
@@ -685,6 +703,10 @@ public class World {
 
             actionsJson += action;
         }
+
+        System.out.println("TURN ID ______________________________");
+        System.out.println(currentPlayer.currentTurnId);
+
         if(currentPlayer.actions.size() > 0) {
             actionsJson = actionsJson.substring(0, actionsJson.length() - 1);
         }

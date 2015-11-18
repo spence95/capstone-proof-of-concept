@@ -2,6 +2,7 @@ package com.werbenjagermanjensenstudios.charitychamps;
 
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.CrumblingBlock;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Mine;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
@@ -60,14 +61,25 @@ public class CollisionManager {
 //            Explosion dummyEx = new Explosion(-1000, -1000);
 //            world.explosions.add(dummyEx);
             for(int i = 0; i < world.explosions.size(); i++){
-            Explosion e = world.explosions.get(i);
+            //Explosion e = world.explosions.get(i);
             for(int p = 0; p < world.players.size(); p++){
                 Player pl = world.players.get(p);
-                if(pl.bounds.overlaps(e.bounds)){
+                if(pl.bounds.overlaps(world.explosions.get(i).bounds)){
                         playerHit(pl);
                     }
                 }
+            for(int b = 0; b < world.blocks.size(); b++){
+                Block bl = world.blocks.get(b);
+                if(bl instanceof CrumblingBlock){
+                    if(bl.bounds.overlaps(world.explosions.get(i).bounds)) {
+                        world.blocks.remove(b);
+                    }
+                }
             }
+          }
+
+
+
         }
     }
 
@@ -114,7 +126,7 @@ public class CollisionManager {
                     double degrees;
                     float bumpbackX;
                     float bumpbackY;
-                    float bumpbackTotal = 25;
+                    float bumpbackTotal = 10;
                     if(dx > px) {
                         degrees = Math.toDegrees(Math.atan(yDist / xDist));
                         bumpbackY = (float)(degrees/90) * bumpbackTotal;

@@ -44,6 +44,9 @@ public class ApiCall {
                 String successValue = httpResponse.getResultAsString();
                 if (successValue.contains("\"total_count\": 0"))//wrong credentials
                 {
+                    System.out.println("IN GET");
+                    System.out.println(successValue);
+                    System.out.println(httpResponse.getStatus());
                     httpReturns.set(ListNumber, "EMPTY");
                 } else//there was a match yo! should probably have a unique conststraint on username. too hard eff it
                 {
