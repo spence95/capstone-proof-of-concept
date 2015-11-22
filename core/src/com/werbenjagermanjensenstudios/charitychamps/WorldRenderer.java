@@ -85,7 +85,8 @@ public class WorldRenderer {
         batch.begin();
         for(int i = 0; i < world.explosions.size(); i++){
             Explosion exp = world.explosions.get(i);
-            batch.draw(Assets.explosionRegion, exp.position.x - (exp.bounds.width / 2), exp.position.y - (exp.bounds.height / 2), exp.bounds.width, exp.bounds.height);
+            TextureRegion keyFrame = Assets.explosionAnim.getKeyFrame(exp.getStateTime(), Animation.ANIMATION_NONLOOPING);
+            batch.draw(keyFrame, exp.position.x - (exp.bounds.width / 2), exp.position.y - (exp.bounds.height / 2), exp.bounds.width, exp.bounds.height);
         }
         batch.end();
     }

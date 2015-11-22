@@ -60,12 +60,17 @@ public class CollisionManager {
         if(!world.isSetting) {
 //            Explosion dummyEx = new Explosion(-1000, -1000);
 //            world.explosions.add(dummyEx);
+            System.out.println("Explosions size: " + world.explosions.size());
             for(int i = 0; i < world.explosions.size(); i++){
             //Explosion e = world.explosions.get(i);
+                System.out.println("in explosions");
             for(int p = 0; p < world.players.size(); p++){
+                System.out.println("in players");
                 Player pl = world.players.get(p);
+                System.out.println("testing overlap");
                 if(pl.bounds.overlaps(world.explosions.get(i).bounds)){
                         playerHit(pl);
+                        System.out.println("Overlapped");
                     }
                 }
             for(int b = 0; b < world.blocks.size(); b++){
@@ -176,7 +181,7 @@ public class CollisionManager {
                 }
             }
             //update that players bullet too
-            if(player.bullet.isShot){
+            //if(player.bullet.isShot){
                 Bullet bullet = player.bullet;
                 for(int i = 0; i < world.blocks.size(); i++) {
                     Block block = world.blocks.get(i);
@@ -195,7 +200,7 @@ public class CollisionManager {
                             bullet.reset();
                         }
                     }
-                }
+                //}
             }
         }
     }

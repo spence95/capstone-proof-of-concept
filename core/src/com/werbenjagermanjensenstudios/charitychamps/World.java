@@ -516,15 +516,28 @@ public class World {
                  }
 
                  pl.updateRunning(deltaTime);
-                 //check if all players are done and start a new round
-                 if (doneCounter >= players.size()) {
-                     if (readyToEndRound)
-                         newRound();
-                 }
-
                  if(pl.bullet.isShot){
                      bulletsAreOut = true;
                  }
+
+                 if(explosions.size() < 1){
+                     if(!bulletsAreOut) {
+                         readyToEndRound = true;
+                     } else {
+                         readyToEndRound = false;
+                     }
+                 } else {
+                     readyToEndRound = false;
+                 }
+
+                 //check if all players are done and start a new round
+                 if (doneCounter >= players.size()) {
+                     if (readyToEndRound) {
+                             newRound();
+                     }
+                 }
+
+
 
                  //check for dead players and remove them
                  if (pl.dead) {
@@ -552,11 +565,6 @@ public class World {
              removeDeadPlayers(deadPlayerIds);
          } else {
              roundWaitingCounter += deltaTime;
-         }
-         if(explosions.size() < 1){
-             if(!bulletsAreOut) {
-                 readyToEndRound = true;
-             }
          }
      }
 

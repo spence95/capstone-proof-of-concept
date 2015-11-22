@@ -12,6 +12,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -151,6 +152,11 @@ public class Assets {
     public static Animation dotOscillating;
     public static Animation playerFiring;
     public static Animation playerDying;
+
+    //Official game assets
+    public static Texture explosion;
+    public static TextureRegion explosionOfficialRegion;
+    public static Animation explosionAnim;
 
     public static Texture loadTexture (String file) { return new Texture(Gdx.files.internal(file));}
 
@@ -480,6 +486,21 @@ public class Assets {
         tfs12.selection = nuSkin.newDrawable("background", 0.5f, 0.5f, 0.5f, 0.5f);
 
         //end textfieldstyle
+
+        //Official game assets
+        explosion = loadTexture("explosionAsset.png");
+        explosionOfficialRegion = new TextureRegion(explosion, 0, 0, 30, 240);
+        float frameDuration = Explosion.duration / 8;
+        explosionAnim = new Animation(frameDuration,
+                new TextureRegion(explosionOfficialRegion, 0, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 30, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 60, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 90, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 120, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 150, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 180, 0, 30, 30),
+                new TextureRegion(explosionOfficialRegion, 210, 0, 30, 30)
+        );
 
 
     }
