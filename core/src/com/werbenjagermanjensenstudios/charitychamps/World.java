@@ -38,8 +38,8 @@ public class World {
     public static final float Move_menu_height = 127 / 2;
     public static final float Attack_menu_width = 150 / 2;
     public static final float Attack_menu_height = 127 / 2;
-    public final float squareWidth = 8;
-    public final float squareHeight = 16;
+    public final float squareWidth = 12;
+    public final float squareHeight = 13.5f;
     //origin start points
     //(20, 40)
     //(20, 440)
@@ -92,6 +92,9 @@ public class World {
     float roundWaitingCounter = 0;
 
     public static int roundWaitingAmount = 1;
+
+    TextField messageText;
+
 
     //define callback interface
     interface playerActionRetrievalCallback {
@@ -348,8 +351,8 @@ public class World {
             if (this.currentPlayer.velocity.x == 0 && this.currentPlayer.velocity.y == 0) {
                 lastTouchedX = x;
                 lastTouchedY = y;
-                dot.position.x = x;
-                dot.position.y = y;
+                //dot.position.x = x;
+                //dot.position.y = y;
                 //if hidden
 //                if (this.actionMenu.state == 0 && this.actionMenu.position.y < 0) {
 //                    this.actionMenu.changeState(1);
@@ -417,7 +420,7 @@ public class World {
             usernameTextField.setHeight(30);
             usernameTextField.setFocusTraversal(false);
             usernameTextField.setDisabled(true);
-            playerLabels.put(playerID,usernameTextField);
+            //playerLabels.put(playerID,usernameTextField);
         }
 
 //        for (int i : playersByID.keySet()) {
@@ -462,7 +465,6 @@ public class World {
     }
 
     public void update(float deltaTime){
-
 
      //update collisions
      collisionManager.updateCollisions();
@@ -600,7 +602,7 @@ public class World {
         for (Player p : players)
         {
             playerIDs.add(p.id);
-            playerUsernames.add(playerLabels.get(p.id).getText());
+            //playerUsernames.add(playerLabels.get(p.id).getText());
         }
 
         MenuScreen menu = new MenuScreen(game);

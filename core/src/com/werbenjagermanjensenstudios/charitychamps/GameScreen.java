@@ -36,12 +36,16 @@ public class GameScreen extends ScreenAdapter {
 
     Rectangle submitBounds;
     TextField loadingText;
+    TextField messageText;
 
     GlyphLayout glyphLayout = new GlyphLayout();
 
     float arenaWidth;
     float arenaHeight;
     float sideBarWidth;
+
+    float displayMessageTime;
+    String messageToDisplay;
 
     public GameScreen(proofOfConcept game, World world){
         this.game = game;
@@ -52,6 +56,8 @@ public class GameScreen extends ScreenAdapter {
         vp = new StretchViewport(480, 800, guiCam);
         guiCam.position.set(800 / 2, 480 / 2, 0);
         touchPoint = new Vector3();
+
+        displayMessageTime = 0;
 
 
 
@@ -84,10 +90,49 @@ public class GameScreen extends ScreenAdapter {
         }
 
         world.update(deltaTime);
+        if(displayMessageTime > 0){
+            //display message
+            displayMessageTime -= deltaTime;
+        } else {
+            displayMessageTime = 0;
+        }
 
         int time = (int)(Player.time - world.currentPlayer.stateTime);
-        if(time < 0)
+        if(time <= 0) {
+            //display stop message
+            displayMessageTime = 1;
+            this.messageText = new TextField(("STOP!"), Assets.tfsTrans100);
+            messageText.setPosition(300, 190);
+            messageText.setWidth(700);
+            messageText.setHeight(150);
+            //loadingText.setAlignment(Align.center);
+            messageText.setFocusTraversal(false);
+            messageText.setDisabled(true);
             time = 0;
+        }
+
+        else if(time > 8 && time < 10 && world.isSetting){
+            displayMessageTime = 1.2f;
+            this.messageText = new TextField(("ENTER ACTIONS!"), Assets.tfsTrans100);
+            messageText.setPosition(150, 190);
+            messageText.setWidth(700);
+            messageText.setHeight(150);
+            //loadingText.setAlignment(Align.center);
+            messageText.setFocusTraversal(false);
+            messageText.setDisabled(true);
+        }
+
+        if(!world.isSetting){
+            displayMessageTime = 1;
+            messageToDisplay = "";
+            this.messageText = new TextField((messageToDisplay), Assets.tfsTrans100);
+            messageText.setPosition(150, 190);
+            messageText.setWidth(700);
+            messageText.setHeight(150);
+            //loadingText.setAlignment(Align.center);
+            messageText.setFocusTraversal(false);
+            messageText.setDisabled(true);
+        }
         this.countdownText = new TextField(Integer.toString(time), Assets.tfsTrans40);
         countdownText.setPosition(5, 30);
         countdownText.setWidth(75);
@@ -108,6 +153,14 @@ public class GameScreen extends ScreenAdapter {
             game.batcher.enableBlending();
 
             loadingText.draw(game.batcher, 1);
+            game.batcher.end();
+        }
+
+        if(displayMessageTime > 0){
+            game.batcher.begin();
+            game.batcher.enableBlending();
+
+            messageText.draw(game.batcher, 1);
             game.batcher.end();
         }
     

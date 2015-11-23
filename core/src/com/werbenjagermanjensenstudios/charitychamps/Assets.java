@@ -158,6 +158,21 @@ public class Assets {
     public static TextureRegion explosionOfficialRegion;
     public static Animation explosionAnim;
 
+    public static Texture desertBackground;
+    public static TextureRegion desertBackgroundRegion;
+
+    public static Texture shadow;
+    public static TextureRegion shadowRegion;
+
+
+    //characters
+    public static Texture rocketman;
+    public static TextureRegion rocketmanRegion;
+    public static Texture rocketmanStill;
+    public static TextureRegion rocketmanStillRegion;
+    public static Animation rocketmanAnim;
+
+
     public static Texture loadTexture (String file) { return new Texture(Gdx.files.internal(file));}
 
     public static void load(){
@@ -501,6 +516,26 @@ public class Assets {
                 new TextureRegion(explosionOfficialRegion, 180, 0, 30, 30),
                 new TextureRegion(explosionOfficialRegion, 210, 0, 30, 30)
         );
+
+        shadow = loadTexture("shadow.png");
+        shadowRegion = new TextureRegion(shadow, 0, 0, 187, 48);
+
+        desertBackground = loadTexture("desertTileSet.png");
+        desertBackgroundRegion = new TextureRegion(desertBackground, 0, 0, 800, 480);
+
+        rocketman = loadTexture("rocketman.png");
+        rocketmanRegion = new TextureRegion(rocketman, 0, 0, 1941, 281);
+        rocketmanStill = loadTexture("rocketmanStill.png");
+        rocketmanStillRegion = new TextureRegion(rocketmanStill, 0, 0, 264, 282);
+        rocketmanAnim = new Animation(.067f,
+                new TextureRegion(rocketmanRegion, 0, 0, 323, 281),
+                new TextureRegion(rocketmanRegion, 323, 0, 323, 281),
+                new TextureRegion(rocketmanRegion, 646, 0, 323, 281),
+                new TextureRegion(rocketmanRegion, 969, 0, 323, 281),
+                new TextureRegion(rocketmanRegion, 1292, 0, 323, 281),
+                new TextureRegion(rocketmanRegion, 1615, 0, 323, 281)
+        );
+
 
 
     }

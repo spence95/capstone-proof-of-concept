@@ -41,7 +41,7 @@ public class WorldRenderer {
         batch.begin();
 //        batch.draw(Assets.backgroundRegion, cam.position.x - FRUSTUM_WIDTH / 2, cam.position.y - FRUSTUM_HEIGHT / 2, FRUSTUM_WIDTH,
 //                FRUSTUM_HEIGHT);
-        batch.draw(Assets.backgroundRegion, cam.position.x - this.world.WORLD_WIDTH / 2, cam.position.y - this.world.WORLD_HEIGHT / 2, this.world.WORLD_WIDTH,
+        batch.draw(Assets.desertBackgroundRegion, cam.position.x - this.world.WORLD_WIDTH / 2, cam.position.y - this.world.WORLD_HEIGHT / 2, this.world.WORLD_WIDTH,
                 this.world.WORLD_HEIGHT);
         batch.end();
     }
@@ -83,6 +83,7 @@ public class WorldRenderer {
 
     private void renderExplosions() {
         batch.begin();
+        batch.enableBlending();
         for(int i = 0; i < world.explosions.size(); i++){
             Explosion exp = world.explosions.get(i);
             TextureRegion keyFrame = Assets.explosionAnim.getKeyFrame(exp.getStateTime(), Animation.ANIMATION_NONLOOPING);
@@ -106,6 +107,7 @@ public class WorldRenderer {
 
     private void renderLabels() {
         batch.begin();
+        batch.enableBlending();
         for (Player p : world.players) {
             try {
                 TextField tf = this.world.playerLabels.get((p.id));
@@ -119,6 +121,7 @@ public class WorldRenderer {
             }//this will make an exception until the player id in the player thing is correct.
 
         }
+        batch.disableBlending();
         batch.end();
         /*for (int i : this.world.playerLabels.keySet()) {
             TextField tf = this.world.playerLabels.get(i);
@@ -141,10 +144,10 @@ public class WorldRenderer {
 
         for(int i = 0; i < world.players.size(); i++){
             Player pl = world.players.get(i);
-            TextureRegion keyFrame = Assets.playerStill;
+            TextureRegion keyFrame = Assets.rocketmanStillRegion;
 
             if(pl.isMoving){
-                keyFrame = Assets.playerWalking.getKeyFrame(pl.stateTime, Animation.ANIMATION_LOOPING);
+                keyFrame = Assets.rocketmanAnim.getKeyFrame(pl.stateTime, Animation.ANIMATION_LOOPING);
             } else if(pl.isFiring){
                 keyFrame = Assets.playerFiring.getKeyFrame(pl.stateTime, Animation.ANIMATION_LOOPING);
             } else if(pl.dead){
@@ -176,6 +179,8 @@ public class WorldRenderer {
 
             if(show || world.isSetting) {
                 batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth * pl.side, world.squareHeight);
+                //draw shadow
+                batch.draw(Assets.shadowRegion, pl.position.x - ((world.squareWidth) / 2), pl.position.y - (world.squareHeight - (world.squareHeight / 4.5f)), world.squareWidth * pl.side, world.squareHeight / 5);
             }
             batch.draw(Assets.bulletRegion, pl.bullet.position.x - (pl.bullet.width / 2), pl.bullet.position.y - (pl.bullet.height / 2), pl.bullet.position.x, pl.bullet.position.y, pl.bullet.bounds.width, pl.bullet.bounds.height, pl.bullet.bounds.width / 10, pl.bullet.bounds.height / 10, pl.bullet.rotation, true);
         }

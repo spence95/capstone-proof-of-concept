@@ -64,7 +64,6 @@ public class ApiCall {
 
             @Override
             public void cancelled() {
-
                 System.out.println("cancelled");
                 httpReturns.set(ListNumber, "CANCELLED");
             }
@@ -72,7 +71,7 @@ public class ApiCall {
 
         while (httpReturns.get(ListNumber).length() < 1)//while its empty because the HTTP method hasnt returned yet
         {
-//            System.out.println("waiting for server");
+            System.out.println("waiting for server");
         }
 
         return httpReturns.get(ListNumber);
