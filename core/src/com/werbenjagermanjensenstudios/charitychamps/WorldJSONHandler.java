@@ -88,23 +88,25 @@ public class WorldJSONHandler {
 
             JSONObject actionsObj = actionArray.getJSONObject(a);
 
-            float originx = actionsObj.getInt("originx")/100;
-            float originy = actionsObj.getInt("originy")/100;
-            float targetx = actionsObj.getInt("targetx")/100;
-            float targety = actionsObj.getInt("targety")/100;
+            float originx = (float)actionsObj.getInt("originx")/100;
+            float originy = (float)actionsObj.getInt("originy")/100;
+            float targetx = (float)actionsObj.getInt("targetx")/100;
+            float targety = (float)actionsObj.getInt("targety")/100;
             int actiontype = actionsObj.getInt("actiontype");
             int actionSeqNum = actionsObj.getInt("actionnumber");
+            float timetaken = (float)actionsObj.getInt("timetaken")/100000;
+            System.out.println("Receiving Time taken: " + actionsObj.getInt("timetaken") + " to " + timetaken);
             if(actiontype == 0){
                 Spawn sp = new Spawn(originx, originy);
                 sp.setSequenceNum(actionSeqNum);
                 actions.add(sp);
                 pl.spawn(originx, originy);
             } else if(actiontype == 1){
-                Move mv = new Move(targetx, targety, 0);
+                Move mv = new Move(targetx, targety, timetaken);
                 mv.setSequenceNum(actionSeqNum);
                 actions.add(mv);
             } else if(actiontype == 2){
-                Attack at = new Attack(targetx, targety, 0);
+                Attack at = new Attack(targetx, targety, timetaken);
                 at.setSequenceNum(actionSeqNum);
                 actions.add(at);
             }

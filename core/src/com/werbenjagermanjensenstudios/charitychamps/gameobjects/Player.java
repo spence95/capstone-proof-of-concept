@@ -31,6 +31,11 @@ public class Player extends DynamicGameObject {
     int turnCounter;
     public ArrayList<Action> actions;
     ArrayList<Action> savedActions;
+    float attackSecondsWaiting;
+
+    //this list is used in running mode so the world can poll the player to get new bullets to its list
+    public ArrayList<Bullet> bulletsShot;
+
     public Vector2 velocity;
     Vector2 movement;
     Vector2 dir;
@@ -62,11 +67,12 @@ public class Player extends DynamicGameObject {
         this.isEnemy = isEnemy;
         actions = new ArrayList<Action>();
         savedActions = new ArrayList<Action>();
-        bullet = new Bullet(-100, -100, 200);
         side = 1;
         health = 2;
         isImmune = false;
         immuneCounter = 0;
+        attackSecondsWaiting = 0;
+        bulletsShot = new ArrayList<Bullet>();
     }
 
     public void spawn(float x, float y){
@@ -114,8 +120,10 @@ public class Player extends DynamicGameObject {
     }
 
     public void update(float deltaTime, boolean isRunning){
+
             //ten seconds per turn
             if (stateTime <= time) {
+
                 dir = new Vector2();
                 //on touch event set the touch vector then get direction vector
                 dir.set(this.destination).sub(position).nor();
@@ -158,11 +166,6 @@ public class Player extends DynamicGameObject {
             stateTime += deltaTime;
     }
 
-    public void updateAttack(float deltaTime){
-        //set bullet's position and destination
-        bullet.shoot(actions.get(turnCounter).x, actions.get(turnCounter).y, position.x, position.y);
-        stateTime += deltaTime;
-    }
 
     public void updateSetting(float deltaTime){
         update(deltaTime, false);
@@ -195,29 +198,33 @@ public class Player extends DynamicGameObject {
                         update(deltaTime, true);
                     }
                 } else if (this.actions.get(turnCounter) instanceof Attack) {
-                    if (bullet.isShot) {
-
-                        //if bullet out of bounds move onto moving again
-                        if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
-                            bullet.reset();
-                        }
-                    } else {
-                        updateAttack(deltaTime);
+//                    if (bullet.isShot) {
+//
+//                        //if bullet out of bounds move onto moving again
+//                        if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
+//                            bullet.reset();
+//                        }
+//                    } else {
+//                        updateAttack(deltaTime);
+//                        this.turnCounter++;
+//                    }
+              //  }
+                    if(attackSecondsWaiting > 0){
+                        attackSecondsWaiting -= deltaTime;
+                    }
+                    if(attackSecondsWaiting <= 0) {
+                        Bullet bu = new Bullet(position.x, position.y, 200, id);
+                        bu.runningModeDestinationX = this.actions.get(turnCounter).x;
+                        bu.runningModeDestinationY = this.actions.get(turnCounter).y;
+                        bulletsShot.add(bu);
+                        attackSecondsWaiting = this.actions.get(turnCounter).secondsToWait;
                         this.turnCounter++;
                     }
-              //  }
-            }
+                    stateTime += deltaTime;
+                }
         } else {
             isDone = true;
         }
-    }
-
-    public void beginMoving(){
-        //if(this.turnCounter < this.actions.size()) {
-//                setToMove((Move) this.actions.get(this.turnCounter));
-//                this.isMoving = true;
-               // this.turnCounter++;
-        //}
     }
 
     public void resetActions(){
@@ -244,8 +251,7 @@ public class Player extends DynamicGameObject {
         turnCounter = 0;
         stateTime = 0;
         isDone = false;
-        //bullet.reset();
-    }
+        }
 
     public void takeHit(int damage){
         this.health -= damage;

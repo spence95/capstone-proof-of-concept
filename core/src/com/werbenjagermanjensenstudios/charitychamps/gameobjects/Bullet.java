@@ -18,28 +18,35 @@ public class Bullet extends DynamicGameObject {
     Vector2 velocity;
     public float rotation;
     public boolean isShot;
+    public float runningModeDestinationX;
+    public float runningModeDestinationY;
 
-    public Bullet(float x, float y, float speed){
+    //used to prevent colliding with own bullet on fire
+    public int ownerID;
+
+    public Bullet(float x, float y, float speed, int ownerID){
         super(x, y, width, height);
         this.speed = speed;
         isShot = false;
         rotation = 0;
         destination = new Vector2(x, y);
-
+        runningModeDestinationX = -1000;
+        runningModeDestinationY = -1000;
+        this.ownerID = ownerID;
     }
 
     public void shoot(float x, float y, float originX, float originY){
         position.set(originX, originY);
         //use proportions to set destination real far out
-        if(y > originY && x > originX){
+        if(y >= originY && x >= originX){
             x = ((x - originX)/(y - originY)) * (Math.abs(y - 500)) + x;
             y = 500;
         }
-        else if (y < originY && x > originX) {
+        else if (y < originY && x >= originX) {
             x = (((x - originX)/Math.abs(y - originY)) * (y + 10)) + x;
             y = -10;
         }
-        else if (y > originY && x < originX){
+        else if (y >= originY && x < originX){
             x = x - (Math.abs(x - originX)/(y - originY)) * (Math.abs(y - 500));
             y = 500;
         }

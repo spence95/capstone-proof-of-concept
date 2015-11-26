@@ -23,24 +23,33 @@ public class CollisionManager {
         updateExplosions();
         updatePowerups();
         updateMines();
+        updateBullets();
     }
 
     private void updateBullets(){
-        for(int i = 0; i < world.players.size(); i++){
-            Player pl = world.players.get(i);
-            Bullet bu = pl.bullet;
-            for(int j = 0; j < world.players.size(); j++){
-                Player opl = world.players.get(j);
-                if(pl.id != opl.id){
-                    if(opl.bounds.overlaps(bu.bounds)){
-                        if(!opl.isImmune){
-                            opl.takeHit(1);
-                            opl.isImmune = true;
-                        }
-                    }
+       for(int i = 0; i < world.bullets.size(); i++){
+           Bullet bu = world.bullets.get(i);
+           for(int j = 0; j < world.blocks.size(); j++){
+               if(bu.bounds.overlaps(world.blocks.get(j).bounds)){
+                   Explosion exp = new Explosion(bu.position.x, bu.position.y);
+                   world.explosions.add(exp);
+                   //world.bullets.remove(i);
+                   bu.position.x = -1000;
+                   bu.position.y = -1000;
+               }
+           }
+           for(int j = 0; j < world.players.size(); j++){
+            if(bu.ownerID != world.players.get(j).id) {
+                if (bu.bounds.overlaps(world.players.get(j).bounds)) {
+                    Explosion exp = new Explosion(bu.position.x, bu.position.y);
+                    world.explosions.add(exp);
+                    //world.bullets.remove(i);
+                    bu.position.x = -1000;
+                    bu.position.y = -1000;
                 }
             }
-        }
+           }
+       }
     }
 
     private void updatePowerups() {
@@ -180,28 +189,7 @@ public class CollisionManager {
 
                 }
             }
-            //update that players bullet too
-            //if(player.bullet.isShot){
-                Bullet bullet = player.bullet;
-                for(int i = 0; i < world.blocks.size(); i++) {
-                    Block block = world.blocks.get(i);
-                    if (bullet.bounds.overlaps(block.bounds)) {
-                        Explosion exp = new Explosion(bullet.position.x, bullet.position.y);
-                        world.explosions.add(exp);
-                        bullet.reset();
-                    }
-                }
-                for(int i = 0; i < world.players.size(); i++){
-                    Player otherPl = world.players.get(i);
-                    if (player != otherPl){
-                        if(bullet.bounds.overlaps(otherPl.bounds)){
-                            Explosion exp = new Explosion(bullet.position.x, bullet.position.y);
-                            world.explosions.add(exp);
-                            bullet.reset();
-                        }
-                    }
-                //}
-            }
+
         }
     }
 

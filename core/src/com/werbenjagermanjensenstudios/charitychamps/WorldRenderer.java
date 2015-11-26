@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.CrumblingBlock;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
@@ -48,8 +49,8 @@ public class WorldRenderer {
 
     public void renderObjects (float delta) {
         batch.enableBlending();
-        //renderSquares();
         renderPlayers(delta);
+        renderBullets(delta);
         renderLabels();
         renderActionButtons();
         renderDot();
@@ -138,6 +139,16 @@ public class WorldRenderer {
 
     }
 
+    private void renderBullets(float delta){
+        batch.begin();
+        for(int i = 0; i < world.bullets.size(); i++) {
+            Bullet bu = world.bullets.get(i);
+            batch.draw(Assets.bulletRegion, bu.position.x - (bu.width / 2), bu.position.y - (bu.height / 2), bu.position.x, bu.position.y,
+                    bu.bounds.width, bu.bounds.height, bu.bounds.width / 10, bu.bounds.height / 10, bu.rotation, true);
+        }
+        batch.end();
+    }
+
     private void renderPlayers(float delta){
         batch.begin();
         batch.draw(Assets.sideBarRegion, 0, 0, 51, 480);
@@ -182,7 +193,6 @@ public class WorldRenderer {
                 //draw shadow
                 batch.draw(Assets.shadowRegion, pl.position.x - ((world.squareWidth) / 2), pl.position.y - (world.squareHeight - (world.squareHeight / 4.5f)), world.squareWidth * pl.side, world.squareHeight / 5);
             }
-            batch.draw(Assets.bulletRegion, pl.bullet.position.x - (pl.bullet.width / 2), pl.bullet.position.y - (pl.bullet.height / 2), pl.bullet.position.x, pl.bullet.position.y, pl.bullet.bounds.width, pl.bullet.bounds.height, pl.bullet.bounds.width / 10, pl.bullet.bounds.height / 10, pl.bullet.rotation, true);
         }
         batch.end();
 //        float side = world.bob.velocity.x < 0 ? -1 : 1;
@@ -220,11 +230,11 @@ public class WorldRenderer {
     }
 
     public void renderDot(){
-        batch.begin();
-        TextureRegion keyFrame = Assets.dotOscillating.getKeyFrame(world.dot.stateTime, Animation.ANIMATION_LOOPING);
-        if(world.currentPlayer.isMoving || world.currentPlayer.bullet.isShot) {
-            batch.draw(keyFrame, world.dot.position.x - (world.dot.bounds.width / 2), world.dot.position.y - (world.dot.bounds.height / 2), world.dot.bounds.width, world.dot.bounds.height);
-        }
-        batch.end();
+//        batch.begin();
+//        TextureRegion keyFrame = Assets.dotOscillating.getKeyFrame(world.dot.stateTime, Animation.ANIMATION_LOOPING);
+//        if(world.currentPlayer.isMoving) {
+//            batch.draw(keyFrame, world.dot.position.x - (world.dot.bounds.width / 2), world.dot.position.y - (world.dot.bounds.height / 2), world.dot.bounds.width, world.dot.bounds.height);
+//        }
+//        batch.end();
     }
 }

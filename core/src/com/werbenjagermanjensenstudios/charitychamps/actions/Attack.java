@@ -7,6 +7,6 @@ import com.werbenjagermanjensenstudios.charitychamps.actions.Action;
  */
 public class Attack extends Action {
     public Attack(float x, float y, float secondsWaiting){
-        super(x, y, 0);
+        super(x, y, secondsWaiting);
     }
 }

@@ -91,6 +91,10 @@ public class World {
     //used to prevent lagging once actions are received
     float roundWaitingCounter = 0;
 
+    //used to know how long to wait in between bullets
+    //when negative one means not needed, set to 0 when needed
+    float attackSecondsWaiting = -1;
+
     public static int roundWaitingAmount = 1;
 
     TextField messageText;
@@ -372,16 +376,24 @@ public class World {
             this.currentPlayer.addMove(x, y);
             this.actionMenu.changeState(2);
             this.actionMenu.isShown = false;
+            attackSecondsWaiting = 0;
         }
     }
 
     public void attackClicked(float x, float y) {
-        if(this.currentPlayer.bullet.isShot == false) {
-            Attack at = new Attack(x, y, 9);
+        //if first bullet in a series
+        if(attackSecondsWaiting > .3f || attackSecondsWaiting == -1) {
+            if(attackSecondsWaiting == -1){
+                attackSecondsWaiting = 0;
+            }
+            Attack at = new Attack(x, y, attackSecondsWaiting);
             this.currentPlayer.addAttack(at);
-            this.currentPlayer.bullet.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
-            this.actionMenu.changeState(2);
-            this.actionMenu.isShown = false;
+            float bulletSpeed = 200;
+            Bullet bu = new Bullet(this.currentPlayer.position.x, this.currentPlayer.position.y, bulletSpeed, this.currentPlayer.id);
+            bu.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
+            bullets.add(bu);
+            attackSecondsWaiting = 0;
+            System.out.println("attackSecondsWaiting reset");
         }
     }
 
@@ -475,8 +487,15 @@ public class World {
      }
 
      //update bullets
-     for(int i = 0; i < players.size(); i++){
-         players.get(i).bullet.update(deltaTime);
+     for(int i = 0; i < bullets.size(); i++){
+         //players.get(i).bullet.update(deltaTime);
+         bullets.get(i).update(deltaTime);
+
+         //check if bullet out of arena bounds then remove it if it is
+         if(bullets.get(i).position.x > 800 || bullets.get(i).position.y > 480 ||
+                 bullets.get(i).position.x < 0 || bullets.get(i).position.y < 0){
+             bullets.remove(i);
+         }
      }
 
      //update action menu
@@ -485,6 +504,12 @@ public class World {
      }
 
      if(isSetting){
+         //update seconds waiting for actions
+         if(attackActionButton.isActive) {
+             System.out.println("attackSecondsWaiting: " + attackSecondsWaiting);
+             attackSecondsWaiting += deltaTime;
+         }
+
          for(int i = 0; i < this.players.size(); i++){
              this.players.get(i).isImmune = false;
          }
@@ -493,6 +518,7 @@ public class World {
             if(this.currentPlayer.isDone){
                 submit();
             }
+
         }
 
         else{
@@ -518,7 +544,15 @@ public class World {
                  }
 
                  pl.updateRunning(deltaTime);
-                 if(pl.bullet.isShot){
+
+                 for(int b = 0; b < pl.bulletsShot.size(); b++){
+                     Bullet bu = pl.bulletsShot.get(b);
+                     bu.shoot(bu.runningModeDestinationX, bu.runningModeDestinationY,bu.position.x, bu.position.y);
+                     bullets.add(bu);
+                     pl.bulletsShot.remove(b);
+                 }
+
+                 if(bullets.size() > 0){
                      bulletsAreOut = true;
                  }
 
@@ -655,6 +689,7 @@ public class World {
     public void submit(){
         hideDot();
         roundWaitingCounter = 0;
+        attackSecondsWaiting = 0;
         this.actionMenu.changeState(2);
         generateTurnJson();
         //newRound();
@@ -663,10 +698,9 @@ public class World {
         currentPlayer.position.x = currentPlayer.xLast;
         currentPlayer.position.y = currentPlayer.yLast;
         explosions = new ArrayList<Explosion>();
-        currentPlayer.bullet.reset();
     }
 
-    public Player getPlayerById(int id){
+        public Player getPlayerById(int id){
         for(int p = 0; p < players.size(); p++){
             if(players.get(p).id == id)
                 return players.get(p);
@@ -698,6 +732,10 @@ public class World {
 
             int targetx = (int) (100 * round(ac.x, 2));
             int targety = (int) (100 * round(ac.y, 2));
+            float timetakenFloat = 100000 * ac.secondsToWait;
+            int timetaken = (int) (round(timetakenFloat, 5));
+
+            System.out.println("Calculating time taken: " + ac.secondsToWait + " to " + timetaken);
 
             //int turnId = turnIDs.get(turnIDs.size() - 1);
             int turnId = currentPlayer.currentTurnId;
@@ -708,7 +746,7 @@ public class World {
                     "\"originy\":" + originy + "," +
                     "\"targetx\":" + targetx + "," +
                     "\"targety\":" + targety + "," +
-                    "\"timetaken\":0" + "," +
+                    "\"timetaken\":" + timetaken +  "," +
                     "\"turn\": \"/api/v1/turn/" + turnId + "/\"},";
 
             actionsJson += action;
