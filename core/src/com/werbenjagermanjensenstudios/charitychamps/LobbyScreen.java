@@ -25,6 +25,7 @@ public class LobbyScreen extends ScreenAdapter {
     TextField loadingText;
     int loadingDotTimer;
     String currentMatchMakingID;
+    String characterClass;
     boolean inGame;
     boolean nextRound;
     WorldRenderer worldRenderer;
@@ -33,8 +34,9 @@ public class LobbyScreen extends ScreenAdapter {
     float timeOutTimer;
 
 
-    public LobbyScreen(proofOfConcept game){
+    public LobbyScreen(proofOfConcept game, String characterClass){
         this.game = game;
+        this.characterClass = characterClass;
         this.inGame = false;
         this.nextRound = false;
         guiCam = new OrthographicCamera(800, 480);
@@ -45,8 +47,8 @@ public class LobbyScreen extends ScreenAdapter {
 
         timeOutTimer = 0;
 
+        //stuff for the loading text
         loadingDotTimer = 0;
-
         this.loadingText = new TextField(("LOADING"), Assets.tfsTrans100);
         loadingText.setPosition(250, 190);
         loadingText.setWidth(700);
@@ -90,6 +92,7 @@ public class LobbyScreen extends ScreenAdapter {
         return api.httpPostPutOrPatch(URL, Body, 0, false, true);
     }
 
+    //get the match id we're supposed to post waiting:true to
     public String[] getMatchmaking(boolean getMatchmakingId){
         String[] results = new String[2];
         String URL = "http://45.33.62.187/api/v1/matchmaking/?player=" + game.getPlayerID()
@@ -130,7 +133,7 @@ public class LobbyScreen extends ScreenAdapter {
                         int lastPlace = tokens.length - 1;
                         int matchID = Integer.parseInt(tokens[lastPlace]);
                         world = new World(game, matchID);
-                        world.start();
+                        world.start(characterClass);
 
                         //post an entry into player-match. you can find a lot of the player stuff in here
 
@@ -180,7 +183,10 @@ public class LobbyScreen extends ScreenAdapter {
                             }
                             //get spawn actions
                             String getActionURL = "http://45.33.62.187/api/v1/action/?turn=" + turnId + "&actionnumber=0&format=json";
+                            System.out.println("EMPTY BUG turnid url: " + getActionURL);
+                            System.out.println("EMPTY BUG current player turnid: " + world.currentPlayer.currentTurnId);
                             String getActionStr = api.httpGet(getActionURL, 0);
+                            System.out.println("EMPTY BUG result of turnid url: " + getActionStr);
                             JSONObject actionJson = new JSONObject(getActionStr);
                             JSONArray actionArray = actionJson.getJSONArray("objects");
                             JSONObject actionObj = actionArray.getJSONObject(0);

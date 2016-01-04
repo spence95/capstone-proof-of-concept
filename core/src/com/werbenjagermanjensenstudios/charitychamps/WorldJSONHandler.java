@@ -5,6 +5,7 @@ import com.werbenjagermanjensenstudios.charitychamps.actions.Attack;
 import com.werbenjagermanjensenstudios.charitychamps.actions.Move;
 import com.werbenjagermanjensenstudios.charitychamps.actions.Spawn;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.PlayerClass;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +29,31 @@ public class WorldJSONHandler {
         int turnId = turnIdJsonObj.getInt("id");
         world.addToTurnIDs(turnId);
         world.currentPlayer.currentTurnId = turnId;
+    }
+
+    public static PlayerClass getPlayersClass(){
+        //call out to server and parsing JSON here
+
+        //dummy data for now
+
+        //Rocketman
+//        int bulletType = 1;
+//        String name = "Rocketman";
+//        boolean canFire = true;
+//        float rateOfFire = 2;
+//        float speed = 180;
+//        int health = 2;
+
+        //Bomber
+        int bulletType = 2;
+        String name = "Bomber";
+        boolean canFire = true;
+        float rateOfFire = 2;
+        float speed = 150;
+        int health = 2;
+
+        PlayerClass pc = new PlayerClass(name, bulletType, canFire, rateOfFire, speed, health);
+        return pc;
     }
 
     public static void runPlayers(World world){
@@ -88,10 +114,10 @@ public class WorldJSONHandler {
 
             JSONObject actionsObj = actionArray.getJSONObject(a);
 
-            float originx = (float)actionsObj.getInt("originx")/100;
-            float originy = (float)actionsObj.getInt("originy")/100;
-            float targetx = (float)actionsObj.getInt("targetx")/100;
-            float targety = (float)actionsObj.getInt("targety")/100;
+            float originx = (float)actionsObj.getInt("originx")/100000;
+            float originy = (float)actionsObj.getInt("originy")/100000;
+            float targetx = (float)actionsObj.getInt("targetx")/100000;
+            float targety = (float)actionsObj.getInt("targety")/100000;
             int actiontype = actionsObj.getInt("actiontype");
             int actionSeqNum = actionsObj.getInt("actionnumber");
             float timetaken = (float)actionsObj.getInt("timetaken")/100000;

@@ -524,6 +524,8 @@ public class Assets {
         desertBackgroundRegion = new TextureRegion(desertBackground, 0, 0, 800, 480);
 
         rocketman = loadTexture("rocketman.png");
+        //set the texture to not lose any pixels when it's downsized
+        rocketman.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         rocketmanRegion = new TextureRegion(rocketman, 0, 0, 1941, 281);
         rocketmanStill = loadTexture("rocketmanStill.png");
         rocketmanStillRegion = new TextureRegion(rocketmanStill, 0, 0, 264, 282);

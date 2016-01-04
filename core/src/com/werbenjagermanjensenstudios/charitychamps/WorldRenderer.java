@@ -153,6 +153,8 @@ public class WorldRenderer {
         batch.begin();
         batch.draw(Assets.sideBarRegion, 0, 0, 51, 480);
 
+        //for when the player is powered up use batch.setColor(Color.cyan);
+
         for(int i = 0; i < world.players.size(); i++){
             Player pl = world.players.get(i);
             TextureRegion keyFrame = Assets.rocketmanStillRegion;
@@ -189,9 +191,10 @@ public class WorldRenderer {
             //showImmuneCounter += delta;
 
             if(show || world.isSetting) {
-                batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth * pl.side, world.squareHeight);
                 //draw shadow
-                batch.draw(Assets.shadowRegion, pl.position.x - ((world.squareWidth) / 2), pl.position.y - (world.squareHeight - (world.squareHeight / 4.5f)), world.squareWidth * pl.side, world.squareHeight / 5);
+                batch.draw(Assets.shadowRegion, pl.position.x - ((world.squareWidth) / 2), pl.position.y - (world.squareHeight - (world.squareHeight / 4f)), world.squareWidth * pl.side, world.squareHeight / 5);
+
+                batch.draw(keyFrame, pl.position.x - (world.squareWidth / 2), pl.position.y - (world.squareHeight / 2), world.squareWidth * pl.side, world.squareHeight);
             }
         }
         batch.end();

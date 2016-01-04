@@ -28,10 +28,11 @@ public class Player extends DynamicGameObject {
     private float secondsWaiting;
     public Vector2 destination;
     Vector2 vectorPosition;
-    int turnCounter;
+    public int turnCounter;
     public ArrayList<Action> actions;
     ArrayList<Action> savedActions;
     float attackSecondsWaiting;
+    public PlayerClass playerclass;
 
     //this list is used in running mode so the world can poll the player to get new bullets to its list
     public ArrayList<Bullet> bulletsShot;
@@ -39,7 +40,6 @@ public class Player extends DynamicGameObject {
     public Vector2 velocity;
     Vector2 movement;
     Vector2 dir;
-    public Bullet bullet;
     public float xLast;
     public float yLast;
     public float side;
@@ -53,7 +53,7 @@ public class Player extends DynamicGameObject {
 
     public final int speed = 180;
 
-    public Player(int id, float width, float height, boolean isEnemy) {
+    public Player(int id, float width, float height, boolean isEnemy, PlayerClass playerClass) {
         super(-1000, -1000, width, height);
         this.currentTurnId = -100;
         this.id = id;
@@ -63,6 +63,7 @@ public class Player extends DynamicGameObject {
         dead = false;
         this.turnCounter = 0;
         this.secondsWaiting = 0;
+        this.playerclass = playerClass;
         stateTime = 0;
         this.isEnemy = isEnemy;
         actions = new ArrayList<Action>();
@@ -96,13 +97,27 @@ public class Player extends DynamicGameObject {
         savedActions.add(mv);
         actions.add(mv);
         resetSecondsWaiting();
+        //this.turnCounter++;
     }
 
-    //used for enemy's actions grabbed from server
-    public void jsonAddMove(float x, float y){
-        Move mv = new Move(x, y, secondsWaiting);
-        savedActions.add(mv);
-        actions.add(mv);
+    public Move getLastMove(){
+        for(int i = actions.size() - 1; i > 0; i--){
+            Action ac = actions.get(i);
+            if(ac instanceof Move){
+                return (Move)ac;
+            }
+        }
+        return null;
+    }
+
+    public void setLastMove(Move mv){
+        for(int i = actions.size() - 1; i > 0; i--){
+            Action ac = actions.get(i);
+            if(ac instanceof Move){
+                actions.get(i).x = mv.x;
+                actions.get(i).y = mv.y;
+            }
+        }
     }
 
     public void addAttack(Attack at){
@@ -174,13 +189,8 @@ public class Player extends DynamicGameObject {
     public void updateRunning(float deltaTime){
         secondsWaiting += deltaTime;
         if(this.actions.size() > turnCounter) {
-            //temp fix, without it crashes for some reason
-            //if(turnCounter < actions.size()) {
                 if (actions.get(turnCounter) instanceof Spawn){
                     if(!isDone){
-//                        position.set(actions.get(turnCounter).x, actions.get(turnCounter).y);
-//                        bounds.x = position.x - bounds.width / 2;
-//                        bounds.y = position.y - bounds.height / 2;
                         spawn(actions.get(turnCounter).x,actions.get(turnCounter).y);
                         turnCounter++;
                     }
@@ -198,25 +208,29 @@ public class Player extends DynamicGameObject {
                         update(deltaTime, true);
                     }
                 } else if (this.actions.get(turnCounter) instanceof Attack) {
-//                    if (bullet.isShot) {
-//
-//                        //if bullet out of bounds move onto moving again
-//                        if (bullet.position.y > World.WORLD_HEIGHT || bullet.position.y < 0 || bullet.position.x > World.WORLD_WIDTH || bullet.position.x < 0) {
-//                            bullet.reset();
-//                        }
-//                    } else {
-//                        updateAttack(deltaTime);
-//                        this.turnCounter++;
-//                    }
-              //  }
                     if(attackSecondsWaiting > 0){
                         attackSecondsWaiting -= deltaTime;
                     }
                     if(attackSecondsWaiting <= 0) {
-                        Bullet bu = new Bullet(position.x, position.y, 200, id);
-                        bu.runningModeDestinationX = this.actions.get(turnCounter).x;
-                        bu.runningModeDestinationY = this.actions.get(turnCounter).y;
-                        bulletsShot.add(bu);
+                        //if bullet is rocket
+                        if(playerclass.bulletType == 1) {
+                            Rocket bu = new Rocket(position.x, position.y, 200, id);
+                            bu.runningModeDestinationX = this.actions.get(turnCounter).x;
+                            bu.runningModeDestinationY = this.actions.get(turnCounter).y;
+                            bulletsShot.add(bu);
+                        }
+                        else if(playerclass.bulletType == 2) {
+                            Bomb bomb = new Bomb(this.position.x, this.position.y, 200, this.id);
+                            bomb.runningModeDestinationX = this.actions.get(turnCounter).x;
+                            bomb.runningModeDestinationY = this.actions.get(turnCounter).y;
+                            bulletsShot.add(bomb);
+                        }
+                        else {
+                            Bullet bu = new Bullet(position.x, position.y, 200, id);
+                            bu.runningModeDestinationX = this.actions.get(turnCounter).x;
+                            bu.runningModeDestinationY = this.actions.get(turnCounter).y;
+                            bulletsShot.add(bu);
+                        }
                         attackSecondsWaiting = this.actions.get(turnCounter).secondsToWait;
                         this.turnCounter++;
                     }
@@ -228,11 +242,9 @@ public class Player extends DynamicGameObject {
     }
 
     public void resetActions(){
-        //this.actions = this.savedActions;
         this.turnCounter = 0;
         this.stateTime = 0;
         this.isDone = false;
-        //bullet.reset();
         resetSecondsWaiting();
     }
 

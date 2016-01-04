@@ -15,15 +15,8 @@ import com.werbenjagermanjensenstudios.charitychamps.actions.Action;
 import com.werbenjagermanjensenstudios.charitychamps.actions.Attack;
 import com.werbenjagermanjensenstudios.charitychamps.actions.Move;
 import com.werbenjagermanjensenstudios.charitychamps.actions.Spawn;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Block;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Bullet;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.CrumblingBlock;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Dot;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.HeartPowerup;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Mine;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
-import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Powerup;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.*;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Class;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -368,16 +361,22 @@ public class World {
 
     public void moveClicked(float x, float y){
         //if player is in middle of move update that move's ending to current position
-        if(!this.currentPlayer.isMoving) {
+        //if(!this.currentPlayer.isMoving) {
+
+//        Move lastMove = currentPlayer.getLastMove();
+//        if(lastMove != null){
 //            this.currentPlayer.stop();
-//            this.currentPlayer.actions.get(this.currentPlayer.turnCounter).x = this.currentPlayer.position.x;
-//            this.currentPlayer.actions.get(this.currentPlayer.turnCounter).y = this.currentPlayer.position.y;
+//            lastMove.x = currentPlayer.position.x;
+//            lastMove.y = currentPlayer.position.y;
+//            currentPlayer.setLastMove(lastMove);
+//        }
+
 
             this.currentPlayer.addMove(x, y);
             this.actionMenu.changeState(2);
             this.actionMenu.isShown = false;
             attackSecondsWaiting = 0;
-        }
+        //}
     }
 
     public void attackClicked(float x, float y) {
@@ -389,9 +388,22 @@ public class World {
             Attack at = new Attack(x, y, attackSecondsWaiting);
             this.currentPlayer.addAttack(at);
             float bulletSpeed = 200;
-            Bullet bu = new Bullet(this.currentPlayer.position.x, this.currentPlayer.position.y, bulletSpeed, this.currentPlayer.id);
-            bu.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
-            bullets.add(bu);
+            // if bullet is rocket
+            if(currentPlayer.playerclass.bulletType == 1){
+                Rocket rocket = new Rocket(this.currentPlayer.position.x, this.currentPlayer.position.y, bulletSpeed, this.currentPlayer.id);
+                rocket.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
+                bullets.add(rocket);
+            }
+            else if(currentPlayer.playerclass.bulletType == 2) {
+                Bomb bomb = new Bomb(this.currentPlayer.position.x, this.currentPlayer.position.y, bulletSpeed, this.currentPlayer.id);
+                bomb.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
+                bullets.add(bomb);
+            }
+            else {
+                Bullet bu = new Bullet(this.currentPlayer.position.x, this.currentPlayer.position.y, bulletSpeed, this.currentPlayer.id);
+                bu.shoot(x, y, this.currentPlayer.position.x, this.currentPlayer.position.y);
+                bullets.add(bu);
+            }
             attackSecondsWaiting = 0;
             System.out.println("attackSecondsWaiting reset");
         }
@@ -442,10 +454,12 @@ public class World {
 
     }
 
-    public void start(){
+    public void start(String characterClass){
+        PlayerClass playerclass = WorldJSONHandler.getPlayersClass();
+
         this.getPlayerDetails();
-        currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false);
-        Player enemy1 = new Player(-1, squareWidth, squareHeight, true);
+        currentPlayer = new Player(game.getPlayerID(), squareWidth, squareHeight, false, playerclass);
+        Player enemy1 = new Player(-1, squareWidth, squareHeight, true, playerclass);
 //        Player enemy2 = new Player(2, squareWidth, squareHeight, true);
 //        Player enemy3 = new Player(3, squareWidth, squareHeight, true);
         players.add(currentPlayer);
@@ -730,8 +744,8 @@ public class World {
                 originy = (int) (100 * round(ac.y, 2));
             }
 
-            int targetx = (int) (100 * round(ac.x, 2));
-            int targety = (int) (100 * round(ac.y, 2));
+            int targetx = (int) (100000 * round(ac.x, 2));
+            int targety = (int) (100000 * round(ac.y, 2));
             float timetakenFloat = 100000 * ac.secondsToWait;
             int timetaken = (int) (round(timetakenFloat, 5));
 
@@ -763,6 +777,8 @@ public class World {
 
         //post actions to turn id in world
         String patchResults = api.httpPostPutOrPatch("http://45.33.62.187/api/v1/action/?format=json", actionsJson, 0, true, false);
+
+        System.out.println("EMPTY BUG Actions json: " + actionsJson);
 
         //put received to turn
         String putReceivedURL = "http://45.33.62.187/api/v1/turn/" + currentPlayer.currentTurnId + "/?format=json";

@@ -374,7 +374,7 @@ public class Menu {
         {
             if (menuComponents.get(0).containsXY(x, y))//continue
             {
-                game.setScreen(new LobbyScreen(game));
+                game.setScreen(new LobbyScreen(game, "Rocketman"));
             }
             else if (menuComponents.get(1).containsXY(x, y))//return
             {

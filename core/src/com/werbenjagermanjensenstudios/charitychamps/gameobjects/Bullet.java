@@ -67,15 +67,9 @@ public class Bullet extends DynamicGameObject {
             movement = new Vector2();
             velocity = new Vector2(dir).scl(this.speed);
             movement.set(velocity).scl(deltaTime);
-           // if (position.dst2(destination) > movement.len2()) {
-                position.add(movement);
-                bounds.x = position.x - bounds.width / 2;
-                bounds.y = position.y - bounds.height / 2;
-//            } else {
-//                position.set(destination);
-//                bounds.x = position.x - bounds.width / 2;
-//                bounds.y = position.y - bounds.height / 2;
-//            }
+            position.add(movement);
+            bounds.x = position.x - bounds.width / 2;
+            bounds.y = position.y - bounds.height / 2;
 
             if( speed < topSpeed) {
                 speed = speed + (speed * deltaTime);
@@ -84,11 +78,4 @@ public class Bullet extends DynamicGameObject {
 
     }
 
-    public void reset(){
-        isShot = false;
-        this.position.set(-100, -100);
-        bounds.x = position.x - bounds.width / 2;
-        bounds.y = position.y - bounds.height / 2;
-        this.speed = 200;
-    }
 }

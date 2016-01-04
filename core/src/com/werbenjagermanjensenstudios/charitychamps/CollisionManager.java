@@ -6,6 +6,7 @@ import com.werbenjagermanjensenstudios.charitychamps.gameobjects.CrumblingBlock;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Explosion;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Mine;
 import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Player;
+import com.werbenjagermanjensenstudios.charitychamps.gameobjects.Rocket;
 
 /**
  * Created by spence95 on 9/24/2015.
@@ -31,8 +32,10 @@ public class CollisionManager {
            Bullet bu = world.bullets.get(i);
            for(int j = 0; j < world.blocks.size(); j++){
                if(bu.bounds.overlaps(world.blocks.get(j).bounds)){
-                   Explosion exp = new Explosion(bu.position.x, bu.position.y);
-                   world.explosions.add(exp);
+                   if(bu instanceof Rocket) {
+                       Explosion exp = new Explosion(bu.position.x, bu.position.y);
+                       world.explosions.add(exp);
+                   }
                    //world.bullets.remove(i);
                    bu.position.x = -1000;
                    bu.position.y = -1000;
@@ -41,8 +44,10 @@ public class CollisionManager {
            for(int j = 0; j < world.players.size(); j++){
             if(bu.ownerID != world.players.get(j).id) {
                 if (bu.bounds.overlaps(world.players.get(j).bounds)) {
-                    Explosion exp = new Explosion(bu.position.x, bu.position.y);
-                    world.explosions.add(exp);
+                    if(bu instanceof Rocket) {
+                        Explosion exp = new Explosion(bu.position.x, bu.position.y);
+                        world.explosions.add(exp);
+                    }
                     //world.bullets.remove(i);
                     bu.position.x = -1000;
                     bu.position.y = -1000;
